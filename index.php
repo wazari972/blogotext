@@ -29,6 +29,9 @@ error_reporting(-1);
 $GLOBALS['BT_ROOT_PATH'] = '';
 
 session_start();
+
+require_once 'inc/conf.php';
+
 if (isset($_POST['allowcookie'])) { // si cookies autorisés, conserve les champs remplis
 	if (isset($_POST['auteur'])) {  setcookie('auteur_c', $_POST['auteur'], time() + 365*24*3600, null, null, false, true); }
 	if (isset($_POST['email'])) {   setcookie('email_c', $_POST['email'], time() + 365*24*3600, null, null, false, true); }
@@ -37,18 +40,16 @@ if (isset($_POST['allowcookie'])) { // si cookies autorisés, conserve les champ
 	setcookie('cookie_c', 1, time() + 365*24*3600, null, null, false, true);
 }
 
-if ( !file_exists('config/user.php') or !file_exists('config/prefs.php') ) {
-	require_once 'inc/conf.php';
-	header('Location: '.$GLOBALS['dossier_admin'].'/install.php');
-	die;
+if ( !file_exists($GLOBALS['dossier_config'].'/user.php') or !file_exists($GLOBALS['dossier_config'].'/prefs.php') ) {
+	//header('Location: '.$GLOBALS['dossier_admin'].'/install.php');
+	die($GLOBALS['dossier_config']);
 }
 
 //$GLOBALS['BT_ROOT_PATH'] = '';
 
-require_once 'config/user.php';
-require_once 'config/prefs.php';
+require_once $GLOBALS['dossier_config'].'/user.php';
+require_once $GLOBALS['dossier_config'].'/prefs.php';
 require_once 'inc/lang.php';
-require_once 'inc/conf.php';
 require_once 'inc/them.php';
 require_once 'inc/fich.php';
 require_once 'inc/html.php';

@@ -11,8 +11,10 @@
 #
 # *** LICENSE ***
 
-require '../config/user.php';
-require '../config/prefs.php';
+require 'conf.php';
+
+require '../'.$GLOBALS['dossier_config'].'/user.php';
+require '../'.$GLOBALS['dossier_config'].'/prefs.php';
 require 'lang.php';
 require 'conf.php';
 require 'them.php' ;

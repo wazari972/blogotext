@@ -18,9 +18,21 @@ if (!empty($GLOBALS['fuseau_horaire'])) {
 	date_default_timezone_set('UTC');
 }
 
+// FOLDERS (change this only if you know what you are doing...)
+$GLOBALS['dossier_admin'] = 'admin';
+$GLOBALS['dossier_backup'] = 'bt_backup/'. $_SERVER['SERVER_NAME'];
+$GLOBALS['dossier_images'] = 'img/'. $_SERVER['SERVER_NAME'];
+$GLOBALS['dossier_fichiers'] = 'files/'. $_SERVER['SERVER_NAME'];
+$GLOBALS['dossier_themes'] = 'themes';
+$GLOBALS['dossier_cache'] = 'cache';
+$GLOBALS['dossier_db'] = 'databases/'. $_SERVER['SERVER_NAME'];
+$GLOBALS['dossier_config'] = 'config/' . $_SERVER['SERVER_NAME'];
+
+include_once $GLOBALS['BT_ROOT_PATH'] . $GLOBALS['dossier_config'] . '/prefs.php';
+
 // BLOGOTEXT VERSION (do not change it)
 $GLOBALS['version'] = '2.1.0.0';
-$GLOBALS['last-online-file'] = '../config/version.txt';
+$GLOBALS['last-online-file'] = '../'.$GLOBALS['dossier_config'].'/version.txt';
 
 // MINIMAL REQUIRED PHP VERSION
 $GLOBALS['minimal_php_version'] = '5.3';
@@ -29,22 +41,11 @@ $GLOBALS['minimal_php_version'] = '5.3';
 $GLOBALS['nom_application']= 'BlogoText';
 $GLOBALS['appsite']= 'http://lehollandaisvolant.net/blogotext/';
 $GLOBALS['date_premier_message_blog'] = '199701';
-$GLOBALS['salt']= '123456'; // if changed : delete /config/user.php file and proceed to a re-installation. No data loss.
+$GLOBALS['salt']= '123456'; // if changed : delete /.$GLOBALS['dossier_config'].'/user.php file and proceed to a re-installation. No data loss.
 $GLOBALS['show_errors'] = -1; // -1 = all (for dev) ; 0 = none (recommended)
-
-// FOLDERS (change this only if you know what you are doing...)
-$GLOBALS['dossier_admin'] = 'admin';
-$GLOBALS['dossier_backup'] = 'bt_backup';
-$GLOBALS['dossier_images'] = 'img';
-$GLOBALS['dossier_fichiers'] = 'files';
-$GLOBALS['dossier_themes'] = 'themes';
-$GLOBALS['dossier_cache'] = 'cache';
-$GLOBALS['dossier_db'] = 'databases';
-$GLOBALS['dossier_config'] = 'config';
 
 $GLOBALS['db_location'] = 'database.sqlite';    // data storage file (for sqlite)
 $GLOBALS['fichier_liste_fichiers'] = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_db'].'/'.'files.php'; // files/image info storage.
-$GLOBALS['fichier_liste_fluxrss'] = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_db'].'/'.'rss.php'; // RSS-feeds list info storage.
 
 
 // DATABASE 'sqlite' or 'mysql' are supported yet.
@@ -54,7 +55,6 @@ if (is_file($mysql_file) and is_readable($mysql_file) and file_get_contents($mys
 } else {
 	$GLOBALS['sgdb'] = 'sqlite';
 }
-
 
 
 // regenerate captcha (always)

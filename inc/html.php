@@ -132,7 +132,7 @@ function afficher_top($titre) {
 
 function footer($index='', $begin_time='') {
 	if ($index != '') {
-		$file = '../config/ip.php';
+		$file = '../'.$GLOBALS['dossier_config'].'/ip.php';
 		if (file_exists($file) and is_readable($file)) {
 			include($file);
 			$new_ip = htmlspecialchars($_SERVER['REMOTE_ADDR']);

@@ -11,19 +11,22 @@
 #
 # *** LICENSE ***
 
-if ( file_exists('../config/mysql.php') and file_get_contents('../config/mysql.php') == '' ) {
+$GLOBALS['BT_ROOT_PATH'] = '../';
+include_once '../inc/conf.php';
+
+if ( file_exists('../'.$GLOBALS['dossier_config'].'/mysql.php') and file_get_contents('../'.$GLOBALS['dossier_config'].'/mysql.php') == '' ) {
 	$step3 = TRUE;
 } else {
 	$step3 = FALSE;
 }
 
-if ( (file_exists('../config/user.php')) and (file_exists('../config/prefs.php')) and $step3 === FALSE) {
+if ( (file_exists('../'.$GLOBALS['dossier_config'].'/user.php')) and (file_exists('../'.$GLOBALS['dossier_config'].'/prefs.php')) and $step3 === FALSE) {
 	header('Location: auth.php');
 	exit;
 }
 $GLOBALS['BT_ROOT_PATH'] = '../';
-if (file_exists('../config/user.php')) { include('../config/user.php'); }
-if (file_exists('../config/prefs.php')) { include('../config/prefs.php'); }
+if (file_exists('../'.$GLOBALS['dossier_config'].'/user.php')) { include('../'.$GLOBALS['dossier_config'].'/user.php'); }
+if (file_exists('../'.$GLOBALS['dossier_config'].'/prefs.php')) { include('../'.$GLOBALS['dossier_config'].'/prefs.php'); }
 
 
 if (isset($_GET['l'])) {
@@ -36,7 +39,6 @@ if (isset($_GET['l'])) {
 
 }
 
-require_once '../inc/conf.php';
 error_reporting($GLOBALS['show_errors']); // MUST be after including "conf.php"...
 require_once '../inc/lang.php';
 require_once '../inc/html.php';
@@ -72,7 +74,7 @@ if ($GLOBALS['step'] == '1') {
 		if ($err_2 = valid_install_2()) {
 				afficher_form_2($err_2);
 		} else {
-			$config_dir = '../config';
+			$config_dir = '../'.$GLOBALS['dossier_config'].'';
 			creer_dossier($config_dir, 1);
 			creer_dossier('../'.$GLOBALS['dossier_images'], 0);
 			creer_dossier('../'.$GLOBALS['dossier_fichiers'], 0);
@@ -220,13 +222,13 @@ function afficher_form_3($erreurs='') {
 }
 
 function traiter_install_2() {
-	$config_dir = '../config';
+	$config_dir = '../'.$GLOBALS['dossier_config'].'';
 	if (!is_file($config_dir.'/prefs.php')) fichier_prefs();
 	fichier_mysql(FALSE); // create an empty file
 }
 
 function traiter_install_3() {
-	//include('../config/prefs.php');
+	//include('../'.$GLOBALS['dossier_config'].'/prefs.php');
 	$GLOBALS['db_handle'] = open_base();
 	$time = time();
 	if ($GLOBALS['db_handle']) {

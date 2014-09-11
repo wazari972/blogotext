@@ -11,7 +11,10 @@
 #
 # *** LICENSE ***
 
-if ( !file_exists('../config/user.php') || !file_exists('../config/prefs.php') ) {
+$GLOBALS['BT_ROOT_PATH'] = '../';
+include_once '../inc/conf.php';
+
+if ( !file_exists('../'.$GLOBALS['dossier_config'].'/user.php') || !file_exists('../'.$GLOBALS['dossier_config'].'/prefs.php') ) {
 	header('Location: install.php');
 }
 

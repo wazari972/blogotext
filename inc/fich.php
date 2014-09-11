@@ -31,7 +31,7 @@ function creer_dossier($dossier, $make_htaccess='') {
 
 
 function fichier_user() {
-	$fichier_user = '../config/user.php';
+	$fichier_user = '../'.$GLOBALS['dossier_config'].'/user.php';
 	$user='';
 	if (strlen(trim($_POST['mdp'])) == 0) {
 		$new_mdp = $GLOBALS['mdp']; 
@@ -51,7 +51,7 @@ function fichier_user() {
 
 
 function fichier_prefs() {
-	$fichier_prefs = '../config/prefs.php';
+	$fichier_prefs = '../'.$GLOBALS['dossier_config'].'/prefs.php';
 	if(!empty($_POST['_verif_envoi'])) {
 		$lang = (isset($_POST['langue']) and preg_match('#^[a-z]{2}$#', $_POST['langue'])) ? $_POST['langue'] : 'fr';
 		$auteur = (clean_txt($_POST['auteur']));
@@ -154,7 +154,7 @@ function fichier_prefs() {
 }
 
 function fichier_mysql($sgdb) {
-	$fichier_mysql = '../config/mysql.php';
+	$fichier_mysql = '../'.$GLOBALS['dossier_config'].'/mysql.php';
 	$data = '';
 	if ($sgdb !== FALSE) {
 		$data .= "<?php\n";
@@ -215,7 +215,7 @@ function fichier_ip() {
 	$content .= "\$GLOBALS['old_ip'] = '".$new_ip."';\n";	
 	$content .= "\$GLOBALS['old_time'] = '".$new_time."';\n";	
 	$content .= "?>";
-	$fichier = '../config/ip.php';
+	$fichier = '../'.$GLOBALS['dossier_config'].'/ip.php';
 
 	if (file_put_contents($fichier, $content) === FALSE) {
 		return FALSE;
