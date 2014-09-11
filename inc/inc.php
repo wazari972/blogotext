@@ -11,24 +11,24 @@
 #
 # *** LICENSE ***
 
-require 'conf.php';
+require_once 'conf.php';
 
-require '../'.$GLOBALS['dossier_config'].'/user.php';
-require '../'.$GLOBALS['dossier_config'].'/prefs.php';
-require 'lang.php';
-require 'conf.php';
-require 'them.php' ;
-require 'html.php' ;
-require 'comm.php';
-require 'form.php';
-require 'fich.php';
-require 'conv.php';
-require 'veri.php';
-require 'util.php';
-require 'imgs.php';
-require 'jasc.php';
+require_once '../'.$GLOBALS['dossier_config'].'/user.php';
+require_once '../'.$GLOBALS['dossier_config'].'/prefs.php';
+require_once 'lang.php';
+require_once 'conf.php';
+require_once 'them.php' ;
+require_once 'html.php' ;
+require_once 'comm.php';
+require_once 'form.php';
+require_once 'fich.php';
+require_once 'conv.php';
+require_once 'veri.php';
+require_once 'util.php';
+require_once 'imgs.php';
+require_once 'jasc.php';
 
-require 'sqli.php';
+require_once 'sqli.php';
 
 
 ?>
