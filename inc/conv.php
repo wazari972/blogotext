@@ -151,6 +151,7 @@ function formatage_wiki($texte) {
 		'#« #',
 		'# !#',
 		'# :#',
+		'#\[med\](\S+)\.(\S+)\[/med\]#s',
 	);
 	$toreplace = array(
 		// transforme certains \r en \n
@@ -168,7 +169,7 @@ function formatage_wiki($texte) {
 		'$1<br/>'."\n",															// br : retour à la ligne sans saut de ligne
 		'<a href="$2">$1</a>',													// a href
 		'<a href="$1$2">$2</a>',												// url
-		'<img src="$1" alt="$3" />',														// img
+		'<a href="$1" target="_blank"><img src="[med]$1[/med]" alt="$3"></a>',										// img
 		'<span style="font-weight: bold;">$1</span>',					// strong
 		'<span style="font-style: italic;">$1</span>',					// italic
 		'<span style="text-decoration: line-through;">$1</span>',	// barre
@@ -187,15 +188,16 @@ function formatage_wiki($texte) {
 		'«&nbsp;',
 		'&nbsp;!',
 		'&nbsp;:',
+		'$1-med.jpg', // ext=$2
 	);
-
+	
 	// un array des balises [code] avant qu’ils ne soient modifiées par le preg_replace($tofind, $toreplace, $texte);
 	// il met en mémoire le contenu des balises [code] tels quelles
 	$nb_balises_code_avant = preg_match_all('#\[code\](.*?)\[/code\]#s', $texte, $balises_code, PREG_SET_ORDER);
 
 	// formate tout sauf les [code]
 	$texte_formate = preg_replace($tofind, $toreplace, $texte);
-
+	
 	// remplace les balises [codes] modifiées par la balise code non formatée et précédement mises en mémoire.
 	// ceci permet de formater l’ensemble du message, sauf les balises [code],
 	if ($nb_balises_code_avant) {

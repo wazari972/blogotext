@@ -49,6 +49,21 @@ function chemin_thb_img_test($filepath) {
 }
 
 
+function chemin_med_img($filepath) {
+	$ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
+	// prend le nom, supprime l’extension et le point, ajoute le " -thb.jpg ", puisque les miniatures de BT sont en JPG.
+	$miniature = substr($filepath, 0, -(strlen($ext)+1)).'-med.jpg'; // "+1" is for the "." between name and ext.
+	return $miniature;
+}
+
+function chemin_med_img_test($filepath) {
+	$thb = chemin_med_img($filepath);
+	if (file_exists($thb)) {
+		return $thb;
+	} else {
+		return $filepath;
+	}
+}
 /*
 	Pour les vignettes dans le mur d’images.
 	Avec en entrée le tableau contenant les images, retourne le HTML + JSON du mur d’image.
@@ -129,45 +144,61 @@ function afficher_liste_images($images) {
 	echo $out;
 }
 
-
 // filepath : image to create a thumbnail from
 function create_thumbnail($filepath) {
 	// if GD library is not loaded by PHP, abord. Thumbnails are not required.
 	if (!extension_loaded('gd')) return;
-	$maxwidth = '160';
-	$maxheight = '160';
+	
 	$ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
 
 	// largeur et hauteur maximale
 	// Cacul des nouvelles dimensions
 	list($width_orig, $height_orig) = getimagesize($filepath);
 	if ($width_orig == 0 or $height_orig == 0) return;
-	if ($maxwidth and ($width_orig < $height_orig)) {
-		$maxwidth = ($maxheight / $height_orig) * $width_orig;
-	} else {
-		$maxheight = ($maxwidth / $width_orig) * $height_orig;
+
+	$loop = 0;
+	while ($loop !== 2) {
+	  if ($loop == 0) {
+	    $maxwidth = '160';
+	    $maxheight = '160';
+	    $destination = chemin_thb_img($filepath); // construit le nom de fichier de la miniature
+	    $quality = 70;
+	    
+	  } else if ($loop == 1) {
+	    $maxwidth = '1024';
+	    $maxheight = '1024';
+
+	    $destination = chemin_med_img($filepath); // construit le nom de fichier de la miniature
+	    $quality = 70;
+	  }
+
+	  $loop++;
+	  
+	  if ($maxwidth and ($width_orig < $height_orig)) {
+	    $maxwidth = ($maxheight / $height_orig) * $width_orig;
+	  } else {
+	    $maxheight = ($maxwidth / $width_orig) * $height_orig;
+	  }
+
+	  // open file with correct format
+	  $thumb = imagecreatetruecolor($maxwidth, $maxheight);
+	  imagefill($thumb, 0, 0, imagecolorallocate($thumb, 255, 255, 255));
+	  switch ($ext) {
+	    case 'jpeg':
+	    case 'jpg': $image = imagecreatefromjpeg($filepath); break;
+	    case 'png': $image = imagecreatefrompng($filepath); break;
+	    case 'gif': $image = imagecreatefromgif($filepath); break;
+	    default : return;
+	  }
+
+	  // resize
+	  imagecopyresampled($thumb, $image, 0, 0, 0, 0, $maxwidth, $maxheight, $width_orig, $height_orig);
+	  imagedestroy($image);
+
+	  // enregistrement en JPG (meilleur compression) des miniatures
+	  imagejpeg($thumb, $destination, $quality); // compression à $quality %
+	  imagedestroy($thumb);
 	}
-
-	// open file with correct format
-	$thumb = imagecreatetruecolor($maxwidth, $maxheight);
-	imagefill($thumb, 0, 0, imagecolorallocate($thumb, 255, 255, 255));
-	switch ($ext) {
-		case 'jpeg':
-		case 'jpg': $image = imagecreatefromjpeg($filepath); break;
-		case 'png': $image = imagecreatefrompng($filepath); break;
-		case 'gif': $image = imagecreatefromgif($filepath); break;
-		default : return;
-	}
-
-	// resize
-	imagecopyresampled($thumb, $image, 0, 0, 0, 0, $maxwidth, $maxheight, $width_orig, $height_orig);
-	imagedestroy($image);
-
-	// enregistrement en JPG (meilleur compression) des miniatures
-	$destination = chemin_thb_img($filepath); // construit le nom de fichier de la miniature
-	imagejpeg($thumb, $destination, 70); // compression à 70%
-	imagedestroy($thumb);
-
 }
 
 // TRAITEMENT DU FORMAULAIRE D’ENVOIE DE FICHIER (ENVOI, ÉDITION, SUPPRESSION)
@@ -277,6 +308,7 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 					if ($fichier['bt_type'] == 'image') {
 						if ( ($old_thb = chemin_thb_img_test($dossier.'/'.$old_filename)) != $dossier.'/'.$old_filename ) {
 							rename($old_thb, chemin_thb_img($dossier.'/'.$new_filename));
+							rename(chemin_med_img($dossier.'/'.$old_filename), chemin_med_img($dossier.'/'.$new_filename));
 						} else {
 							create_thumbnail($dossier.'/'.$new_filename);
 						}
@@ -317,6 +349,7 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 					if (TRUE === unlink($dossier.'/'.$fichier['bt_filename'])) { // fichier physique effacé
 						if ($fichier['bt_type'] == 'image') { // supprimer aussi la miniature si elle existe.
 							@unlink(chemin_thb_img($dossier.'/'.$fichier['bt_filename'])); // supprime la thumbnail si y’a
+							@unlink(chemin_img_img($dossier.'/'.$fichier['bt_filename'])); // supprime la thumbnail si y’a
 						}
 						unset($GLOBALS['liste_fichiers'][$tbl_id]); // efface le fichier dans la liste des fichiers.
 						$GLOBALS['liste_fichiers'] = tri_selon_sous_cle($GLOBALS['liste_fichiers'], 'bt_id');
