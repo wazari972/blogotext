@@ -1,0 +1,40 @@
+<div id="posts">
+	<article class="post itembloc">
+		<hgroup class="post-hgr article-hgr">
+			<h2 class="art_titre"><a href="{article_lien}" title="{article_chapo}">{article_titre}</a></h2>
+		</hgroup>
+		<div class="post-cnt article-cnt">
+			{article_contenu}
+			<p class="clearboth"></p>
+		</div>
+		<footer class="post-ftr article-ftr">
+			<p class="art-date">{article_date} - <a href="{article_lien}#comments">{nombre_commentaires}</a></p>
+			<p class="tags">Publié dans&nbsp;: {article_tags}</p>
+		</footer>
+	</article>
+
+
+<div class="comments" id="comments">
+<!-- commentaire -->
+{BOUCLE_commentaires}
+	<div class="comment itembloc" id="{commentaire_ancre}">
+		<hgroup class="post-hgr commentaire-hgr">
+			<h2 class="com_titre">{commentaire_auteur_lien} :</h2>
+		</hgroup>
+		<div class="post-cnt commentaire-cnt">
+			{commentaire_contenu}
+		</div>
+		<footer class="post-ftr commentaire-ftr">
+			<p class="com-reply"><a href="#form-commentaire" onclick="reply('[b]@[{commentaire_auteur}|#{commentaire_ancre}] :[/b] ');">@répondre</a> <a href="#{commentaire_ancre}">#lien</a></p>
+			<h3 class="com_date">le {commentaire_date} à {commentaire_heure}</h3>
+		</footer>
+	</div>
+{/BOUCLE_commentaires}
+
+<div id="postcom">
+{formulaire_commentaire}
+</div>
+<!-- commentaire -->
+</div><!-- end commentS -->
+
+</div> <!-- end #posts-->
