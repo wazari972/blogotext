@@ -345,6 +345,7 @@ $GLOBALS['lang'] = array(
 'pref_linx_dl_auto'				=> 'Ajouter automatiquement les fichiers partagés à vos fichiers&nbsp;?',
 'pref_ask_everytime'				=> 'Demander à chaque fois',
 'pref_check_update'				=> 'Vérifier les mises à jour automatiquement',
+'pref_old_first'                                => 'Anciens posts en premier',
 'maintenance_optim'				=> 'Nettoyer la base de données',
 // Notes
 'note_no_article'					=> 'Aucun article',

@@ -83,6 +83,7 @@ function fichier_prefs() {
 //		$linx_defaut_status = $_POST['linx_defaut_status'];
 		$auto_dl_liens_fichiers = $_POST['dl_link_to_files'];
 		$nombre_liens_admin = $_POST['nb_list_linx'];
+		$old_first = $_POST['old_first'];
 	} else {
 		$lang = (isset($_POST['langue']) and preg_match('#^[a-z]{2}$#', $_POST['langue'])) ? $_POST['langue'] : 'fr';
 		$auteur = clean_txt($GLOBALS['identifiant']);
@@ -145,6 +146,7 @@ function fichier_prefs() {
 //	$prefs .= "\$GLOBALS['linx_defaut_status']= '".$linx_defaut_status."';\n";
 	$prefs .= "\$GLOBALS['max_linx_admin']= '".$nombre_liens_admin."';\n";
 	$prefs .= "\$GLOBALS['dl_link_to_files']= '".$auto_dl_liens_fichiers."';\n";
+	$prefs .= "\$GLOBALS['old_first']= '".$old_first."';\n";
 	$prefs .= "?>";
 	if (file_put_contents($fichier_prefs, $prefs) === FALSE) {
 		return FALSE;
