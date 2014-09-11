@@ -262,12 +262,19 @@ else {
 	// paramètre ORDER BY (pas un paramètre, mais ajouté à la $query quand même)
 	switch ($where) {
 		case 'articles' :
-			$sql_order = "ORDER BY bt_date DESC ";
+			$sql_order = "ORDER BY bt_date ";
 			break;
 		default:
-			$sql_order = "ORDER BY bt_id DESC ";
+			$sql_order = "ORDER BY bt_id ";
 			break;
 	}
+
+        // ordre chronologique ?
+	if ($GLOBALS['old_first']) {
+          $sql_order .= "ASC ";
+        } else {
+          $sql_order .= "DESC ";
+        }
 
 	// paramètre de filtrage admin/public (pas un paramètre, mais ajouté quand même)
 	switch ($where) {
@@ -287,7 +294,7 @@ else {
 	} else {
 		$sql_p = '';
 	}
-
+        
 	// Concaténation de tout ça.
 	$glue = 'AND ';
 	if (!empty($sql_date)) {
