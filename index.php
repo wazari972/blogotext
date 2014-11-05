@@ -22,6 +22,13 @@ if (extension_loaded('zlib')) {
 else {
 	ob_start("ob_gzhandler");
 }
+
+if (strpos($_SERVER["SERVER_NAME"], "phd.kevin.pouget.me") !== false 
+ && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false) 
+{
+	header("Location: index.php?tag=work");
+	die(); 
+}
 header('Content-Type: text/html; charset=UTF-8');
 
 $begin = microtime(TRUE);
