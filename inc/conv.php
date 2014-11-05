@@ -134,9 +134,11 @@ function formatage_wiki($texte) {
 		'#\[(https?://)([^[]+)\]#',											// url
 		'#\[img\](.*?)(\|(.*?))?\[/img\]#s',								// [img]
 		'#\[b\](.*?)\[/b\]#s',													// strong
+                '#`(.*?)\`#s',													// inline-code
 		'#\[i\](.*?)\[/i\]#s',													// italic
 		'#\[s\](.*?)\[/s\]#s',													// strike
 		'#\[u\](.*?)\[/u\]#s',													// souligne
+
 		'#%%#',																		// br
 		'#\*\*(.*?)(<br/>\n|$)#s',													// ul/li (br because of prev replace)
 		'#</ul>\n<ul>#s',																// ul/li
@@ -171,7 +173,8 @@ function formatage_wiki($texte) {
 		'<a href="$1$2">$2</a>',												// url
 		'<a href="$1" target="_blank"><img src="[med]$1[/med]" alt="$3"></a>',										// img
 		'<span style="font-weight: bold;">$1</span>',					// strong
-		'<span style="font-style: italic;">$1</span>',					// italic
+                '<var>$1</var>',					// inline code
+                '<span style="font-style: italic;">$1</span>',					// italic
 		'<span style="text-decoration: line-through;">$1</span>',	// barre
 		'<span style="text-decoration: underline;">$1</span>',		// souligne
 		'<br />',																	// br
