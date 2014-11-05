@@ -48,11 +48,8 @@ if (isset($_POST['allowcookie'])) { // si cookies autorisés, conserve les champ
 }
 
 if ( !file_exists($GLOBALS['dossier_config'].'/user.php') or !file_exists($GLOBALS['dossier_config'].'/prefs.php') ) {
-	//header('Location: '.$GLOBALS['dossier_admin'].'/install.php');
-	die($GLOBALS['dossier_config']);
+	header('Location: '.$GLOBALS['dossier_admin'].'/install.php');
 }
-
-//$GLOBALS['BT_ROOT_PATH'] = '';
 
 require_once $GLOBALS['dossier_config'].'/user.php';
 require_once $GLOBALS['dossier_config'].'/prefs.php';
