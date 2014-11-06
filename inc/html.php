@@ -318,10 +318,33 @@ function encart_categories($mode) {
 		$uliste = '<ul>'."\n";
 		foreach($liste as $tag) {
 			$tagurl = urlencode(trim($tag['tag']));
-			$uliste .= "\t".'<li><a href="'.$_SERVER['PHP_SELF'].'?tag='.$tagurl.$ampmode.'" rel="tag">'.ucfirst($tag['tag']).' ('.$tag['nb'].')</a></li>'."\n";
+			$uliste .= "\t".'<li><a href="'.$_SERVER['PHP_SELF'].'?tag='.$tagurl.$ampmode.'" rel="tag" title="'.$tag['nb'].' posts">'.ucfirst($tag['tag']).'</a></li>'."\n";
 		}
 		$uliste .= '</ul>'."\n";
 		return $uliste;
+	}
+}
+
+function encart_last_posts() {
+	mb_internal_encoding('UTF-8');
+        $sql = "SELECT * FROM `articles` \n"
+          . "WHERE `bt_statut`=1\n"
+          . "ORDER BY `bt_date`\n"
+          . "DESC limit 0, 5";
+	$tableau = liste_elements($sql, array(), 'articles');
+	if (isset($tableau)) {
+		$listeLastPosts = '<ul class="encart_lastposts">'."\n";
+                foreach ($tableau as $i => $post) {
+                  $listeLastPosts .= '<li title="'.date_formate($post['bt_id'])." – ". liste_tags($post, 0).'">'.
+                          '<a href="'.$post['bt_link'].'">'.$post['bt_title'].'</a><br/>'.
+                          '</li>'."<hr/>\n";
+		}
+		$listeLastPosts .= '</ul>'
+                  . '<a href="?liste">–see all–</a>'
+                  ."\n";
+		return $listeLastPosts;
+	} else {
+		return $GLOBALS['lang']['no_comments'];
 	}
 }
 

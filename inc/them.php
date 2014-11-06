@@ -29,6 +29,8 @@ $GLOBALS['balises'] = array(
 	'racine_du_site' => '{racine_du_site}',
 	'rss' => '{rss}',
 	'rss_comments' => '{rss_comments}',
+        //perso
+        'list_polynesie' => '{list_polynesie}',
 	// Navigation
 	'pagination' => '{pagination}',
 	// Blog
@@ -44,7 +46,8 @@ $GLOBALS['balises'] = array(
 	// Encarts
 	'comm_encart' => '{commentaires_encart}',
 	'cat_encart' => '{categories_encart}',
-
+        'last_post_encart' => '{last_post_encart}',
+        
 	// Article
 	'article_titre' => '{article_titre}',
 	'article_titre_page' => '{article_titre_page}',
@@ -111,6 +114,12 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 
 	$texte = str_replace($GLOBALS['balises']['pagination'], lien_pagination(), $texte);
 
+        if (strpos($_SERVER["SERVER_NAME"], "polynesie") !== false) {
+          $texte = str_replace($GLOBALS['balises']['list_polynesie'], list_tagged_articles("polynesie", true), $texte);
+        } else {
+          $texte = str_replace($GLOBALS['balises']['list_polynesie'], "", $texte);
+        }
+
 	if (strpos($texte, $GLOBALS['balises']['form_recherche']) !== FALSE) {
 		$texte = str_replace($GLOBALS['balises']['form_recherche'], moteur_recherche(''), $texte) ;
 	}
@@ -120,7 +129,10 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 
 	// Formulaires
 	$texte = str_replace($GLOBALS['balises']['rss'], $GLOBALS['rss'], $texte);
-	$texte = str_replace($GLOBALS['balises']['comm_encart'], encart_commentaires(), $texte);
+        if (strpos($texte, $GLOBALS['balises']['last_post_encart']) !== FALSE) {
+          $texte = str_replace($GLOBALS['balises']['last_post_encart'], encart_last_posts(), $texte);
+        }
+        $texte = str_replace($GLOBALS['balises']['comm_encart'], encart_commentaires(), $texte);
 	$texte = str_replace($GLOBALS['balises']['cat_encart'], encart_categories((isset($_GET['mode']))?$_GET['mode']:''), $texte);
 	if (isset($GLOBALS['rss_comments'])) { $texte = str_replace($GLOBALS['balises']['rss_comments'], $GLOBALS['rss_comments'], $texte);}
 
@@ -185,6 +197,18 @@ function conversions_theme_lien($texte, $lien) {
 	return $texte;
 }
 
+function list_tagged_articles($tag, $first_only) {
+  if ($first_only && strpos($_SERVER["REQUEST_URI"], "?") !== false) {
+    return "";
+  }
+  
+  $query = "SELECT bt_date,bt_id,bt_title,bt_nb_comments,bt_link FROM articles "
+    . "WHERE bt_date <= ".date('YmdHis')." AND bt_statut=1 "
+    . " AND `bt_categories` LIKE '%$tag%'"
+    . "ORDER BY bt_date ASC";
+  $tableau = liste_elements($query, array(), 'articles');
+  return get_article_list($tableau);
+}
 
 // récupère le bout du fichier thème contenant une boucle comme {BOUCLE_commentaires}
 //  soit le morceau de HTML retourné est parsé à son tour pour crée le HTML de chaque commentaire ou chaque article.
@@ -269,24 +293,37 @@ function afficher_index($tableau, $type) {
 	}
 	echo $HTML;
 }
-
-// Affiche la liste des articles, avec le &liste dans l’url
-function afficher_liste($tableau) {
+function get_article_list($tableau) {
 	$HTML_elmts = '';
-	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
-	$HTML_article = conversions_theme($theme_page, array(), 'list');
+	
 	if (!empty($tableau)) {
 		$HTML_elmts .= '<ul>'."\n";
 		foreach ($tableau as $e) {
-			$short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
-			$HTML_elmts .= "\t".'<li>'.$short_date.' - <a href="'.$e['bt_link'].'">'.$e['bt_title'].'</a></li>'."\n";
+                  $short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
+                  $HTML_elmts .= "\t".'<li>'.$short_date.' - <a href="'.$e['bt_link'].'">'.$e['bt_title'].'</a></li>'."\n";
 		}
 		$HTML_elmts .= '</ul>'."\n";
+	}
+	return $HTML_elmts;
+}
+// Affiche la liste des articles, avec le &liste dans l’url
+function afficher_liste($tableau) {
+  echo get_liste($tableau);
+}
+function get_liste($tableau) {
+	$HTML_elmts = '';
+	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) {
+          die($GLOBALS['lang']['err_theme_introuvable']);
+        }
+        
+	$HTML_article = conversions_theme($theme_page, array(), 'list');
+	if (!empty($tableau)) {
+                $HTML_elmts = get_article_list($tableau);
 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
 	}
 	else {
 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $GLOBALS['lang']['note_no_article'], $HTML_article);
 	}
-	echo $HTML;
+	return $HTML;
 }
 

@@ -24,7 +24,8 @@ else {
 }
 
 if (strpos($_SERVER["SERVER_NAME"], "phd.kevin.pouget.me") !== false 
- && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false) 
+ && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
+ && strpos($_SERVER["REQUEST_URI"], "?") === false ) 
 {
 	header("Location: index.php?tag=work");
 	die(); 
