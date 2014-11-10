@@ -235,7 +235,7 @@ pre {
 }
 
 .quote, blockquote, q {
-	font-style: italic;
+/*	font-style: italic;*/
 	padding: 10px;
 	text-align: justify;
 	border-radius: 5px;
