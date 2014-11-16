@@ -69,20 +69,30 @@ if ($post != '') {
 	echo '<div id="subnav">'."\n";
 		echo '<p>';
 		echo '<a href="'.$post['bt_link'].'">'.$GLOBALS['lang']['lien_article'].'</a> &nbsp; – &nbsp; ';
-		echo '<a href="commentaires.php?post_id='.$article_id.'">'.ucfirst(nombre_commentaires($post['bt_nb_comments'])).'</a>';
+		echo '<a href="commentaires.php?post_id='.$article_id.'">'.ucfirst(nombre_commentaires($post['bt_nb_comments'])).'</a> &nbsp; – &nbsp; ';
+                if (isset($_GET['md'])) {
+                  echo '<a href="?post_id='.$article_id.'">Editeur Wiki</a>';
+                } else {
+                  echo '<a href="?post_id='.$article_id.'&md">Editeur Markdown</a>';
+                }
 		echo '</p>'."\n";
 	echo '</div>'."\n";
 }
 
 echo '<div id="page">'."\n";
 
-// EDIT
-if ($post != '') {
-	apercu($post);
-}
-afficher_form_billet($post, $erreurs_form);
+if (isset($_GET['md'])) {
+	afficher_form_billet_md($post, $erreurs_form);
+	echo js_alert_before_quit(1, "wmd-input");
+} else {
+	// EDIT 
+	if ($post != '') {
+		apercu($post);
+	}
+	afficher_form_billet($post, $erreurs_form);
 
-echo js_alert_before_quit(1);
+	echo js_alert_before_quit(1);
+}
 
 footer('', $begin);
 

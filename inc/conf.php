@@ -133,7 +133,12 @@ function init_list_comments($comment) {
  */
 
 function init_post_article() { //no $mode : it's always admin.
-	$formated = formatage_wiki(protect_markup(clean_txt($_POST['contenu'])));
+        if (isset($_POST['html-content'])) {
+          $formated = $_POST['html-content'];
+        } else {
+          $formated = formatage_wiki(protect_markup(clean_txt($_POST['contenu'])));
+        }
+
 	if ($GLOBALS['automatic_keywords'] == '0') {
 		$keywords = htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['mots_cles']))));
 	} else {

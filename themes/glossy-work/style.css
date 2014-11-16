@@ -212,6 +212,12 @@ h1 img {
 }
 
 /* code presentation */
+var, p code, ul code {
+    font-family:'Lucida Console', monospace;
+    background-color: #C9F4C3;
+    font-style: normal;
+}
+
 .code, pre, code {
 	font-family: monospace;
 	border-radius: 5px;
@@ -221,12 +227,6 @@ h1 img {
 	color: black;
 	white-space: pre-wrap;
         display: black;
-}
-
-var {
-    font-family:'Lucida Console', monospace;
-    background-color: #C9F4C3;
-    font-style: normal;
 }
 
 pre {

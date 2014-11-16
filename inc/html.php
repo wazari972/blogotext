@@ -14,10 +14,11 @@
 
 /// menu haut panneau admin /////////
 function afficher_menu($active) {
+        $MD_DEFAULT=True;
 	echo '<div id="nav">'."\n";
 	echo "\t".'<a href="index.php" id="lien-index"', ($active == 'index.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['label_resume'].'</a>'."\n";
 	echo "\t".'<a href="articles.php" id="lien-liste"', ($active == 'articles.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['mesarticles'].'</a>'."\n";
-	echo "\t".'<a href="ecrire.php" id="lien-nouveau"', ($active == 'ecrire.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['nouveau'].'</a>'."\n";
+	echo "\t".'<a href="ecrire.php'.($MD_DEFAULT ? "?md" : "").'" id="lien-nouveau"', ($active == 'ecrire.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['nouveau'].'</a>'."\n";
 	echo "\t".'<a href="commentaires.php" id="lien-lscom"', ($active == 'commentaires.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['titre_commentaires'].'</a>'."\n";
 	echo "\t".'<a href="fichiers.php" id="lien-fichiers"', ($active == 'fichiers.php') ? ' class="current"' : '', '>'.ucfirst($GLOBALS['lang']['label_fichiers']).'</a>'."\n";
 	if ($GLOBALS['onglet_liens'])
@@ -429,7 +430,8 @@ function afficher_liste_articles($tableau) {
 			// ICONE SELON STATUT
 			$out .= "\t".'<li>'."\n";
 			// TITRE
-			$out .= "\t\t".'<span><span class="'.( ($article['bt_statut'] == '1') ? 'on' : 'off').'"></span>'.'<a href="ecrire.php?post_id='.$article['bt_id'].'" title="'.trim($article['bt_abstract']).'">'.$article['bt_title'].'</a>'.'</span>'."\n";
+                        $MD_DEFAULT = False;
+			$out .= "\t\t".'<span><span class="'.( ($article['bt_statut'] == '1') ? 'on' : 'off').'"></span>'.'<a href="ecrire.php?post_id='.$article['bt_id'].($MD_DEFAULT ? "&md" : "").'" title="'.trim($article['bt_abstract']).'">'.$article['bt_title'].'</a>'.'</span>'."\n";
 			// DATE
 			$out .= "\t\t".'<span><a href="'.$_SERVER['PHP_SELF'].'?filtre='.substr($article['bt_date'],0,8).'">'.date_formate($article['bt_date']).'</a> - '.heure_formate($article['bt_date']).'</span>'."\n";
 			// NOMBRE COMMENTS

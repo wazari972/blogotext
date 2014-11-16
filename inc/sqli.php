@@ -246,6 +246,10 @@ function traiter_form_billet($billet) {
 	}
 	if ($result === TRUE) {
 		rafraichir_cache();
+                if (isset($_GET['md'])) {
+                  $redir .= "&md";
+                }
+                
 		redirection($redir);
 	}
 	else { die($result); }

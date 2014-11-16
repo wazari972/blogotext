@@ -248,13 +248,13 @@ function ask_suppr(button) {
 }
 
 
-function js_alert_before_quit($a) {
-$sc = '
-var contenuLoad = document.getElementById("contenu").value;
+function js_alert_before_quit($a, $textareaId="contenu") {
+  $sc = '
+var contenuLoad = document.getElementById("'.$textareaId.'").value;
 window.addEventListener("beforeunload", function (e) {
 	// From https://developer.mozilla.org/en-US/docs/Web/Reference/Events/beforeunload
 	var confirmationMessage = \''.$GLOBALS['lang']['question_quit_page'].'\';
-	if(document.getElementById("contenu").value == contenuLoad) { confirmationMessage = null };
+	if(document.getElementById("'.$textareaId.'").value == contenuLoad) { confirmationMessage = null };
 	(e || window.event).returnValue = confirmationMessage || \'\' ;	//Gecko + IE ; Gecko show popup if "null" but not if empty str,
 	return confirmationMessage;													// Webkit.
 });

@@ -465,7 +465,7 @@ function afficher_form_link($step, $erreurs, $editlink='') {
 	return $form;
 }
 
-/// formulaires BILLET //////////
+
 function afficher_form_billet($article, $erreurs) {
 	function s_color($color) {
 		return '<button type="button" onclick="insertTag(\'[color='.$color.']\',\'[/color]\',\'contenu\');"><span style="background:'.$color.';"></span></button>';
@@ -604,7 +604,7 @@ function afficher_form_billet($article, $erreurs) {
 			echo '</span>'."\n";
 		echo '</div>'."\n";
 
-    echo '</div>'."\n";
+                echo '</div>'."\n";
 	echo '<p class="centrer">'."\n";
 	echo '<input class="submit blue-square" type="submit" name="enregistrer" onclick="contenuLoad=document.getElementById(\'contenu\').value" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />'."\n";
 	if ($article) {
@@ -617,6 +617,117 @@ function afficher_form_billet($article, $erreurs) {
 	echo hidden_input('_verif_envoi', '1');
 	echo hidden_input('token', new_token());
 
+	echo '</form>'."\n";
+}
+
+
+function afficher_form_billet_md($article, $erreurs) {
+	if ($article != '') {
+		$defaut_jour = $article['jour'];
+		$defaut_mois = $article['mois'];
+		$defaut_annee = $article['annee'];
+		$defaut_heure = $article['heure'];
+		$defaut_minutes = $article['minutes'];
+		$defaut_secondes = $article['secondes'];
+		$titredefaut = $article['bt_title'];
+		// abstract : s’il est vide, il est regénéré à l’affichage, mais reste vide dans la BDD)
+		$chapodefaut = get_entry($GLOBALS['db_handle'], 'articles', 'bt_abstract', $article['bt_id'], 'return');
+		$notesdefaut = $article['bt_notes'];
+		$categoriesdefaut = $article['bt_categories'];
+		$contenudefaut = htmlspecialchars($article['bt_wiki_content']);
+		$motsclesdefaut = $article['bt_keywords'];
+		$statutdefaut = $article['bt_statut'];
+		$allowcommentdefaut = $article['bt_allow_comments'];
+	} else {
+		$defaut_jour = date('d');
+		$defaut_mois = date('m');
+		$defaut_annee = date('Y');
+		$defaut_heure = date('H');
+		$defaut_minutes = date('i');
+		$defaut_secondes = date('s');
+		$chapodefaut = '';
+		$contenudefaut = '';
+		$motsclesdefaut = '';
+		$categoriesdefaut = '';
+		$titredefaut = '';
+		$notesdefaut = '';
+		$statutdefaut = '1';
+		$allowcommentdefaut = '1';
+	}
+	if ($erreurs) {
+          echo erreurs($erreurs);
+	}
+        
+	if (isset($article['bt_id'])) {
+          echo '<form id="form-ecrire" method="post" onsubmit="return moveTag();" action="'.$_SERVER['PHP_SELF'].'?md&post_id='.$article['bt_id'].'" >'."\n";
+	} else {
+          echo '<form id="form-ecrire" method="post" onsubmit="return moveTag();" action="'.$_SERVER['PHP_SELF'].'?md" >'."\n";
+	}
+        
+        echo '<input id="titre" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" class="text" spellcheck="true" />'."\n" ;
+	echo '<div id="chapo_note">'."\n";
+	echo '<div id="blocchapo">'."\n";
+        echo '<textarea id="chapo" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" class="text" >'.$chapodefaut.'</textarea>'."\n" ;
+	echo '</div>'."\n";
+	echo '<div id="blocnote">'."\n";
+        echo '<textarea id="notes" name="notes" rows="5" cols="30" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_notes']).'" tabindex="40" class="text" >'.$notesdefaut.'</textarea>'."\n" ;
+	echo '</div>'."\n";
+	echo '</div>'."\n";
+        echo '
+        <link rel="stylesheet" type="text/css" href="../pagedown/article.css" />
+        <script type="text/javascript" src="../pagedown/Markdown.Converter.js"></script>
+        <script type="text/javascript" src="../pagedown/Markdown.Sanitizer.js"></script>
+        <script type="text/javascript" src="../pagedown/Markdown.Editor.js"></script>
+        
+        <div class="wmd-panel">
+            <div id="wmd-button-bar"></div>
+            <textarea class="wmd-input" id="wmd-input" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
+            <textarea class="wmd-input " id="wmd-output" name="html-content"></textarea>
+';
+
+	echo form_categories_links('articles', $categoriesdefaut);
+	echo "\t".'<input list="htmlListTags" type="text" class="text" id="type_tags" name="tags" onkeydown="chkHit(event);" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'" tabindex="65"/>'."\n";
+	echo "\t".'<input type="hidden" id="categories" name="categories" value="" />'."\n";
+
+	if ($GLOBALS['automatic_keywords'] == '0') {
+          echo '<div><input id="mots_cles" name="mots_cles" type="text" size="50" value="'.$motsclesdefaut.'" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_motscle']).'" tabindex="67" class="text" /></div>'."\n";
+	}
+
+	echo '<div id="date-and-opts">'."\n";
+	echo '<div id="date">'."\n";
+        echo '<span id="formdate">'."\n";
+        form_annee($defaut_annee);
+        form_mois($defaut_mois);
+        form_jour($defaut_jour);
+        echo '</span>'."\n\n";
+        echo '<span id="formheure">';
+        form_heure($defaut_heure, $defaut_minutes, $defaut_secondes);
+        echo '</span>'."\n";
+        echo '</div>'."\n";
+        echo '<div id="opts">'."\n";
+        echo '<span id="formstatut">'."\n";
+        form_statut($statutdefaut);
+        echo '</span>'."\n";
+        echo '<span id="formallowcomment">'."\n";
+        form_allow_comment($allowcommentdefaut);
+        echo '</span>'."\n";
+        echo '</div>'."\n";
+        
+        echo '</div>'."\n";
+	echo '<p class="centrer">'."\n";
+	echo '<input class="submit blue-square" type="submit" name="enregistrer" onclick="contenuLoad=document.getElementById(\'wmd-input\').value" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />'."\n";
+	if ($article) {
+          echo '<input class="submit red-square" type="submit" name="supprimer" value="'.$GLOBALS['lang']['supprimer'].'" onclick="contenuLoad = document.getElementById(\'wmd-input\').value; return window.confirm(\''.$GLOBALS['lang']['question_suppr_article'].'\')" />'."\n";
+          echo hidden_input('article_id', $article['bt_id']);
+          echo hidden_input('article_date', $article['bt_date']);
+          echo hidden_input('ID', $article['ID']);
+	}
+	echo '</p>'."\n";
+	echo hidden_input('_verif_envoi', '1');
+	echo hidden_input('token', new_token());
+        echo '<div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+<script type="text/javascript" src="../pagedown/Markdown.Blogotext.js"></script>';
+        echo '</div>'."\n";
 	echo '</form>'."\n";
 }
 // FIN AFFICHER_FORM_BILLET
