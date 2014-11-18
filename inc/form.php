@@ -682,7 +682,7 @@ function afficher_form_billet_md($article, $erreurs) {
         <div class="wmd-panel">
             <div id="wmd-button-bar"></div>
             <textarea class="wmd-input" id="wmd-input" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
-            <textarea class="wmd-input " id="wmd-output" name="html-content"></textarea>
+            <textarea class="wmd-input nodisplay" id="wmd-output" name="html-content"></textarea>
 ';
 
 	echo form_categories_links('articles', $categoriesdefaut);
