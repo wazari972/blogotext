@@ -831,7 +831,7 @@ else
                 result = "<a href=\"" + url + "\" title=\"" + title + "\"  ><img src=\"" + img_url + "\" alt=\"" + alt_text + "\"";
             }
             
-
+            if (!title) title = alt_text;
             // attacklab: Markdown.pl adds empty title attributes to images.
             // Replicate this bug.
 

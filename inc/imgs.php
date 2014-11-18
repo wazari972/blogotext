@@ -477,9 +477,9 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 	elseif (!empty($fichiers) and isset($_GET['file_id']) and preg_match('/\d{14}/',($_GET['file_id']))) {
 
 		if ($fichiers[0]['bt_type'] == 'image') {
-			$dossier = $GLOBALS['racine'].$GLOBALS['dossier_images'];
+			$dossier = "/".$GLOBALS['dossier_images'];
 		} else {
-			$dossier = $GLOBALS['racine'].$GLOBALS['dossier_fichiers'];
+			$dossier = "/".$GLOBALS['dossier_fichiers'];
 		}
 
 		$form .= '<fieldset class="edit-fichier">'."\n";
@@ -514,11 +514,11 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 		// la partie des codes d’intégration (bbcode, etc.)
 		$form .= '<p>'.ucfirst('codes d’intégration :').'</p>'."\n";
 		$form .= '<p id="interg-codes">'."\n";
-		$form .= '<input onfocus="SelectAllText(\'file_url\')" id="file_url" class="text" type="text" value=\''.$dossier.'/'.$fichiers[0]['bt_filename'].'\' />'."\n";
+		$form .= '<input onfocus="SelectAllText(\'file_url\')" id="file_url" class="text" type="text" value=\''.$GLOBALS['racine'].$GLOBALS['racine'].$dossier.'/'.$fichiers[0]['bt_filename'].'\' />'."\n";
 		if ($fichiers[0]['bt_type'] == 'image') { // si le fichier est une image, on ajout BBCode pour [IMG] et le code en <img/>
-			$form .= '<input onfocus="SelectAllText(\'image_html\')" id="image_html" class="text" type="text" value=\'<img src="'.$dossier.'/'.$fichiers[0]['bt_filename'].'" alt="" width="'.$fichiers[0]['bt_dim_w'].'" height="'.$fichiers[0]['bt_dim_h'].'" style="max-width: 100%; height: auto;" />\' />'."\n";
-			$form .= '<input onfocus="SelectAllText(\'image_bbcode_img\')" id="image_bbcode_img" class="text" type="text" value=\'[img]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/img]\' />'."\n";
-			$form .= '<input onfocus="SelectAllText(\'image_bbcode_img_spl\')" id="image_bbcode_img_spl" class="text" type="text" value=\'[spoiler][img]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/img][/spoiler]\' />'."\n";
+                        $form .= 'Markdown <input onfocus="SelectAllText(\'image_bbcode_img_spl\')" id="image_bbcode_img_spl" class="text" type="text" value=\'![title]('.$dossier.'/'.$fichiers[0]['bt_filename'].')\' />'."\n";
+			$form .= 'Image sans redimension: <input onfocus="SelectAllText(\'image_html\')" id="image_html" class="text" type="text" value=\'<img src="'.$dossier.'/'.$fichiers[0]['bt_filename'].'" alt="" width="'.$fichiers[0]['bt_dim_w'].'" height="'.$fichiers[0]['bt_dim_h'].'" style="max-width: 100%; height: auto;" />\' />'."\n";
+			$form .= 'Wiki: <input onfocus="SelectAllText(\'image_bbcode_img\')" id="image_bbcode_img" class="text" type="text" value=\'[img]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/img]\' />'."\n";
 		} else {
 			$form .= '<input onfocus="SelectAllText(\'file_html\')" id="file_html" class="text" type="text" value=\'<a href="'.$dossier.'/'.$fichiers[0]['bt_filename'].'" />'.$fichiers[0]['bt_filename'].'</a>\' />'."\n";
 			$form .= '<input onfocus="SelectAllText(\'fichier_bbcode_url\')" id="fichier_bbcode_url" class="text" type="text" value=\'[url]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/url]\' />'."\n";
