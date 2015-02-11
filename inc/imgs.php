@@ -4,7 +4,7 @@
 # http://lehollandaisvolant.net/blogotext/
 #
 # 2006      Frederic Nassar.
-# 2010-2014 Timo Van Neerden <timo@neerden.eu>
+# 2010-2015 Timo Van Neerden <timo@neerden.eu>
 #
 # BlogoText is free software.
 # You can redistribute it under the terms of the MIT / X11 Licence.
@@ -144,17 +144,24 @@ function afficher_liste_images($images) {
 	echo $out;
 }
 
+
 // filepath : image to create a thumbnail from
 function create_thumbnail($filepath) {
 	// if GD library is not loaded by PHP, abord. Thumbnails are not required.
 	if (!extension_loaded('gd')) return;
-	
+	$maxwidth = '160';
+	$maxheight = '160';
 	$ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
 
 	// largeur et hauteur maximale
 	// Cacul des nouvelles dimensions
 	list($width_orig, $height_orig) = getimagesize($filepath);
 	if ($width_orig == 0 or $height_orig == 0) return;
+	if ($maxwidth and ($width_orig < $height_orig)) {
+		$maxwidth = ($maxheight / $height_orig) * $width_orig;
+	} else {
+		$maxheight = ($maxwidth / $width_orig) * $height_orig;
+	}
 
 	$loop = 0;
 	while ($loop !== 2) {
@@ -180,25 +187,26 @@ function create_thumbnail($filepath) {
 	    $maxheight = ($maxwidth / $width_orig) * $height_orig;
 	  }
 
-	  // open file with correct format
-	  $thumb = imagecreatetruecolor($maxwidth, $maxheight);
-	  imagefill($thumb, 0, 0, imagecolorallocate($thumb, 255, 255, 255));
-	  switch ($ext) {
-	    case 'jpeg':
-	    case 'jpg': $image = imagecreatefromjpeg($filepath); break;
-	    case 'png': $image = imagecreatefrompng($filepath); break;
-	    case 'gif': $image = imagecreatefromgif($filepath); break;
-	    default : return;
-	  }
-
-	  // resize
-	  imagecopyresampled($thumb, $image, 0, 0, 0, 0, $maxwidth, $maxheight, $width_orig, $height_orig);
-	  imagedestroy($image);
-
-	  // enregistrement en JPG (meilleur compression) des miniatures
-	  imagejpeg($thumb, $destination, $quality); // compression à $quality %
-	  imagedestroy($thumb);
+	// open file with correct format
+	$thumb = imagecreatetruecolor($maxwidth, $maxheight);
+	imagefill($thumb, 0, 0, imagecolorallocate($thumb, 255, 255, 255));
+	switch ($ext) {
+		case 'jpeg':
+		case 'jpg': $image = imagecreatefromjpeg($filepath); break;
+		case 'png': $image = imagecreatefrompng($filepath); break;
+		case 'gif': $image = imagecreatefromgif($filepath); break;
+		default : return;
 	}
+
+	// resize
+	imagecopyresampled($thumb, $image, 0, 0, 0, 0, $maxwidth, $maxheight, $width_orig, $height_orig);
+	imagedestroy($image);
+
+	// enregistrement en JPG (meilleur compression) des miniatures
+	$destination = chemin_thb_img($filepath); // construit le nom de fichier de la miniature
+	imagejpeg($thumb, $destination, 70); // compression à 70%
+	imagedestroy($thumb);
+   }
 }
 
 // TRAITEMENT DU FORMAULAIRE D’ENVOIE DE FICHIER (ENVOI, ÉDITION, SUPPRESSION)
@@ -214,7 +222,7 @@ function traiter_form_fichier($fichier) {
 			$new_fichier = bdd_fichier($fichier, 'ajout-nouveau', 'download', $_POST['fichier']);
 		}
 		$fichier = (is_null($new_fichier)) ? $fichier : $new_fichier;
-		redirection($_SERVER['PHP_SELF'].'?file_id='.$fichier['bt_id'].'&msg=confirm_fichier_ajout');
+		redirection(basename($_SERVER['PHP_SELF']).'?file_id='.$fichier['bt_id'].'&msg=confirm_fichier_ajout');
 	}
 	// édition d’une entrée d’un fichier
 	elseif ( isset($_POST['editer']) and !isset($_GET['suppr']) ) {
@@ -225,11 +233,11 @@ function traiter_form_fichier($fichier) {
 	elseif ( (isset($_POST['supprimer']) and preg_match('#^\d{14}$#', $_POST['file_id'])) ) {
 		$response = bdd_fichier($fichier, 'supprimer-existant', '', $_POST['file_id']);
 		if ($response == 'error_suppr_file_suppr_error') {
-			redirection($_SERVER['PHP_SELF'].'?errmsg=error_fichier_suppr&what=file_suppr_error');
+			redirection(basename($_SERVER['PHP_SELF']).'?errmsg=error_fichier_suppr&what=file_suppr_error');
 		} elseif ($response == 'no_such_file_on_disk') {
-			redirection($_SERVER['PHP_SELF'].'?msg=error_fichier_suppr&what=but_no_such_file_on_disk2');
+			redirection(basename($_SERVER['PHP_SELF']).'?msg=error_fichier_suppr&what=but_no_such_file_on_disk2');
 		} elseif ($response == 'success') {
-			redirection($_SERVER['PHP_SELF'].'?msg=confirm_fichier_suppr');
+			redirection(basename($_SERVER['PHP_SELF']).'?msg=confirm_fichier_suppr');
 		}
 	}
 }
@@ -267,7 +275,7 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 				if (move_uploaded_file($new_file, $dossier.'/'. $dest) ) {
 					$fichier['bt_checksum'] = sha1_file($dossier.'/'. $dest);
 				} else {
-					redirection($_SERVER['PHP_SELF'].'?errmsg=error_fichier_ajout_2');
+					redirection(basename($_SERVER['PHP_SELF']).'?errmsg=error_fichier_ajout_2');
 					exit;
 				}
 			}
@@ -275,7 +283,7 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 			elseif ( $comment == 'download' and copy($sup_var, $dossier.'/'. $dest) ) {
 				$fichier['bt_filesize'] = filesize($dossier.'/'. $dest);
 			} else {
-				redirection($_SERVER['PHP_SELF'].'?errmsg=error_fichier_ajout');
+				redirection(basename($_SERVER['PHP_SELF']).'?errmsg=error_fichier_ajout');
 				exit;
 			}
 
@@ -308,14 +316,13 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 					if ($fichier['bt_type'] == 'image') {
 						if ( ($old_thb = chemin_thb_img_test($dossier.'/'.$old_filename)) != $dossier.'/'.$old_filename ) {
 							rename($old_thb, chemin_thb_img($dossier.'/'.$new_filename));
-							rename(chemin_med_img($dossier.'/'.$old_filename), chemin_med_img($dossier.'/'.$new_filename));
 						} else {
 							create_thumbnail($dossier.'/'.$new_filename);
 						}
 					}
 				// error rename ficher
 				} else {
-					redirection($_SERVER['PHP_SELF'].'?file_id='.$fichier['bt_id'].'&errmsg=error_fichier_rename');
+					redirection(basename($_SERVER['PHP_SELF']).'?file_id='.$fichier['bt_id'].'&errmsg=error_fichier_rename');
 				}
 			}
 			list($fichier['bt_dim_w'], $fichier['bt_dim_h']) = getimagesize($dossier.'/'.$new_filename); // reupdate filesize.
@@ -329,7 +336,7 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 
 			$GLOBALS['liste_fichiers'] = tri_selon_sous_cle($GLOBALS['liste_fichiers'], 'bt_id');
 			file_put_contents($GLOBALS['fichier_liste_fichiers'], '<?php /* '.chunk_split(base64_encode(serialize($GLOBALS['liste_fichiers']))).' */'); // écrit dans le fichier, la liste
-			redirection($_SERVER['PHP_SELF'].'?file_id='.$fichier['bt_id'].'&edit&msg=confirm_fichier_edit');
+			redirection(basename($_SERVER['PHP_SELF']).'?file_id='.$fichier['bt_id'].'&edit&msg=confirm_fichier_edit');
 	}
 
 	// suppression d’un fichier (de la BDD et du disque)
@@ -344,17 +351,16 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 			}
 			// remove physical file on disk if it exists
 			if (is_file($dossier.'/'.$fichier['bt_filename']) and isset($tbl_id)) {
-				$liste_fichiers = scandir($dossier); // liste les fichiers réels dans le dossier
-				if (in_array($fichier['bt_filename'], $liste_fichiers) and !($fichier['bt_filename'] == '..' or $fichier['bt_filename'] == '.')) {
-					if (TRUE === unlink($dossier.'/'.$fichier['bt_filename'])) { // fichier physique effacé
-						if ($fichier['bt_type'] == 'image') { // supprimer aussi la miniature si elle existe.
-							@unlink(chemin_thb_img($dossier.'/'.$fichier['bt_filename'])); // supprime la thumbnail si y’a
-							@unlink(chemin_img_img($dossier.'/'.$fichier['bt_filename'])); // supprime la thumbnail si y’a
-						}
-						unset($GLOBALS['liste_fichiers'][$tbl_id]); // efface le fichier dans la liste des fichiers.
-						$GLOBALS['liste_fichiers'] = tri_selon_sous_cle($GLOBALS['liste_fichiers'], 'bt_id');
-						file_put_contents($GLOBALS['fichier_liste_fichiers'], '<?php /* '.chunk_split(base64_encode(serialize($GLOBALS['liste_fichiers']))).' */'); // enregistre la liste
-						return 'success';
+				$liste_fichiers = rm_dots_dir(scandir($dossier)); // liste les fichiers réels dans le dossier
+				if (TRUE === unlink($dossier.'/'.$fichier['bt_filename'])) { // fichier physique effacé
+					if ($fichier['bt_type'] == 'image') { // supprimer aussi la miniature si elle existe.
+						@unlink(chemin_thb_img($dossier.'/'.$fichier['bt_filename'])); // supprime la thumbnail si y’a
+						@unlink(chemin_img_img($dossier.'/'.$fichier['bt_filename'])); // supprime la thumbnail si y’a
+					}
+					unset($GLOBALS['liste_fichiers'][$tbl_id]); // efface le fichier dans la liste des fichiers.
+					$GLOBALS['liste_fichiers'] = tri_selon_sous_cle($GLOBALS['liste_fichiers'], 'bt_id');
+					file_put_contents($GLOBALS['fichier_liste_fichiers'], '<?php /* '.chunk_split(base64_encode(serialize($GLOBALS['liste_fichiers']))).' */'); // enregistre la liste
+					return 'success';
 
 					} else { // erreur effacement fichier physique
 						return 'error_suppr_file_suppr_error';
@@ -440,7 +446,7 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 	if ($erreurs) {
 		echo erreurs($erreurs);
 	}
-	$form = '<form id="form-image" class="bordered-formbloc" enctype="multipart/form-data" method="post" action="'.$_SERVER['PHP_SELF'].'">'."\n";
+	$form = '<form id="form-image" class="bordered-formbloc" enctype="multipart/form-data" method="post" action="'.basename($_SERVER['PHP_SELF']).'">'."\n";
 	
 	if (empty($fichiers)) { // si PAS fichier donnée : formulaire nouvel envoi.
 		$form .= '<fieldset class="pref" >'."\n";
@@ -477,9 +483,9 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 	elseif (!empty($fichiers) and isset($_GET['file_id']) and preg_match('/\d{14}/',($_GET['file_id']))) {
 
 		if ($fichiers[0]['bt_type'] == 'image') {
-			$dossier = "/".$GLOBALS['dossier_images'];
+			$dossier = $GLOBALS['racine'].$GLOBALS['dossier_images'];
 		} else {
-			$dossier = "/".$GLOBALS['dossier_fichiers'];
+			$dossier = $GLOBALS['racine'].$GLOBALS['dossier_fichiers'];
 		}
 
 		$form .= '<fieldset class="edit-fichier">'."\n";
@@ -514,11 +520,11 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 		// la partie des codes d’intégration (bbcode, etc.)
 		$form .= '<p>'.ucfirst('codes d’intégration :').'</p>'."\n";
 		$form .= '<p id="interg-codes">'."\n";
-		$form .= '<input onfocus="SelectAllText(\'file_url\')" id="file_url" class="text" type="text" value=\''.$GLOBALS['racine'].$GLOBALS['racine'].$dossier.'/'.$fichiers[0]['bt_filename'].'\' />'."\n";
+		$form .= '<input onfocus="SelectAllText(\'file_url\')" id="file_url" class="text" type="text" value=\''.$dossier.'/'.$fichiers[0]['bt_filename'].'\' />'."\n";
 		if ($fichiers[0]['bt_type'] == 'image') { // si le fichier est une image, on ajout BBCode pour [IMG] et le code en <img/>
-                        $form .= 'Markdown <input onfocus="SelectAllText(\'image_bbcode_img_spl\')" id="image_bbcode_img_spl" class="text" type="text" value=\'![title]('.$dossier.'/'.$fichiers[0]['bt_filename'].')\' />'."\n";
-			$form .= 'Image sans redimension: <input onfocus="SelectAllText(\'image_html\')" id="image_html" class="text" type="text" value=\'<img src="'.$dossier.'/'.$fichiers[0]['bt_filename'].'" alt="" width="'.$fichiers[0]['bt_dim_w'].'" height="'.$fichiers[0]['bt_dim_h'].'" style="max-width: 100%; height: auto;" />\' />'."\n";
-			$form .= 'Wiki: <input onfocus="SelectAllText(\'image_bbcode_img\')" id="image_bbcode_img" class="text" type="text" value=\'[img]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/img]\' />'."\n";
+			$form .= '<input onfocus="SelectAllText(\'image_html\')" id="image_html" class="text" type="text" value=\'<img src="'.$dossier.'/'.$fichiers[0]['bt_filename'].'" alt="" width="'.$fichiers[0]['bt_dim_w'].'" height="'.$fichiers[0]['bt_dim_h'].'" style="max-width: 100%; height: auto;" />\' />'."\n";
+			$form .= '<input onfocus="SelectAllText(\'image_bbcode_img\')" id="image_bbcode_img" class="text" type="text" value=\'[img]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/img]\' />'."\n";
+			$form .= '<input onfocus="SelectAllText(\'image_bbcode_img_spl\')" id="image_bbcode_img_spl" class="text" type="text" value=\'[spoiler][img]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/img][/spoiler]\' />'."\n";
 		} else {
 			$form .= '<input onfocus="SelectAllText(\'file_html\')" id="file_html" class="text" type="text" value=\'<a href="'.$dossier.'/'.$fichiers[0]['bt_filename'].'" />'.$fichiers[0]['bt_filename'].'</a>\' />'."\n";
 			$form .= '<input onfocus="SelectAllText(\'fichier_bbcode_url\')" id="fichier_bbcode_url" class="text" type="text" value=\'[url]'.$dossier.'/'.$fichiers[0]['bt_filename'].'[/url]\' />'."\n";

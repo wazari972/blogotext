@@ -173,17 +173,32 @@
 
 	/* articles list */
 
-	ul#billets li span:nth-of-type(3) {
-		width: 60px;
-		padding: 0 5px;
-		text-align: center;
-	}
-	ul#billets li span:nth-of-type(4) {
-		padding: 0 5px;
-	}
-	ul#billets li span:nth-of-type(5) {
-		padding-left: 5px;
-	}
+		ul#billets li {
+			display: block;
+		}
+
+		ul#billets li > span {
+			vertical-align: middle;
+			display: inline-block;
+		}
+
+		ul#billets li > span:first-of-type span {
+			display: inline-block;
+			height: 20px;
+			width: 20px;
+		}
+
+		ul#billets li > span:nth-of-type(1) { /*title*/			
+			display: flex;
+			align-items: center;
+			font-weight: bold;
+		}
+
+
+		ul#billets li > span:nth-of-type(3) { /*comms*/
+			margin-left: 5px;
+			margin-right: 10px;
+		}
 
 	/* graphiques */
 	#articles .month-nb {
@@ -194,5 +209,44 @@
 	/* commentaires */
 	#articles .month {
 		width: 14px;
+	}
+	.comm-link-span-title {
+		display: block;
+		text-align: left;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+	}
+	.p-edit-button {
+		text-align: right;
+	}
+	.p-edit-button button {
+		float: none;
+	}
+
+	/* paged des RSS */
+	#posts-menu {
+		text-align: center;
+		border-left: none;
+	}
+	#posts-menu button {
+		margin: 5px;
+	}
+	#message-return {
+		display: block;
+		margin: 10px auto;
+	}
+	#feed-list {
+		display: none;
+	}
+	#rss-list {
+		padding-right: 0%;
+		padding-left: 0%;
+		margin: auto 0;
+	}
+	#post-list > li {
+		padding-top: 6px;
+		padding-bottom: 6px;
 	}
 }

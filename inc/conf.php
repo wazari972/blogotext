@@ -4,7 +4,7 @@
 # http://lehollandaisvolant.net/blogotext/
 #
 # 2006      Frederic Nassar.
-# 2010-2014 Timo Van Neerden <timo@neerden.eu>
+# 2010-2015 Timo Van Neerden <timo@neerden.eu>
 #
 # BlogoText is free software.
 # You can redistribute it under the terms of the MIT / X11 Licence.
@@ -31,8 +31,8 @@ $GLOBALS['dossier_config'] = 'config/' . $_SERVER['SERVER_NAME'];
 include_once $GLOBALS['BT_ROOT_PATH'] . $GLOBALS['dossier_config'] . '/prefs.php';
 
 // BLOGOTEXT VERSION (do not change it)
-$GLOBALS['version'] = '2.1.0.0';
-$GLOBALS['last-online-file'] = '../'.$GLOBALS['dossier_config'].'/version.txt';
+$GLOBALS['version'] = '2.1.0.1';
+$GLOBALS['last-online-file'] = '../config/version.txt';
 
 // MINIMAL REQUIRED PHP VERSION
 $GLOBALS['minimal_php_version'] = '5.3';
@@ -41,11 +41,12 @@ $GLOBALS['minimal_php_version'] = '5.3';
 $GLOBALS['nom_application']= 'BlogoText';
 $GLOBALS['appsite']= 'http://lehollandaisvolant.net/blogotext/';
 $GLOBALS['date_premier_message_blog'] = '199701';
-$GLOBALS['salt']= '123456'; // if changed : delete /.$GLOBALS['dossier_config'].'/user.php file and proceed to a re-installation. No data loss.
+$GLOBALS['salt']= '123456'; // if changed : delete /config/user.php file and proceed to a re-installation. No data loss.
 $GLOBALS['show_errors'] = -1; // -1 = all (for dev) ; 0 = none (recommended)
 
 $GLOBALS['db_location'] = 'database.sqlite';    // data storage file (for sqlite)
 $GLOBALS['fichier_liste_fichiers'] = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_db'].'/'.'files.php'; // files/image info storage.
+$GLOBALS['fichier_liste_fluxrss'] = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_db'].'/'.'rss.php'; // RSS-feeds list info storage.
 
 
 // DATABASE 'sqlite' or 'mysql' are supported yet.
@@ -55,6 +56,7 @@ if (is_file($mysql_file) and is_readable($mysql_file) and file_get_contents($mys
 } else {
 	$GLOBALS['sgdb'] = 'sqlite';
 }
+
 
 
 // regenerate captcha (always)
@@ -109,7 +111,7 @@ function init_list_articles($article) {
 		}
 		$dec_id = decode_id($article['bt_id']);
 		$article = array_merge($article, decode_id($article['bt_date']));
-		$article['lien'] = $_SERVER['PHP_SELF'].'?d='.$dec_id['annee'].'/'.$dec_id['mois'].'/'.$dec_id['jour'].'/'.$dec_id['heure'].'/'.$dec_id['minutes'].'/'.$dec_id['secondes'].'-'.titre_url($article['bt_title']);
+		$article['lien'] = basename($_SERVER['PHP_SELF']).'?d='.$dec_id['annee'].'/'.$dec_id['mois'].'/'.$dec_id['jour'].'/'.$dec_id['heure'].'/'.$dec_id['minutes'].'/'.$dec_id['secondes'].'-'.titre_url($article['bt_title']);
 		$article['bt_link'] = $GLOBALS['racine'].'?d='.$dec_id['annee'].'/'.$dec_id['mois'].'/'.$dec_id['jour'].'/'.$dec_id['heure'].'/'.$dec_id['minutes'].'/'.$dec_id['secondes'].'-'.titre_url($article['bt_title']);
 	}
 	return $article;
@@ -133,16 +135,11 @@ function init_list_comments($comment) {
  */
 
 function init_post_article() { //no $mode : it's always admin.
-        if (isset($_POST['html-content'])) {
-          $formated = $_POST['html-content'];
-        } else {
-          $formated = formatage_wiki(protect_markup(clean_txt($_POST['contenu'])));
-        }
-
+	$formated_contenu = formatage_wiki(protect_markup(clean_txt($_POST['contenu'])));
 	if ($GLOBALS['automatic_keywords'] == '0') {
 		$keywords = htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['mots_cles']))));
 	} else {
-		$keywords = extraire_mots($_POST['titre'].' '.$formated);
+		$keywords = extraire_mots($_POST['titre'].' '.$formated_contenu);
 	}
 
 	$date = str4($_POST['annee']).str2($_POST['mois']).str2($_POST['jour']).str2($_POST['heure']).str2($_POST['minutes']).str2($_POST['secondes']);
@@ -152,9 +149,9 @@ function init_post_article() { //no $mode : it's always admin.
 		'bt_id'				=> $id,
 		'bt_date'			=> $date,
 		'bt_title'			=> htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['titre'])))),
-		'bt_abstract'		=> htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['chapo'])))),
+		'bt_abstract'		=> (empty($_POST['chapo']) ? '' : formatage_wiki(protect_markup(clean_txt($_POST['chapo'])))),
 		'bt_notes'			=> htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['notes'])))),
-		'bt_content'		=> $formated,
+		'bt_content'		=> $formated_contenu,
 		'bt_wiki_content'	=> stripslashes(protect_markup(clean_txt($_POST['contenu']))),
 		'bt_link'			=> '', // this one is not needed yet. Maybe in the futur. I dunno why it is still in the DB…
 		'bt_keywords'		=> $keywords,
@@ -220,7 +217,7 @@ function init_post_link2() { // second init : the whole link data needs to be st
 	$id = htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['bt_id']))));
 	$author = htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['bt_author']))));
 	if (empty($_POST['url'])) {
-		$url = $GLOBALS['racine'].'index.php?mode=links&amp;id='.$id;
+		$url = $GLOBALS['racine'].'?mode=links&amp;id='.$id;
 	} else {
 		$url = htmlspecialchars(stripslashes(protect_markup(clean_txt($_POST['url']))));
 	}
