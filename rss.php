@@ -20,8 +20,11 @@ $begin = microtime(TRUE);
 
 $GLOBALS['dossier_cache'] = 'cache';
 
-require_once 'config/user.php';
-require_once 'config/prefs.php';
+require_once 'inc/conf.php';
+
+require_once $GLOBALS['dossier_config'].'/user.php';
+require_once $GLOBALS['dossier_config'].'/prefs.php';
+
 date_default_timezone_set($GLOBALS['fuseau_horaire']);
 
 function require_all() {

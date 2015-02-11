@@ -375,7 +375,7 @@ function bdd_fichier($fichier, $quoi, $comment, $sup_var) {
 			$GLOBALS['liste_fichiers'] = tri_selon_sous_cle($GLOBALS['liste_fichiers'], 'bt_id');
 			file_put_contents($GLOBALS['fichier_liste_fichiers'], '<?php /* '.chunk_split(base64_encode(serialize($GLOBALS['liste_fichiers']))).' */'); // enregistre la liste
 			return 'no_such_file_on_disk';
-	}
+
 }
 
 
