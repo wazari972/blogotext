@@ -172,10 +172,11 @@ h1 img {
 	padding: 20px;
 	background-color: #fefefe;
 	color: black;
-	text-shadow: 0px 0px 2px rgba(120, 120, 120, .2);
+	/*text-shadow: 0px 0px 2px rgba(120, 120, 120, .2);*/
 }
 
 .post-cnt p {
+	margin-top: 10px;
 	margin-bottom: 10px;
 }
 .post-cnt a {
