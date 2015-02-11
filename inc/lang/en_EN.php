@@ -273,6 +273,7 @@ $GLOBALS['lang'] = array(
 'question_suppr_comment'		=> 'This comment will be deleted!',
 'question_suppr_fichier'		=> 'This file will be deleted!',
 'question_quit_page'				=> 'Your modifications have not been saved. Leaving this page will have your modifications lost. Ok?',
+'question_clean_rss'				=> 'All the read items will be removed from database, OK?',
 // Confirmations
 'confirm_article_suppr'			=> 'Article has ben deleted',
 'confirm_article_ajout'			=> 'Article has been saved',
@@ -284,12 +285,18 @@ $GLOBALS['lang'] = array(
 'confirm_comment_ajout'			=> 'Comment has been added',
 'confirm_comment_suppr'			=> 'Comment has been deleted',
 'confirm_comment_edit'			=> 'Comment has been edited',
-'confirm_comment_valid'			=> 'Comment statute has been edited',
+'confirm_comment_valid'			=> 'Comment status has been edited',
 'confirm_link_ajout'				=> 'Link has been added',
 'confirm_link_suppr'				=> 'Link has been removed',
 'confirm_link_edit'				=> 'Link has been updated',
+'confirm_feed_update'			=> 'The feeds have been updated.',
+'confirm_feeds_edit'				=> 'The feeds have been edited.',
+'confirm_feed_ajout'				=> 'The feed has been added.',
+'confirm_feed_clean'				=> 'All old feeds have removed.',
 // No-onfiramtion
 'error_image_add'					=> 'File could not have been added',
+'error_phpajax'					=> 'Some PHP/Ajax Error happened:',
+'error_comment_suppr'			=> 'The comment has not been deleted since an error happened.',
 // Redirections
 'retour_liste'						=> '« Articles list',
 // Titres des pages
@@ -423,7 +430,9 @@ $GLOBALS['lang'] = array(
 'rss_label_config'				=> 'Edit feed list',
 'rss_nothing_here_note'			=> 'Nothing here? Import an OPML file here: ',
 'rss_jsalert_new_link'			=> 'RSS/Atom complete link:',
+'rss_jsalert_new_link_folder'	=> 'Put feed in folder (or leave empty):',
 'rss_raccourcis_clavier'		=> 'Ctrl+Up = Read previous entry, Ctrl+Down = Read next entry.',
+'rss_nouveau_flux'				=> 'new entries.',
 
 
 // vérifier les mises à jours

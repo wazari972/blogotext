@@ -219,33 +219,8 @@ image_vignettes();
 }
 
 
+// If article form has been changed, ask for confirmation before closing page/tab.
 
-function js_comm_question_suppr($a) {
-$sc = '
-function ask_suppr(button) {
-	var reponse = window.confirm(\''.$GLOBALS['lang']['question_suppr_comment'].'\');
-	if (reponse == true) {
-		var form = button.parentNode.parentNode.getElementsByTagName(\'form\')[0];
-		var submitButtons = form.getElementsByTagName(\'input\');
-		for (var i = 0, nb = submitButtons.length ; i<nb ; i++) {
-			if (submitButtons[i].name === \'enregistrer\') {
-				submitButtons[i].name = \'supprimer_comm\';
-				submitButtons[i].type = \'text\';
-				break;
-			}
-		}
-		form.submit();
-	}
-	return reponse;
-}
-';
-	if ($a == 1) {
-		$sc = "\n".'<script type="text/javascript">'."\n".$sc."\n".'</script>'."\n";
-	} else {
-		$sc = "\n".$sc."\n";
-	}
-	return $sc;
-}
 
 
 function js_alert_before_quit($a, $textareaId="contenu") {
@@ -254,9 +229,9 @@ var contenuLoad = document.getElementById("'.$textareaId.'").value;
 window.addEventListener("beforeunload", function (e) {
 	// From https://developer.mozilla.org/en-US/docs/Web/Reference/Events/beforeunload
 	var confirmationMessage = \''.$GLOBALS['lang']['question_quit_page'].'\';
-	if(document.getElementById("'.$textareaId.'").value == contenuLoad) { confirmationMessage = null };
-	(e || window.event).returnValue = confirmationMessage || \'\' ;	//Gecko + IE ; Gecko show popup if "null" but not if empty str,
-	return confirmationMessage;													// Webkit.
+	if(document.getElementById("'.$textareaId.'").value == contenuLoad) { return true; };
+	(e || window.event).returnValue = confirmationMessage || \'\' ;	//Gecko + IE
+	return confirmationMessage;													// Webkit : ignore this.
 });
 ';
 	if ($a == 1) {
@@ -267,8 +242,16 @@ window.addEventListener("beforeunload", function (e) {
 	return $sc;
 }
 
-/* 
- Below: for RSS */
+/*
+ *
+ *
+ *
+ *
+ *  Below: for RSS reader
+ *
+ *
+ *
+*/
 
 function js_rss_json_list($a) {
 $sc = '
@@ -289,11 +272,12 @@ function rss_feedlist(RssPosts) {
 		li.id = \'i_\'+item.id;
 		li.classList.add(\'li-post-bloc\');
 		li.dataset.feedUrl = item.feed;
+		li.onclick = function(){ return openItem(this); };
 		if (item.statut == 0) { li.classList.add(\'read\'); }
 
 		// new line with the title
 		var title = document.createElement("p");
-		title.innerHTML = \'<a href="\'+item.link+\'" onclick="return openItem(this);" target="_blank">\'+item.title+\'</a>\';
+		title.innerHTML = \'<a href="\'+item.link+\'" target="_blank">\'+item.title+\'</a>\';
 		title.title = item.title;
 		title.classList.add(\'post-title\');
 
@@ -367,7 +351,7 @@ function sortSite(origine) {
 		}
 	}
 	rss_feedlist(newList);
-	window.location.hash = \'rss-list\';
+	if (newList.length != 0) window.location.hash = \'rss-list\';
 	return false;
 }
 
@@ -429,7 +413,11 @@ function refresh_all_feeds(refreshLink) {
 
 	xhr.onprogress = function() {
 		if (glLength != this.responseText.length) {
-			notifNode.innerHTML = this.responseText.substr(glLength);
+			
+			var posSpace = (this.responseText.substr(0, this.responseText.length-1)).lastIndexOf(" ");
+
+
+			notifNode.innerHTML = this.responseText.substr(posSpace);//+" "+glLength+" "+posSpace;
 			glLength = this.responseText.length;
 		}
 	}
@@ -437,13 +425,14 @@ function refresh_all_feeds(refreshLink) {
 		var resp = this.responseText;
 
 		// update status
-		notifNode.innerHTML = resp.substr(resp.indexOf("Success")+40+7)+\' new feeds (please reload page)\';
+		var nbNewFeeds = resp.substr(resp.indexOf("Success")+40+7);
+		notifNode.innerHTML = nbNewFeeds+\' new feeds (please reload page)\';
 		token = resp.substr(resp.indexOf("Success")+7, 40);
 
 		// if new feeds, reload page.
 		refreshLink.dataset.refreshOngoing = 0;
 		loading_animation(\'off\');
-		window.location.href = window.location.href.split("?")[0]+\'?msg=confirm_feed_update\';
+		window.location.href = window.location.href.split("?")[0]+\'?msg=confirm_feed_update&nbnew=\'+nbNewFeeds;
 		return false;
 	};
 

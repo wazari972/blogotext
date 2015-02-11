@@ -12,7 +12,7 @@
 #feed-list {
 	background: linear-gradient(to right, #f5f5f5 7px, white);
 	box-sizing: border-box;
-	-moz-box-sizing: border-box;
+/*	-moz-box-sizing: border-box;*/
 	width: 230px;
 	float: left;
 	margin: 0px;
@@ -187,6 +187,7 @@
 #post-list > li:hover {
 	position: relative;
 	box-shadow: 0 0 10px silver;
+	cursor: pointer;
 }
 
 #post-list > li.read:not(.open-post) {
@@ -255,6 +256,7 @@
 #post-list > li.open-post {
 	background: 9px 17px url(rss-feed-icon.png) no-repeat, linear-gradient(to bottom, #bbb 0px, #eee 50px);
 	color: inherit;
+	cursor: auto;
 }
 
 #post-list > li.open-post .rss-item-content {

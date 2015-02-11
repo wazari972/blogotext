@@ -4,7 +4,7 @@
 # http://lehollandaisvolant.net/blogotext/
 #
 # 2006      Frederic Nassar.
-# 2010-2014 Timo Van Neerden <timo@neerden.eu>
+# 2010-2015 Timo Van Neerden <timo@neerden.eu>
 #
 # BlogoText is free software.
 # You can redistribute it under the terms of the MIT / X11 Licence.
@@ -44,7 +44,7 @@ afficher_top($GLOBALS['lang']['mesabonnements']);
 echo '<div id="top">'."\n";
 afficher_msg($GLOBALS['lang']['mesabonnements']);
 //echo moteur_recherche($GLOBALS['lang']['search_in_links']);
-afficher_menu(pathinfo($_SERVER['PHP_SELF'], PATHINFO_BASENAME));
+afficher_menu(basename($_SERVER['PHP_SELF']));
 echo '</div>'."\n";
 
 
@@ -82,7 +82,7 @@ else {
 	$out_html .= "\t\t\t\t".'<li><button type="button" onclick="window.location.href=\'maintenance.php#form_import\'" title="Import/export"></button></li>'."\n";
 	$out_html .= "\t\t\t\t".'<li><button type="button" onclick="return cleanList();" title="'.$GLOBALS['lang']['rss_label_clean'].'"></button></li>'."\n";
 	$out_html .= "\t\t\t".'</ul>'."\n";
-	$out_html .= "\t\t\t".'<span id="message-return"></span>'."\n";
+	$out_html .= "\t\t\t".'<span id="message-return">'.(isset($_GET['nbnew']) ? htmlspecialchars($_GET['nbnew']).' '.$GLOBALS['lang']['rss_nouveau_flux'] : '' ).'</span>'."\n";
 	$out_html .= "\t\t".'</div>'."\n";
 	$out_html .= "\t".'<ul id="feed-list">'."\n";
 	$out_html .= feed_list_html();
@@ -116,28 +116,6 @@ else {
 	echo "\n".'</script>'."\n";
 
 }
-
-
-
-
-
-
-/*
-
-TODO :
-- sur mobile, les deux premiers panneaux sont masqués, type Google Play
-
-- navigation clavier avec les flèches : passer d’un flux à un autre
-- les vieux articles lus sont supprimés de la BDD (+vacuum)
-
-*/
-
-
-
-
-
-
-
 
 
 footer('', $begin);
