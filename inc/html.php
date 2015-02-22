@@ -17,7 +17,7 @@ function afficher_menu($active) {
 	echo '<div id="nav">'."\n";
 	echo "\t".'<a href="index.php" id="lien-index"', ($active == 'index.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['label_resume'].'</a>'."\n";
 	echo "\t".'<a href="articles.php" id="lien-liste"', ($active == 'articles.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['mesarticles'].'</a>'."\n";
-	echo "\t".'<a href="ecrire.php" id="lien-nouveau"', ($active == 'ecrire.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['nouveau'].'</a>'."\n";
+	echo "\t".'<a href="ecrire.php?&md" id="lien-nouveau"', ($active == 'ecrire.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['nouveau'].'</a>'."\n";
 	echo "\t".'<a href="commentaires.php" id="lien-lscom"', ($active == 'commentaires.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['titre_commentaires'].'</a>'."\n";
 	echo "\t".'<a href="fichiers.php" id="lien-fichiers"', ($active == 'fichiers.php') ? ' class="current"' : '', '>'.ucfirst($GLOBALS['lang']['label_fichiers']).'</a>'."\n";
 	if ($GLOBALS['onglet_liens'])
