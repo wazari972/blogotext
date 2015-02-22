@@ -31,7 +31,7 @@ $GLOBALS['dossier_config'] = 'config/' . $_SERVER['SERVER_NAME'];
 include_once $GLOBALS['BT_ROOT_PATH'] . $GLOBALS['dossier_config'] . '/prefs.php';
 
 // BLOGOTEXT VERSION (do not change it)
-$GLOBALS['version'] = '2.1.0.1';
+$GLOBALS['version'] = '2.1.0.2';
 $GLOBALS['last-online-file'] = '../config/version.txt';
 
 // MINIMAL REQUIRED PHP VERSION
