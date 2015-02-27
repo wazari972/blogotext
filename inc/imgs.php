@@ -156,11 +156,6 @@ function create_thumbnail($filepath) {
 	// Cacul des nouvelles dimensions
 	list($width_orig, $height_orig) = getimagesize($filepath);
 	if ($width_orig == 0 or $height_orig == 0) return;
-	if ($maxwidth and ($width_orig < $height_orig)) {
-		$maxwidth = ($maxheight / $height_orig) * $width_orig;
-	} else {
-		$maxheight = ($maxwidth / $width_orig) * $height_orig;
-	}
 
 	$loop = 0;
 	while ($loop !== 2) {
