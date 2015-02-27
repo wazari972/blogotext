@@ -42,8 +42,21 @@ if (check_session() === TRUE) { // return to index if session is already open.
 	exit;
 }
 
+// autologin for SSH authenticated ips
+$AUTOLOGIN_FILE = "/var/www/alternc/k/kevin/.ssh_autologin";
+$autologin = FALSE;
+if (file_exists($AUTOLOGIN_FILE)
+	//&& (time() - filemtime($AUTOLOGIN_FILE)) < 60*60*12 // file is newer than 12h
+	&& $_SERVER["REMOTE_ADDR"] == str_replace("\n", "", file_get_contents($AUTOLOGIN_FILE)))
+{
+
+	$autologin = TRUE;
+        $_POST['nom_utilisateur'] = $GLOBALS['identifiant'];
+        $_POST['mot_de_passe'] = $GLOBALS['mdp'];
+}
+
 // Auth checking :
-if (isset($_POST['_verif_envoi']) and valider_form() === TRUE) { // OK : getting in.
+if (isset($_POST['_verif_envoi']) and valider_form() === TRUE or $autologin) { // OK : getting in.
 	$ip = (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? htmlspecialchars($_SERVER['HTTP_X_FORWARDED_FOR']) : htmlspecialchars($_SERVER['REMOTE_ADDR']);
 	$_SESSION['user_id'] = $_POST['nom_utilisateur'].hash_password($_POST['mot_de_passe'], $GLOBALS['salt']).md5($_SERVER['HTTP_USER_AGENT'].$ip); // set special hash
 	usleep(100000); // 100ms sleep to avoid bruteforce
@@ -69,7 +82,7 @@ if (isset($_POST['_verif_envoi']) and valider_form() === TRUE) { // OK : getting
 		// The login was right, so we give a token because the previous one expired with the session
 		$_SESSION['BT-post-token'] = new_token();
 	}
-
+        $_SESSION['user_id'] = $_SESSION['user_id'] = $_POST['nom_utilisateur'].$_POST['mot_de_passe'].md5($_SERVER['HTTP_USER_AGENT'].$ip);
 	header('Location: '.$location);
 
 } else { // On sort…
