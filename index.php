@@ -275,7 +275,7 @@ else {
 	}
 
         // ordre chronologique ?
-	if ($GLOBALS['old_first']) {
+	if ($GLOBALS['old_first'] || isset($_GET['old_first']) && $_GET['old_first'] !== 'n' ) {
           $sql_order .= "ASC ";
         } else {
           $sql_order .= "DESC ";
