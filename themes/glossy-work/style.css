@@ -45,9 +45,20 @@ a:hover {
 	text-decoration: underline;
 }
 
+p, ul {
+    line-height: 20px;
+    text-align: justify;
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+article {
+        max-width: 700px;
+}
+
 /* old browser compatibility */
 article, aside, figcaption, figure, footer, header, hgroup, nav, section {
-	display: block;
+    display: block;
 }
 
 /* General ====================================== */
@@ -716,7 +727,7 @@ adaptative styles for the width of the visitor's screen */
 /* very    b  i  g    screens (larger than 1800 px) */
 @media (min-width: 1800px) {
 	body {
-		font-size: 18px;
+		font-size: 17px;
 	}
 	h1, #main, #entete h2 {
 		max-width: 1400px;
