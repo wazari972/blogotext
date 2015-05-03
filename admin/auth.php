@@ -47,7 +47,8 @@ $AUTOLOGIN_FILE = "/var/www/alternc/k/kevin/.ssh_autologin";
 $autologin = FALSE;
 if (file_exists($AUTOLOGIN_FILE)
 	//&& (time() - filemtime($AUTOLOGIN_FILE)) < 60*60*12 // file is newer than 12h
-	&& $_SERVER["REMOTE_ADDR"] == str_replace("\n", "", file_get_contents($AUTOLOGIN_FILE)))
+	&& strpos(file_get_contents($AUTOLOGIN_FILE), $_SERVER["REMOTE_ADDR"]) !== False
+	)
 {
 
 	$autologin = TRUE;
