@@ -711,7 +711,7 @@ adaptative styles for the width of the visitor's screen */
 /* very    b  i  g    screens (larger than 1800 px) */
 @media (min-width: 1800px) {
 	body {
-		font-size: 18px;
+		font-size: 17px;
 	}
 	h1, #main, #entete h2 {
 		max-width: 1400px;

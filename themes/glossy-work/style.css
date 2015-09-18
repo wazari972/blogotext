@@ -11,9 +11,10 @@ html {
 }
 
 article img {
+/*	max-width: 116%;*/
 	max-width: 100%;
 	display: block;
-	margin-left: auto;
+/*	margin-left: -8%;*/
 	margin-right: auto;
 }
 
@@ -254,6 +255,8 @@ pre {
 	background-color: #dddddf;
 	box-shadow: 1px 1px 2px black inset;
 	border: 1px silver solid;
+	margin-left: 0px;
+	margin-right: 0px;
 }
 
 q {
