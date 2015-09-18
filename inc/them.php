@@ -47,7 +47,7 @@ $GLOBALS['balises'] = array(
 	'comm_encart' => '{commentaires_encart}',
 	'cat_encart' => '{categories_encart}',
         'last_post_encart' => '{last_post_encart}',
-        
+
 	// Article
 	'article_titre' => '{article_titre}',
 	'article_titre_page' => '{article_titre_page}',
@@ -56,6 +56,7 @@ $GLOBALS['balises'] = array(
 	'article_contenu' => '{article_contenu}',
 	'article_heure' => '{article_heure}',
 	'article_date' => '{article_date}',
+	'article_date_iso' => '{article_date_iso}',
 	'article_lien' => '{article_lien}',
 	'article_tags' => '{article_tags}',
 	'article_tags_plain' => '{article_tags_plain}',
@@ -67,6 +68,7 @@ $GLOBALS['balises'] = array(
 	'commentaire_contenu' => '{commentaire_contenu}',
 	'commentaire_heure' => '{commentaire_heure}',
 	'commentaire_date' => '{commentaire_date}',
+	'commentaire_date_iso' => '{commentaire_date_iso}',
 	'commentaire_email' => '{commentaire_email}',
 	'commentaire_webpage' => '{commentaire_webpage}',
 	'commentaire_anchor' => '{commentaire_ancre}', // the id="" content
@@ -78,6 +80,7 @@ $GLOBALS['balises'] = array(
 	'lien_titre' => '{lien_titre}',
 	'lien_url' => '{lien_url}',
 	'lien_date' => '{lien_date}',
+	'lien_date_iso' => '{lien_date_iso}',
 	'lien_heure' => '{lien_heure}',
 	'lien_description' => '{lien_description}',
 	'lien_permalink' => '{lien_permalink}',
@@ -103,6 +106,9 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 		if ($solo_art['bt_type'] == 'article') {
 			$texte = str_replace($GLOBALS['balises']['article_chapo'], $solo_art['bt_abstract'], $texte);
 			$texte = str_replace($GLOBALS['balises']['blog_motscles'], $solo_art['bt_keywords'], $texte);
+		}
+		if ($solo_art['bt_type'] == 'link' or $solo_art['bt_type'] == 'note') {
+			$texte = str_replace($GLOBALS['balises']['article_titre_page'], $solo_art['bt_title'].' - ', $texte);
 		}
 	}
 
@@ -132,7 +138,7 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
         if (strpos($texte, $GLOBALS['balises']['last_post_encart']) !== FALSE) {
           $texte = str_replace($GLOBALS['balises']['last_post_encart'], encart_last_posts(), $texte);
         }
-        $texte = str_replace($GLOBALS['balises']['comm_encart'], encart_commentaires(), $texte);
+	$texte = str_replace($GLOBALS['balises']['comm_encart'], encart_commentaires(), $texte);
 	$texte = str_replace($GLOBALS['balises']['cat_encart'], encart_categories((isset($_GET['mode']))?$_GET['mode']:''), $texte);
 	if (isset($GLOBALS['rss_comments'])) { $texte = str_replace($GLOBALS['balises']['rss_comments'], $GLOBALS['rss_comments'], $texte);}
 
@@ -144,9 +150,10 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 function conversions_theme_commentaire($texte, $commentaire) {
 	$texte = str_replace($GLOBALS['balises']['commentaire_contenu'], $commentaire['bt_content'], $texte);
 	$texte = str_replace($GLOBALS['balises']['commentaire_date'], date_formate($commentaire['bt_id']), $texte);
+	$texte = str_replace($GLOBALS['balises']['commentaire_date_iso'], date_formate_iso($commentaire['bt_id']), $texte);
 	$texte = str_replace($GLOBALS['balises']['commentaire_heure'], heure_formate($commentaire['bt_id']), $texte);
 	$texte = str_replace($GLOBALS['balises']['commentaire_email'], $commentaire['bt_email'], $texte);
-	$texte = str_replace($GLOBALS['balises']['commentaire_gravatar'], 'http://2.gravatar.com/avatar/'.md5($commentaire['bt_email']), $texte);
+	$texte = str_replace($GLOBALS['balises']['commentaire_gravatar'], $GLOBALS['gravatar_link'].md5($commentaire['bt_email']), $texte);
 	$texte = str_replace($GLOBALS['balises']['commentaire_auteur_lien'], $commentaire['auteur_lien'], $texte);
 	$texte = str_replace($GLOBALS['balises']['commentaire_auteur'], str_replace("'", "\\'", $commentaire['bt_author']), $texte);
 	$texte = str_replace($GLOBALS['balises']['commentaire_webpage'], $commentaire['bt_webpage'], $texte);
@@ -171,12 +178,13 @@ function conversions_theme_article($texte, $billet) {
 	$texte = str_replace($GLOBALS['balises']['article_chapo'], $billet['bt_abstract'], $texte);
 	$texte = str_replace($GLOBALS['balises']['article_contenu'], $billet['bt_content'], $texte);
 	$texte = str_replace($GLOBALS['balises']['article_date'], date_formate($billet['bt_date']), $texte);
+	$texte = str_replace($GLOBALS['balises']['article_date_iso'], date_formate_iso($billet['bt_date']), $texte);
 	$texte = str_replace($GLOBALS['balises']['article_heure'], heure_formate($billet['bt_date']), $texte);
 	// comments closed (globally or only for this article) and no comments => say « comments closed »
 	if ( ($billet['bt_allow_comments'] == 0 or $GLOBALS['global_com_rule'] == 1 ) and $billet['bt_nb_comments'] == 0 ) { $texte = str_replace($GLOBALS['balises']['nb_commentaires'], $GLOBALS['lang']['note_comment_closed'], $texte); }
 	// comments open OR ( comments closed AND comments exists ) => say « nb comments ».
-	if ( !($billet['bt_allow_comments'] == 0 or $GLOBALS['global_com_rule'] == 1 ) or $billet['bt_nb_comments'] != 0 ) { $texte = str_replace($GLOBALS['balises']['nb_commentaires'], nombre_commentaires($billet['bt_nb_comments']), $texte); }
-	$texte = str_replace($GLOBALS['balises']['article_lien'], $billet['lien'], $texte);
+	if ( !($billet['bt_allow_comments'] == 0 or $GLOBALS['global_com_rule'] == 1 ) or $billet['bt_nb_comments'] != 0 ) { $texte = str_replace($GLOBALS['balises']['nb_commentaires'], nombre_objets($billet['bt_nb_comments'], 'commentaire'), $texte); }
+	$texte = str_replace($GLOBALS['balises']['article_lien'], $billet['bt_link'], $texte);
 	$texte = str_replace($GLOBALS['balises']['article_tags'], liste_tags($billet, '1'), $texte);
 	$texte = str_replace($GLOBALS['balises']['article_tags_plain'], liste_tags($billet, '0'), $texte);
 	return $texte;
@@ -189,6 +197,7 @@ function conversions_theme_lien($texte, $lien) {
 	$texte = str_replace($GLOBALS['balises']['lien_titre'], $lien['bt_title'], $texte);
 	$texte = str_replace($GLOBALS['balises']['lien_url'], $lien['bt_link'], $texte);
 	$texte = str_replace($GLOBALS['balises']['lien_date'], date_formate($lien['bt_id']), $texte);
+	$texte = str_replace($GLOBALS['balises']['lien_date_iso'], date_formate_iso($lien['bt_id']), $texte);
 	$texte = str_replace($GLOBALS['balises']['lien_heure'], heure_formate($lien['bt_id']), $texte);
 	$texte = str_replace($GLOBALS['balises']['lien_permalink'], $lien['bt_id'], $texte);
 	$texte = str_replace($GLOBALS['balises']['lien_description'], $lien['bt_content'], $texte);
@@ -247,7 +256,11 @@ function afficher_index($tableau, $type) {
 		$HTML_elmts = '';
 		$data = array();
 		if (!empty($tableau)) {
-			if (count($tableau)==1 and !empty($tableau[0]['bt_title'])) $data = $tableau[0];
+			if (count($tableau)==1 and !empty($tableau[0]['bt_title']) and $tableau[0]['bt_type'] == 'article') {
+				redirection($tableau[0]['bt_link']);
+				exit;
+			} else {
+				if (count($tableau)==1 and ($tableau[0]['bt_type'] == 'link' or $tableau[0]['bt_type'] == 'note') ) $data = $tableau[0]; 
 			$HTML_article = conversions_theme($theme_page, $data, 'post');
 			if ($tableau[0]['bt_type'] == 'article') {
 				if (!($theme_article = file_get_contents($GLOBALS['theme_post_artc']))) die($GLOBALS['lang']['err_theme_introuvable']);
@@ -265,6 +278,7 @@ function afficher_index($tableau, $type) {
 				$HTML_elmts .=  $conversion_theme_fonction($theme_article, $element);
 			}
 			$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
+			}
 		}
 		else {
 			$HTML_article = conversions_theme($theme_page, $data, 'list');
@@ -302,37 +316,24 @@ function afficher_index($tableau, $type) {
 	}
 	echo $HTML;
 }
-function get_article_list($tableau) {
-	$HTML_elmts = '';
-	
-	if (!empty($tableau)) {
-		$HTML_elmts .= '<ul>'."\n";
-		foreach ($tableau as $e) {
-                  $short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
-                  $HTML_elmts .= "\t".'<li>'.$short_date.' - <a href="'.$e['bt_link'].'">'.$e['bt_title'].'</a></li>'."\n";
-		}
-		$HTML_elmts .= '</ul>'."\n";
-	}
-	return $HTML_elmts;
-}
+
 // Affiche la liste des articles, avec le &liste dans l’url
 function afficher_liste($tableau) {
-  echo get_liste($tableau);
-}
-function get_liste($tableau) {
 	$HTML_elmts = '';
-	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) {
-          die($GLOBALS['lang']['err_theme_introuvable']);
-        }
-        
+	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
 	$HTML_article = conversions_theme($theme_page, array(), 'list');
 	if (!empty($tableau)) {
-                $HTML_elmts = get_article_list($tableau);
+		$HTML_elmts .= '<ul id="liste-all-articles">'."\n";
+		foreach ($tableau as $e) {
+			$short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
+			$HTML_elmts .= "\t".'<li><time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time><a href="'.$e['bt_link'].'">'.$e['bt_title'].'</a></li>'."\n";
+		}
+		$HTML_elmts .= '</ul>'."\n";
 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
 	}
 	else {
 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $GLOBALS['lang']['note_no_article'], $HTML_article);
 	}
-	return $HTML;
+	echo $HTML;
 }
 

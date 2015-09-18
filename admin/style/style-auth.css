@@ -2,37 +2,75 @@
 -------------------------------------------------------------------------------- */
 
 #pageauth {
-	width: 450px;
 	font-size: 1em;
 	display: block;
 	clear: both;
 	margin: 10px auto 10px;
 	text-align: center;
-	background: url("logo.png") no-repeat center 20px;
-	padding-top: 120px;
 }
 
-#pageauth p label {
-	display: inline-block;
-	width: 200px;
-}
-
-#pageauth input.text {
-	width: 200px;
-}
-
-#auth {
-	width: 299px;
+#auth,
+#install {
+	width: 320px;
 	margin: auto;
+	box-sizing: border-box;
 }
 
-#auth p label {
-	text-align: left;
+#auth p,
+#install p {
+//	display: flex;
+	justify-content: center;
+//	align-items: flex-end;
+	min-height: 40px;
+	padding: 5px 0;
+}
+
+#auth p label:not([for="stay_logged"]) {
+	padding: 0 0 0 24px;
+	width: 24px;
+	height: 28px;
+	box-sizing: border-box;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: middle;
+	background: white url(sprites.png) no-repeat 0 0 / 640px 400px;
+}
+#install p label,
+#install p input.text {
+	height: 28px;
+	line-height: 28px;
+	box-sizing: border-box;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#auth input.text,
+#install input.text {
 	width: 200px;
+	border: 0;
+	margin: 0;
+	border-bottom: 1px solid silver;
+	padding: 5px;
 }
 
-#auth label[for="stay_logged"], #auth label[for="stay_logged"]+input {
-	display: inline;
+#auth input.text:focus,
+#install input.text:focus {
+	border-bottom-color: #2196F3;
+	box-shadow: 0px -1px 0px #2196F3 inset;
+}
+
+#auth label[for="stay_logged"],
+#auth label[for="stay_logged"]+input {
+	align-self: center;	
+}
+
+#auth p label[for="user"]     { background-position: -265px -131px; }
+#auth p label[for="password"] { background-position: -302px -131px; }
+
+
+#auth input.blue-square {
+	width: 200px;
+	line-height: 1.9em;
 }
 
 #pageauth h1 {
@@ -41,8 +79,7 @@
 }
 
 #pageauth h1#step { /* install */
-	font-size: 2em;
-	margin: 0;
+	font-size: 1.8em;
 	color: #999;
 }
 
@@ -50,7 +87,17 @@
 	border: 1px dashed silver;
 }
 
+#pageauth label {
+	text-align: center;
+}
+
 #pageauth label[for="sgdb"] {
 	display: inline;
+}
+
+
+#install p label {
+	text-align: left;
+	width: 220px;
 }
 

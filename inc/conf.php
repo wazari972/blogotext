@@ -31,7 +31,7 @@ $GLOBALS['dossier_config'] = 'config/' . $_SERVER['SERVER_NAME'];
 include_once $GLOBALS['BT_ROOT_PATH'] . $GLOBALS['dossier_config'] . '/prefs.php';
 
 // BLOGOTEXT VERSION (do not change it)
-$GLOBALS['version'] = '2.1.0.2';
+$GLOBALS['version'] = '3.0.2';
 $GLOBALS['last-online-file'] = '../config/version.txt';
 
 // MINIMAL REQUIRED PHP VERSION
@@ -40,14 +40,24 @@ $GLOBALS['minimal_php_version'] = '5.3';
 // GENERAL
 $GLOBALS['nom_application']= 'BlogoText';
 $GLOBALS['appsite']= 'http://lehollandaisvolant.net/blogotext/';
-$GLOBALS['date_premier_message_blog'] = '199701';
-$GLOBALS['salt']= '123456'; // if changed : delete /config/user.php file and proceed to a re-installation. No data loss.
-$GLOBALS['show_errors'] = -1; // -1 = all (for dev) ; 0 = none (recommended)
+$GLOBALS['date_premier_message_blog'] = '199701'; // (this value is a fallback. Actual value is in /config/config-advanced.ini)
+$GLOBALS['salt']= '123456'; // (this value is a fallback. Actual value is in /config/config-advanced.ini)
+$GLOBALS['show_errors'] = -1; // (this value is a fallback. Actual value is in /config/config-advanced.ini)
+$GLOBALS['use_ip_in_session'] = 1; // (this value is a fallback. Actual value is in /config/config-advanced.ini)
+$GLOBALS['gravatar_link'] = 'themes/default/gravatars/get.php?g='; // (this value is a fallback. Actual value is in /config/config-advanced.ini)
 
 $GLOBALS['db_location'] = 'database.sqlite';    // data storage file (for sqlite)
 $GLOBALS['fichier_liste_fichiers'] = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_db'].'/'.'files.php'; // files/image info storage.
 $GLOBALS['fichier_liste_fluxrss'] = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_db'].'/'.'rss.php'; // RSS-feeds list info storage.
 
+// ADVANCED CONFIG OPTIONS. This function replaces some of the above values.
+$adv_config_file = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_config'].'/'.'config-advanced.ini';
+if (is_file($adv_config_file) and is_readable($adv_config_file)) {
+	$adv_options = parse_ini_file($adv_config_file);
+	foreach ($adv_options as $option => $value) {
+		$GLOBALS[$option] = $value;
+	}
+}
 
 // DATABASE 'sqlite' or 'mysql' are supported yet.
 $mysql_file = $GLOBALS['BT_ROOT_PATH'].$GLOBALS['dossier_config'].'/'.'mysql.php';
@@ -87,9 +97,10 @@ if ( isset($GLOBALS['theme_choisi']) ) {
 $GLOBALS['files_ext'] = array(
 	'archive'		=> array('zip', '7z', 'rar', 'tar', 'gz', 'bz', 'bz2', 'xz', 'lzma'), // more ?
 	'executable'	=> array('exe', 'e', 'bin'),
+	'android-apk'	=> array('apk'),
 	'html-xml'		=> array('html', 'htm', 'xml', 'mht'), // more ?
 	'image'			=> array('png', 'gif', 'bmp', 'jpg', 'jpeg', 'ico', 'svg', 'tif', 'tiff'),
-	'music'			=> array('mp3', 'wave', 'wav', 'ogg', 'wma', 'flac', 'aac', 'mid', 'midi'), // more ?
+	'music'			=> array('mp3', 'wave', 'wav', 'ogg', 'wma', 'flac', 'aac', 'mid', 'midi', 'm4a'), // more ?
 	'presentation'	=> array('ppt', 'pptx', 'pps', 'ppsx', 'odp'),
 	'pdf'			=> array('pdf', 'ps', 'psd'),
 	'spreadsheet'	=> array('xls', 'xlsx', 'xlt', 'xltx', 'ods', 'ots', 'csv'),
@@ -111,7 +122,6 @@ function init_list_articles($article) {
 		}
 		$dec_id = decode_id($article['bt_id']);
 		$article = array_merge($article, decode_id($article['bt_date']));
-		$article['lien'] = basename($_SERVER['PHP_SELF']).'?d='.$dec_id['annee'].'/'.$dec_id['mois'].'/'.$dec_id['jour'].'/'.$dec_id['heure'].'/'.$dec_id['minutes'].'/'.$dec_id['secondes'].'-'.titre_url($article['bt_title']);
 		$article['bt_link'] = $GLOBALS['racine'].'?d='.$dec_id['annee'].'/'.$dec_id['mois'].'/'.$dec_id['jour'].'/'.$dec_id['heure'].'/'.$dec_id['minutes'].'/'.$dec_id['secondes'].'-'.titre_url($article['bt_title']);
 	}
 	return $article;
@@ -163,7 +173,7 @@ function init_post_article() { //no $mode : it's always admin.
 		'bt_wiki_content'	=> stripslashes(protect_markup(clean_txt($_POST['contenu']))),
 		'bt_link'			=> '', // this one is not needed yet. Maybe in the futur. I dunno why it is still in the DB…
 		'bt_keywords'		=> $keywords,
-		'bt_categories'		=> htmlspecialchars(traiter_tags($_POST['categories'])), // htmlSpecialChars() nedded to escape the (") since tags are put in a <input/>. (') are escaped in form_categories(), with addslashes – not here because of JS problems :/
+		'bt_categories'	=> (isset($_POST['categories']) ? htmlspecialchars(traiter_tags($_POST['categories'])) : ''), // htmlSpecialChars() nedded to escape the (") since tags are put in a <input/>. (') are escaped in form_categories(), with addslashes – not here because of JS problems :/
 		'bt_statut'			=> $_POST['statut'],
 		'bt_allow_comments'	=> $_POST['allowcomment'],
 	);

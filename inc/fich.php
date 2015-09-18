@@ -49,6 +49,25 @@ function fichier_user() {
 	}
 }
 
+function fichier_adv_conf() {
+	$fichier_advconf = '../'.$GLOBALS['dossier_config'].'/config-advanced.ini';
+	$conf='';
+	$conf .= '; <?php die(); /*'."\n\n";
+	$conf .= '; This file contains some more advanced configuration features.'."\n\n";
+	$conf .= 'date_premier_message_blog = \''.date('Ym').'\''."\n";
+	$conf .= 'salt = \''.$salt = sha1(uniqid(mt_rand(), true)).'\''."\n";
+	$conf .= 'show_errors = -1;'."\n";
+	$conf .= 'gravatar_link = \'themes/default/gravatars/get.php?g=\''."\n";
+	$conf .= 'use_ip_in_session = 0;'."\n\n\n";
+	$conf .= '; */ ?>'."\n";
+
+	if (file_put_contents($fichier_advconf, $conf) === FALSE) {
+		return FALSE;
+	} else {
+		return TRUE;
+	}
+}
+
 
 function fichier_prefs() {
 	$fichier_prefs = '../'.$GLOBALS['dossier_config'].'/prefs.php';
@@ -290,6 +309,14 @@ function get_external_file($url, $timeout=10) {
 	$context = stream_context_create(array('http'=> $headers));
 	$data = @file_get_contents($url, false, $context, -1, 4000000); // We download at most 4 Mb from source.
 	if (isset($data) and isset($http_response_header[0]) and ( strpos($http_response_header[0], '200 OK') | (strpos($http_response_header[0], '302 Found') ) | (strpos($http_response_header[0], '301 Moved') | (strpos($http_response_header[0], '302 Moved')) ) !== FALSE ) ) {
+
+		// detect gzip data
+		foreach($http_response_header as $i => $h) {
+			// if gzip : decode it
+			if(stristr($h, 'content-encoding') and stristr($h, 'gzip')) {
+				$data = gzinflate( substr($data,10,-8) );
+			}
+		}
 		return array('body' => $data, 'headers' => http_parse_headers($http_response_header));
 	} else {
 		return array();
@@ -298,7 +325,7 @@ function get_external_file($url, $timeout=10) {
 
 
 
-
+// TODO: unify get_external_file() with c_get_external_file() in one single Curl function, accepting 1 or many url and returning array().
 function c_get_external_file($feeds) {
 	// uses chunks of 40 feeds because Curl has problems with too big (~150) "multi" requests.
 	// $feeds = array_splice($feeds, 60, 20);
@@ -315,6 +342,7 @@ function c_get_external_file($feeds) {
 
 		// init each url
 		foreach ($chunk as $i => $feed) {
+
 			$curl_arr[$i] = curl_init(trim($i));
 			curl_setopt_array($curl_arr[$i], array(
 					CURLOPT_RETURNTRANSFER => TRUE,
@@ -324,6 +352,7 @@ function c_get_external_file($feeds) {
 					CURLOPT_USERAGENT => $_SERVER['HTTP_USER_AGENT'],
 					CURLOPT_SSL_VERIFYPEER => FALSE,
 					CURLOPT_SSL_VERIFYHOST => FALSE,
+					CURLOPT_ENCODING => "gzip",
 				));
 			curl_multi_add_handle($master, $curl_arr[$i]);
 		}
@@ -417,7 +446,7 @@ function get_new_feeds($feedlink, $md5='') {
 		if (!empty($content)) {
 			$new_md5 = md5($content);
 			// if Feed has changed : parse it (otherwise, do nothing : no need)
-			if ($md5 != $new_md5 or $md5 == '') {
+			if ($md5 != $new_md5 or '' == $md5) {
 				$data_array = feed2array($content, $url);
 				if ($data_array !== FALSE) {
 					$return[$url] = $data_array;
@@ -426,8 +455,9 @@ function get_new_feeds($feedlink, $md5='') {
 					$GLOBALS['liste_flux'][$url]['checksum'] = $new_md5;
 					$GLOBALS['liste_flux'][$url]['iserror'] = 0;
 				} else {
-					//echo '<b>'.$url.'</b> - «'.htmlspecialchars(substr($content, 0, 120)).'»<br/>'; // debug
-					$GLOBALS['liste_flux'][$url]['iserror'] += 1;
+					if (isset($GLOBALS['liste_flux'][$url])) { // error on feed update (else would be on adding new feed)
+						$GLOBALS['liste_flux'][$url]['iserror'] += 1;
+					}
 				}
 			}
 		}
@@ -541,17 +571,6 @@ function send_rss_json($rss_entries) {
 		'}'.(($count==$i) ? '' :',')."\n";
 	}
 	$out .= ']'."\n".'}';
-
-	// RSS Feed list
-	$out .= "\n".'var rss_feeds = {"list": ['."\n";
-/*	foreach ($GLOBALS['liste_flux'] as $i => $feed) {
-		$out .= '{'.
-			'"link": "'.$feed['link'].'",'.
-			'"title": "'.$feed['title'].'",'.
-		'},'."\n";
-	}*/
-	$out .= ']'."\n".'}'."\n";
-
 	$out .=  '</script>'."\n";
 
 	return $out;

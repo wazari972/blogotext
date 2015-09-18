@@ -4,7 +4,7 @@
 # http://lehollandaisvolant.net/blogotext/
 #
 # 2006      Frederic Nassar.
-# 2010-2014 Timo Van Neerden <timo@neerden.eu>
+# 2010-2015 Timo Van Neerden <timo@neerden.eu>
 #
 # BlogoText is free software.
 # You can redistribute it under the terms of the MIT / X11 Licence.
@@ -153,6 +153,7 @@ function formatage_wiki($texte) {
 		'#« #',
 		'# !#',
 		'# :#',
+		'# \?#',
 		'#\[med\](\S+)\.(\S+)\[/med\]#s',
 	);
 	$toreplace = array(
@@ -182,7 +183,7 @@ function formatage_wiki($texte) {
 		'',																				// ul/li
 		'<ol>'."\n".'<li>$1</li></ol>'."\n",									// ol/li
 		'',																				// ol/li
-		'<q>$1</q>',																// citation
+		'<blockquote>$1</blockquote>'."\n",											// citation
 		'<span style="color:$2;">$4</span>',								// color
 		'<span style="font-size:$2pt;">$4</span>',								// text-size
 
@@ -193,14 +194,14 @@ function formatage_wiki($texte) {
 		'&nbsp;:',
 		'$1-med.jpg', // ext=$2
 	);
-	
+
 	// un array des balises [code] avant qu’ils ne soient modifiées par le preg_replace($tofind, $toreplace, $texte);
 	// il met en mémoire le contenu des balises [code] tels quelles
 	$nb_balises_code_avant = preg_match_all('#\[code\](.*?)\[/code\]#s', $texte, $balises_code, PREG_SET_ORDER);
 
 	// formate tout sauf les [code]
 	$texte_formate = preg_replace($tofind, $toreplace, $texte);
-	
+
 	// remplace les balises [codes] modifiées par la balise code non formatée et précédement mises en mémoire.
 	// ceci permet de formater l’ensemble du message, sauf les balises [code],
 	if ($nb_balises_code_avant) {
@@ -244,10 +245,10 @@ function formatage_commentaires($texte) {
 		'<code>$1</code>',													// code
 		'$1<a href="$2">$2</a>',												// url
 		'<a href="$2">$1</a>',												// a href
-		'<span style="font-weight: bold;">$1</span>',				// strong
-		'<span style="font-style: italic;">$1</span>',				// italic
-		'<span style="text-decoration: line-through;">$1</span>',// barre
-		'<span style="text-decoration: underline;">$1</span>',	// souligne
+		'<strong>$1</strong>',												// strong
+		'<em>$1</em>',															// italic
+		'<del>$1</del>',														// barre
+		'<u>$1</u>',															// souligne
 		'&thinsp;»',															// close quote
 		'«&thinsp;',															// open quote
 		'&thinsp;!',															// !
@@ -280,23 +281,23 @@ function formatage_links($texte) {
 	$toreplace = array(
 		'$1<a href="$2">$2</a>',												// url  '$1<a href="$2">$2</a>'
 		'<a href="$2">$1</a>',												// a href
-		'<span style="font-weight: bold;">$1</span>',				// strong
-		'<span style="font-style: italic;">$1</span>',				// italic
-		'<span style="text-decoration: line-through;">$1</span>',// barre
-		'<span style="text-decoration: underline;">$1</span>',	// souligne
+		'<strong>$1</strong>',												// strong
+		'<em>$1</em>',															// italic
+		'<del>$1</del>',														// barre
+		'<u>$1</u>',															// souligne
 //		'$1<br/>'."\n",														// br : retour à la ligne sans saut de ligne
 	);
 
 	// ceci permet de formater l’ensemble du message, sauf les balises [code],
 	$nb_balises_code_avant = preg_match_all('#\[code\](.*?)\[/code\]#s', $texte, $balises_code, PREG_SET_ORDER);
 	$texte_formate = preg_replace($tofind, $toreplace, ' '.$texte.' ');
+	$texte_formate = nl2br(trim(($texte_formate)));
 	if ($nb_balises_code_avant) {
 		$nb_balises_code_apres = preg_match_all('#\[code\](.*?)\[/code\]#s', $texte_formate, $balises_code_apres, PREG_SET_ORDER);
 		foreach ($balises_code as $i => $code) {
 			$texte_formate = str_replace($balises_code_apres[$i][0], '<pre>'.$balises_code[$i][1].'</pre>', $texte_formate);
 		}
 	}
-	$texte_formate = nl2br(trim(($texte_formate)));
 	return $texte_formate;
 }
 
@@ -307,11 +308,6 @@ function date_formate($id, $format_force='') {
 		$time_article = mktime(0, 0, 0, $date['mois'], $date['jour'], $date['annee']);
 		$auj = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
 		$hier = mktime(0, 0, 0, date('m'), date('d')-'1', date('Y'));
-	if ( $time_article == $auj ) {
-		$retour = $GLOBALS['lang']['aujourdhui'];
-	} elseif ( $time_article == $hier ) {
-		$retour = $GLOBALS['lang']['hier'];
-	} else {
 		$jour_l = jour_en_lettres($date['jour'], $date['mois'], $date['annee']);
 		$mois_l = mois_en_lettres($date['mois']);
 			$format = array (
@@ -319,15 +315,22 @@ function date_formate($id, $format_force='') {
 				'1' => $date['mois'].'/'.$date['jour'].'/'.$date['annee'],                 // 01/14/1983
 				'2' => $date['jour'].' '.$mois_l.' '.$date['annee'],                       // 14 janvier 1983
 				'3' => $jour_l.' '.$date['jour'].' '.$mois_l.' '.$date['annee'],           // vendredi 14 janvier 1983
-				'4' => $mois_l.' '.$date['jour'].', '.$date['annee'],                      // janvier 14, 1983
-				'5' => $jour_l.', '.$mois_l.' '.$date['jour'].', '.$date['annee'],         // vendredi, janvier 14, 1983
-				'6' => $date['annee'].'-'.$date['mois'].'-'.$date['jour'],                 // 1983-01-14
+				'4' => $jour_l.' '.$date['jour'].' '.$mois_l,                        // vendredi 14 janvier
+				'5' => $mois_l.' '.$date['jour'].', '.$date['annee'],                // janvier 14, 1983
+				'6' => $jour_l.', '.$mois_l.' '.$date['jour'].', '.$date['annee'],   // vendredi, janvier 14, 1983
+				'7' => $date['annee'].'-'.$date['mois'].'-'.$date['jour'],           // 1983-01-14
+				'8' => substr($jour_l,0,3).'. '.$date['jour'].' '.$mois_l,           // ven. 14 janvier
 			);
 
 		if ($format_force != '') {
 			$retour = $format[$format_force];
 		} else {
 			$retour = $format[$GLOBALS['format_date']];
+
+			if ( $time_article == $auj ) {
+				$retour = $GLOBALS['lang']['aujourdhui'].', '.$retour;
+			} elseif ( $time_article == $hier ) {
+				$retour = $GLOBALS['lang']['hier'].', '.$retour;
 		}
 	}
 	return ucfirst($retour);
@@ -346,6 +349,12 @@ function heure_formate($id) {
 	return $valeur;
 }
 
+function date_formate_iso($id) {
+	$date = decode_id($id);
+	$ts = mktime($date['heure'], $date['minutes'], $date['secondes'], $date['mois'], $date['jour'], $date['annee']); // ts : timestamp
+	$date_iso = date('c', $ts);
+	return $date_iso;
+}
 // à partir d’une valeur en octets (par ex 20M) retourne la quantité en octect.
 // le format « 20M » est par exemple retourné avec ini_get("max_upload_size").
 function return_bytes($val) {
@@ -434,57 +443,13 @@ function mois_en_lettres($numero, $abbrv='') {
 	}
 }
 
-function nombre_articles($nb) {
+function nombre_objets($nb, $type) {
 	if ($nb == '0') {
-		$retour = $GLOBALS['lang']['note_no_article'];
+		$retour = $GLOBALS['lang']['note_no_'.$type];
 	} elseif ($nb == '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_article'];
+		$retour = $nb.' '.$GLOBALS['lang']['label_'.$type];
 	} elseif ($nb > '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_articles'];
-	}
-	return $retour;
-}
-
-function nombre_commentaires($nb) {
-	if ($nb == '0') {
-		$retour = $GLOBALS['lang']['note_no_comment'];
-	} elseif ($nb == '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_commentaire'];
-	} else {
-		$retour = $nb.' '.$GLOBALS['lang']['label_commentaires'];
-	}
-	return $retour;
-}
-
-function nombre_liens($nb) {
-	if ($nb == '0') {
-		$retour = $GLOBALS['lang']['note_no_link'];
-	} elseif ($nb == '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_link'];
-	} elseif ($nb > '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_links'];
-	}
-	return $retour;
-}
-
-function nombre_images($nb) {
-	if ($nb == '0') {
-		$retour = $GLOBALS['lang']['note_no_image'];
-	} elseif ($nb == '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_image'];
-	} elseif ($nb > '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_images'];
-	}
-	return $retour;
-}
-
-function nombre_fichiers($nb) {
-	if ($nb == '0') {
-		$retour = $GLOBALS['lang']['note_no_file'];
-	} elseif ($nb == '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_fichier'];
-	} elseif ($nb > '1') {
-		$retour = $nb.' '.$GLOBALS['lang']['label_fichiers'];
+		$retour = $nb.' '.$GLOBALS['lang']['label_'.$type.'s'];
 	}
 	return $retour;
 }
