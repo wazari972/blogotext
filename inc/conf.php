@@ -24,7 +24,7 @@ $GLOBALS['dossier_backup'] = 'bt_backup/'. $_SERVER['SERVER_NAME'];
 $GLOBALS['dossier_images'] = 'img/'. $_SERVER['SERVER_NAME'];
 $GLOBALS['dossier_fichiers'] = 'files/'. $_SERVER['SERVER_NAME'];
 $GLOBALS['dossier_themes'] = 'themes';
-$GLOBALS['dossier_cache'] = 'cache';
+$GLOBALS['dossier_cache'] = 'cache/'.$_SERVER['SERVER_NAME'];
 $GLOBALS['dossier_db'] = 'databases/'. $_SERVER['SERVER_NAME'];
 $GLOBALS['dossier_config'] = 'config/' . $_SERVER['SERVER_NAME'];
 
