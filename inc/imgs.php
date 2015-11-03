@@ -541,7 +541,7 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 		$form .= '<p><strong>'.ucfirst('codes d’intégration :').'</strong></p>'."\n";
 		$form .= '<input onfocus="this.select()" class="text" type="text" value=\''.$dossier.'/'.$myfile['bt_filename'].'\' />'."\n";
 		if ($myfile['bt_type'] == 'image') { // si le fichier est une image, on ajout BBCode pour [IMG] et le code en <img/>
-			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'![description]['.$dossier.'/'.$myfile['bt_filename']."]' />\n";
+			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'![description]('.$dossier.'/'.$myfile['bt_filename'].")' />\n";
 		} else {
 			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'<a href="'.$dossier.'/'.$myfile['bt_filename'].'" />'.$myfile['bt_filename'].'</a>\' />'."\n";
 			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'[url]'.$dossier.'/'.$myfile['bt_filename'].'[/url]\' />'."\n";
