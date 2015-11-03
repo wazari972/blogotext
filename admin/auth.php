@@ -25,6 +25,41 @@ error_reporting($GLOBALS['show_errors']);
 $max_attemps = 10; // max attempts before blocking login page
 $wait_time = 30;   // time to wait before unblocking login page, in minutes
 
+// autologin for SSH authenticated ips
+$AUTOLOGIN_FILE = "/var/www/alternc/k/kevin/.ssh_autologin";
+$autologin = FALSE;
+if (file_exists($AUTOLOGIN_FILE)
+        //&& (time() - filemtime($AUTOLOGIN_FILE)) < 60*60*12 // file is newer than 12h
+        && strpos(file_get_contents($AUTOLOGIN_FILE), $_SERVER["REMOTE_ADDR"]) !== False
+        )
+{
+        $autologin = TRUE;
+        $_POST['nom_utilisateur'] = $GLOBALS['identifiant'];
+        $_POST['mot_de_passe'] = $GLOBALS['mdp'];
+        $_POST['_verif_envoi'] = 1;
+	$_POST['stay_logged'] = 1;
+}
+
+
+function valider_form() {;
+        $mot_de_passe_ok = $GLOBALS['mdp'].$GLOBALS['identifiant'];
+        $mot_de_passe_essai = hash_password($_POST['mot_de_passe'], $GLOBALS['salt']).$_POST['nom_utilisateur'];
+        // first test password
+        if ($mot_de_passe_essai != $mot_de_passe_ok) {
+                return FALSE;
+        }
+        // then test captcha
+        if (isset($GLOBALS['connexion_captcha']) and ($GLOBALS['connexion_captcha'] == "1")) { // si captcha activé
+                if ( empty($_SESSION['freecap_word_hash']) or empty($_POST['word']) or (sha1(strtolower($_POST['word'])) != $_SESSION['freecap_word_hash']) ) {
+                        return FALSE;
+                }
+                $_SESSION['freecap_word_hash'] = FALSE; // reset captcha word
+        }
+
+        return TRUE;
+}
+
+
 // Acces LOG
 if (isset($_POST['nom_utilisateur'])) {
 	// IP
@@ -42,27 +77,14 @@ if (check_session() === TRUE) { // return to index if session is already open.
 	exit;
 }
 
-// autologin for SSH authenticated ips
-$AUTOLOGIN_FILE = "/var/www/alternc/k/kevin/.ssh_autologin";
-$autologin = FALSE;
-if (file_exists($AUTOLOGIN_FILE)
-	//&& (time() - filemtime($AUTOLOGIN_FILE)) < 60*60*12 // file is newer than 12h
-	&& strpos(file_get_contents($AUTOLOGIN_FILE), $_SERVER["REMOTE_ADDR"]) !== False
-	)
-{
-
-	$autologin = TRUE;
-        $_POST['nom_utilisateur'] = $GLOBALS['identifiant'];
-        $_POST['mot_de_passe'] = $GLOBALS['mdp'];
-}
-
 // Auth checking :
-if (isset($_POST['_verif_envoi']) and valider_form() === TRUE) { // OK : getting in.
+if (isset($_POST['_verif_envoi']) and ($autologin or valider_form())) { // OK : getting in
 	if ($GLOBALS['use_ip_in_session'] == 1) {
 		$ip = get_real_ip();
 	} else {
 		$ip = date('m'); // make session expire at least once a month, disregarding IP changes.
 	}
+
 	$_SESSION['user_id'] = $_POST['nom_utilisateur'].hash_password($_POST['mot_de_passe'], $GLOBALS['salt']).md5($_SERVER['HTTP_USER_AGENT'].$ip); // set special hash
 	usleep(100000); // 100ms sleep to avoid bruteforce
 
@@ -87,12 +109,11 @@ if (isset($_POST['_verif_envoi']) and valider_form() === TRUE) { // OK : getting
 		// The login was right, so we give a token because the previous one expired with the session
 		$_SESSION['BT-post-token'] = new_token();
 	}
-
 	header('Location: '.$location);
 
 } else { // On sort…
 		// …et affiche la page d'auth
-		afficher_top('Identification');
+		afficher_html_head('Identification');
 		echo '<div id="axe">'."\n";
 		echo '<div id="pageauth">'."\n";
 		echo '<h1>'.$GLOBALS['nom_application'].'</h1>'."\n";
@@ -104,30 +125,11 @@ if (isset($_POST['_verif_envoi']) and valider_form() === TRUE) { // OK : getting
 			echo '<p><label for="word">'.ucfirst($GLOBALS['lang']['label_dp_word_captcha']).'</label><input class="text" type="text" id="word" name="word" value="" /></p>'."\n";
 			echo '<p><a href="#" onclick="new_freecap();return false;" title="'.$GLOBALS['lang']['label_dp_changer_captcha'].'"><img src="../inc/freecap/freecap.php" id="freecap" alt="captcha"></a></p>'."\n";
 		}
-
 		echo '<p><label for="stay_logged">'.$GLOBALS['lang']['label_stay_logged'].'</label><input type="checkbox" id="stay_logged" name="stay_logged" checked /></p>'."\n";
 		echo '<input class="blue-square" type="submit" name="submit" value="'.$GLOBALS['lang']['connexion'].'" />'."\n";
 		echo '<input type="hidden" name="_verif_envoi" value="1" />'."\n";
 		echo '</div>'."\n";
 		echo '</form>'."\n";
-}
-
-function valider_form() {
-	$mot_de_passe_ok = $GLOBALS['mdp'].$GLOBALS['identifiant'];
-	$mot_de_passe_essai = hash_password($_POST['mot_de_passe'], $GLOBALS['salt']).$_POST['nom_utilisateur'];
-	// first test password
-	if ($mot_de_passe_essai != $mot_de_passe_ok) {
-		return FALSE;
-	}
-	// then test captcha
-	if (isset($GLOBALS['connexion_captcha']) and ($GLOBALS['connexion_captcha'] == "1")) { // si captcha activé
-		if ( empty($_SESSION['freecap_word_hash']) or empty($_POST['word']) or (sha1(strtolower($_POST['word'])) != $_SESSION['freecap_word_hash']) ) {
-			return FALSE;
-		}
-		$_SESSION['freecap_word_hash'] = FALSE; // reset captcha word
-	}
-
-	return TRUE;
 }
 
 echo "\n".'<script src="style/javascript.js" type="text/javascript"></script>'."\n";
