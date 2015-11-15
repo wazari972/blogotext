@@ -149,7 +149,7 @@ function afficher_msg() {
 
 function apercu($article) {
 	if (isset($article)) {
-		$apercu = '<h2>'.$article['bt_title'].'</h2>'."\n";
+		$apercu = '<h2> '.$article['bt_title'].'</h2>'."\n";
 		$apercu .= '<div><strong>'.$article['bt_abstract'].'</strong></div>'."\n";
 		$apercu .= '<div>'.rel2abs_admin($article['bt_content']).'</div>'."\n";
 		echo '<div id="apercu">'."\n".$apercu.'</div>'."\n\n";

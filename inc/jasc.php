@@ -60,13 +60,13 @@ function uploadNext() {
 // If article form has been changed, ask for confirmation before closing page/tab.
 
 
-function js_alert_before_quit($a) {
+function js_alert_before_quit($a, $divname="contenue") {
 $sc = '
-var contenuLoad = document.getElementById("contenu").value;
+var contenuLoad = document.getElementById("'.$divname.'").value;
 window.addEventListener("beforeunload", function (e) {
 	// From https://developer.mozilla.org/en-US/docs/Web/Reference/Events/beforeunload
 	var confirmationMessage = \''.$GLOBALS['lang']['question_quit_page'].'\';
-	if(document.getElementById("contenu").value == contenuLoad) { return true; };
+	if(document.getElementById("'.$divname.'").value == contenuLoad) { return true; };
 	(e || window.event).returnValue = confirmationMessage || \'\' ;	//Gecko + IE
 	return confirmationMessage;													// Webkit : ignore this.
 });

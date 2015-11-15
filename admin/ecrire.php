@@ -90,7 +90,7 @@ if (isset($_GET['md'])) {
 		apercu($post);
 	}
 	afficher_form_billet($post, $erreurs_form);
-	echo js_alert_before_quit(0);
+	echo js_alert_before_quit(1);
 }
 
 echo "\n".'<script src="style/javascript.js" type="text/javascript"></script>'."\n";

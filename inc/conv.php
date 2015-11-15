@@ -172,7 +172,7 @@ function formatage_wiki($texte) {
 		'$1<br/>'."\n",															// br : retour à la ligne sans saut de ligne
 		'<a href="$2">$1</a>',													// a href
 		'<a href="$1$2">$2</a>',												// url
-		'<a href="$1" target="_blank"><img src="[med]$1[/med]" alt="$3"></a>',										// img
+        '<a href="$1" target="_blank"><img src="[med]$1[/med]" alt="$3"></a>',										// img
 		'<span style="font-weight: bold;">$1</span>',					// strong
                 '<var>$1</var>',					// inline code
                 '<span style="font-style: italic;">$1</span>',					// italic
@@ -192,7 +192,8 @@ function formatage_wiki($texte) {
 		'«&nbsp;',
 		'&nbsp;!',
 		'&nbsp;:',
-		'$1-med.jpg', // ext=$2
+        '&nbsp;?',
+		'$1-med.jpg', // ext=$2 // but ext must be lower case
 	);
 
 	// un array des balises [code] avant qu’ils ne soient modifiées par le preg_replace($tofind, $toreplace, $texte);
