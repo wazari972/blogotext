@@ -30,6 +30,15 @@ if (strpos($_SERVER["SERVER_NAME"], "phd.kevin.pouget.me") !== false
 	header("Location: index.php?tag=work");
 	die(); 
 }
+
+if (strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false 
+ && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
+ && strpos($_SERVER["REQUEST_URI"], "?") === false ) 
+{
+	header("Location: wall.php");
+	die(); 
+}
+
 header('Content-Type: text/html; charset=UTF-8');
 
 $begin = microtime(TRUE);
