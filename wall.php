@@ -44,7 +44,13 @@ require_all();
 
 $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 
-$query = "SELECT * FROM articles WHERE bt_statut=1 ORDER BY bt_date DESC";
+if (strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false) {
+    $ORDER = 'ASC';
+} else {
+    $ORDER = 'DESC';
+}
+
+$query = "SELECT * FROM articles WHERE bt_statut=1 ORDER BY bt_id $ORDER";
 
 // paramètre de page "p"
 $sql_p = '';
