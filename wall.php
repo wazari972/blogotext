@@ -43,14 +43,33 @@ function require_all() {
 require_all();
 
 $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
+$array = array();
+$ORDER = 'DESC'; // may be overwritten
+
+$query = "SELECT * FROM articles WHERE bt_statut=1";
 
 if (strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false) {
-    $ORDER = 'ASC';
-} else {
-    $ORDER = 'DESC';
+    $ORDER = 'ASC';    
 }
 
-$query = "SELECT * FROM articles WHERE bt_statut=1 ORDER BY bt_id $ORDER";
+// paramètre de tag "tag"
+if (isset($_GET['tag'])) {
+    $sql_tag = "( bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? ) ";
+    $array[] = $_GET['tag'];
+    $array[] = $_GET['tag'].', %';
+    $array[] = '%, '.$_GET['tag'].', %';
+    $array[] = '%, '.$_GET['tag'];
+
+    $query .= ' AND '.$sql_tag;
+
+    if(in_array(strtolower($_GET['tag']), array("polynesie", "chypre"))) {
+        $ORDER = 'ASC';   
+    } 
+}
+
+
+
+$query .= " ORDER BY bt_id $ORDER";
 
 // paramètre de page "p"
 $sql_p = '';
@@ -59,9 +78,10 @@ if (isset($_GET['p']) and is_numeric($_GET['p']) and $_GET['p'] >= 1) {
 } elseif (!isset($_GET['d']) ) {
     //$sql_p = ' LIMIT '.$GLOBALS['max_bill_acceuil'];
 }
+
 $query .= $sql_p;
 
-$tableau = liste_elements($query, array(), 'articles');
+$tableau = liste_elements($query, $array, 'articles');
 
 function endsWith($haystack, $needle) {
     // search forward starting from end minus needle length characters
