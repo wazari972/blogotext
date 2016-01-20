@@ -117,7 +117,12 @@ else
         
         // called with the text once all normalizations have been completed (tabs to spaces, line endings, etc.), but before any conversions have
         pluginHooks.addNoop("postNormalization");
-        
+       
+        // makes converter instance aviable in private methods
+        var converter = this;
+        this.autoNewLine = false;  // when true, RETURN becomes a literal newline
+ 	                           // WARNING: this is a significant deviation from the markdown spec
+ 
         // Called with the text before / after creating block elements like code blocks and lists. Note that this is called recursively
         // with inner content, e.g. it's called with the full text, and then only with the content of a blockquote. The inner
         // call will receive outdented text.
@@ -552,6 +557,14 @@ else
             text = text.replace(/  +\n/g, " <br>\n");
             
             text = pluginHooks.postSpanGamut(text);
+
+            // Do hard breaks:
+            if(converter.autoNewLine) {
+                text = text.replace(/\n/g, " <br>\n");
+            } else {
+                text = text.replace(/  +\n/g, " <br>\n");
+            }
+
 
             return text;
         }
