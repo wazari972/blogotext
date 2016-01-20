@@ -49,7 +49,8 @@ $ORDER = 'DESC'; // may be overwritten
 $query = "SELECT * FROM articles WHERE bt_statut=1";
 
 if (strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false) {
-    $ORDER = 'ASC';    
+    $ORDER = 'ASC';
+    $_GET['tag'] = 'polynesie';
 }
 
 // paramètre de tag "tag"
@@ -104,6 +105,8 @@ function afficher_wall($tableau) {
         
         foreach ($tableau as $element) {
             if (empty($element['bt_notes'])) {
+                //continue;
+            } else if ($element['bt_notes'] == "skip") {
                 continue;
             }
 
