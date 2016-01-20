@@ -1,6 +1,10 @@
 (function () {                
     var converter = new Markdown.Converter();
 
+    if (window.location.hostname == "capoeira.0x972.info") {alert("set")
+      converter.autoNewLine = true;
+    }
+
     converter.hooks.chain("postConversion", function (text) {
         document.getElementById("wmd-output").value = text;
         return text;
