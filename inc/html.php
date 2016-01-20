@@ -413,12 +413,13 @@ function liste_tags($billet, $html_link) {
 			foreach($tag_list as $tag) {
 				$tag = trim($tag);
 				$tagurl = urlencode($tag);
-				$liste .= '<a href="'.basename($_SERVER['PHP_SELF']).'?tag='.$tagurl.$mode.'" rel="tag">'.$tag.'</a>';
+				$liste .= '<a href="'.basename($_SERVER['PHP_SELF']).'?tag='.$tagurl.$mode.'" rel="tag">'.$tag.'</a>&nbsp;';
 			}
 		} else {
 			foreach($tag_list as $tag) {
 				$tag = trim($tag);
 				$tag = diacritique($tag, 0, 0);
+                                $liste .= " $tag";
 			}
 		}
 	} else {
