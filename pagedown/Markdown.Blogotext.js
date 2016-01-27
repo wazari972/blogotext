@@ -1,7 +1,7 @@
 (function () {                
     var converter = new Markdown.Converter();
 
-    if (window.location.hostname == "capoeira.0x972.info") {alert("set")
+    if (window.location.hostname == "capoeira.0x972.info") {
       converter.autoNewLine = true;
     }
 
