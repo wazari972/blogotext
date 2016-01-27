@@ -78,6 +78,7 @@ function afficher_liste_articles($tableau) {
 			} else {
 				$out .= "\t\t".'<span><a href="'.$article['bt_link'].'">'.$GLOBALS['lang']['preview'].'</a></span>'."\n";
 			}
+                        $out .= "		".'<span>&nbsp;<a title="Share on Google+" href="https://plus.google.com/share?url='.$GLOBALS['lang']['lien_article'].'" target="_blank"><img src="https://www.gstatic.com/images/icons/gplus-16.png" /></a></span>'."\n";
 			$out .= "\t".'</li>'."\n";
 			$i++;
 		}
