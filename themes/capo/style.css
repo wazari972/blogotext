@@ -324,9 +324,18 @@ body > header p {
 }
 .capoeira-chant {
     color: blue;
+    float: left;
 }
 .capoeira-traduction {
     color: green;
+    float: right;
+    text-align: right;
+}
+.capoeira-break {
+    clear: both;
+}
+.capoeira-after {
+   text-align: center;
 }
 
 /* list of comments */
