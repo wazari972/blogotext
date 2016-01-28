@@ -53,6 +53,7 @@ $GLOBALS['balises'] = array(
 	'article_titre_page' => '{article_titre_page}',
 	'article_titre_echape' => '{article_titre_echape}',
 	'article_chapo' => '{article_chapo}',
+        'article_notes' => '{article_notes}',
 	'article_contenu' => '{article_contenu}',
 	'article_heure' => '{article_heure}',
 	'article_date' => '{article_date}',
@@ -104,8 +105,9 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 		$texte = str_replace($GLOBALS['balises']['article_titre_echape'], urlencode($solo_art['bt_title']), $texte);
 		$texte = str_replace($GLOBALS['balises']['article_lien'], $solo_art['bt_link'], $texte);
 		if ($solo_art['bt_type'] == 'article') {
-			$texte = str_replace($GLOBALS['balises']['article_chapo'], $solo_art['bt_abstract'], $texte);
+			$texte = str_replace($GLOBALS['balises']['article_chapo'], htmlspecialchars($solo_art['bt_abstract'], ENT_QUOTES), $texte);
 			$texte = str_replace($GLOBALS['balises']['blog_motscles'], $solo_art['bt_keywords'], $texte);
+                        $texte = str_replace($GLOBALS['balises']['article_notes'], $solo_art['bt_notes'], $texte);
 		}
 		if ($solo_art['bt_type'] == 'link' or $solo_art['bt_type'] == 'note') {
 			$texte = str_replace($GLOBALS['balises']['article_titre_page'], $solo_art['bt_title'].' - ', $texte);
