@@ -6,6 +6,7 @@
     }
 
     converter.hooks.chain("postConversion", function (text) {
+        text = do_capo_split(text)
         document.getElementById("wmd-output").value = text;
         return text;
     });

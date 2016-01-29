@@ -47,6 +47,14 @@ if (strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false
         die();
 }
 
+if (strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false
+ && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
+ && strpos($_SERVER["REQUEST_URI"], "?") === false )
+{
+        header("Location: ?liste");
+        die();
+}
+
 
 header('Content-Type: text/html; charset=UTF-8');
 

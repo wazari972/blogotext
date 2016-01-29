@@ -24,7 +24,17 @@ function afficher_html_head($titre) {
 	$txt .= "\t".'<meta charset="UTF-8" />'."\n";
 	$txt .= "\t".'<link type="text/css" rel="stylesheet" href="style/style.css.php" />'."\n";
 	$txt .= "\t".'<meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />'."\n";
-	$txt .= "\t".'<title>'.$titre.' | '.$GLOBALS['nom_application'].'</title>'."\n";
+        $txt .= "\t".'<title>'.$titre.' | '.$GLOBALS['nom_application'].'</title>'."\n";
+
+        if (strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false
+            && $_SERVER["SCRIPT_NAME"] === "/admin/ecrire.php") 
+        {
+        	 $txt .= "\t".'<script src="/'.$GLOBALS['theme_style'].'/jquery-2.2.0.min.js"></script>'."\n";
+                 $txt .= "\t".'<script src="/'.$GLOBALS['theme_style'].'/traduc.js"></script>'."\n";
+                 $txt .= "\t".'<link rel="stylesheet" type="text/css" href="/'.$GLOBALS['theme_style'].'/style.css" media="all"/>'."\n";
+            $txt .= "\t".'<meta charset="UTF-8" />'."\n";
+        }
+
 	$txt .= '</head>'."\n";
 	$txt .= '<body id="body">'."\n\n";
 	echo $txt;
