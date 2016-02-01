@@ -27,7 +27,8 @@ article iframe {
 body {
 	background: #f2f2f2;
 	font-size: 15px;
-	color: #222;
+	/*color: #222;*/
+        color: #444;
 	font-family: 'Trebuchet MS', helvetica, arial, sans-serif;
 	word-wrap: break-word;
 }
@@ -47,7 +48,7 @@ a:hover {
 }
 
 p, ul {
-    line-height: 20px;
+    line-height: 1.6;
     text-align: justify;
     margin-left: 35px;
     margin-right: 35px;
@@ -183,7 +184,8 @@ h1 img {
 .post-cnt {
 	padding: 20px;
 	background-color: #fefefe;
-	color: black;
+        font-size: 18px;
+        line-height: 1.6;
 	/*text-shadow: 0px 0px 2px rgba(120, 120, 120, .2);*/
 }
 

@@ -6,7 +6,9 @@
     }
 
     converter.hooks.chain("postConversion", function (text) {
-        text = do_capo_split(text)
+        if (window.location.hostname == "capoeira.0x972.info") {
+          text = do_capo_split(text)
+	}
         document.getElementById("wmd-output").value = text;
         return text;
     });

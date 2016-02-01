@@ -25,8 +25,10 @@ article iframe {
 
 body {
 	background: #f2f2f2;
-	font-size: 15px;
-	color: #222;
+	font-size: 18px;
+        color: #444;
+	/*color: #222;*/
+        line-height: 1.6;
 	font-family: 'Trebuchet MS', helvetica, arial, sans-serif;
 	word-wrap: break-word;
 }
@@ -48,6 +50,7 @@ a:hover {
 /* old browser compatibility */
 article, aside, figcaption, figure, footer, header, hgroup, nav, section {
 	display: block;
+        line-height: 1.6;
 }
 
 /* Wall*/
@@ -271,7 +274,7 @@ h1 {
 }
 
 .post-cnt p {
-	margin-bottom: 10px;
+        font-size: 18px;
 }
 .post-cnt a {
 	color: #27f;
@@ -808,6 +811,7 @@ adaptative styles for the width of the visitor's screen */
 }
 
 /* very    b  i  g    screens (larger than 1800 px) */
+/*
 @media (min-width: 1800px) {
 	body {
 		font-size: 17px;
@@ -820,7 +824,7 @@ adaptative styles for the width of the visitor's screen */
 	#menu {
 		padding: 15px 20%;
 	}
-}
+}*/
 
 @media print {
 	body, .post {
