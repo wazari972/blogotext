@@ -182,7 +182,7 @@ elseif ( isset($_GET['id']) and preg_match('#\d{14}#', $_GET['id']) ) {
 
 // List of all articles
 elseif (isset($_GET['liste'])) {
-	$query = "SELECT bt_date,bt_id,bt_title,bt_nb_comments,bt_link FROM articles WHERE bt_date <= ".date('YmdHis')." AND bt_statut=1 ORDER BY bt_date DESC";
+	$query = "SELECT bt_date,bt_id,bt_title,bt_notes,bt_nb_comments,bt_link FROM articles WHERE bt_date <= ".date('YmdHis')." AND bt_statut=1 ORDER BY bt_date DESC";
 	$tableau = liste_elements($query, array(), 'articles');
 	afficher_liste($tableau);
 }

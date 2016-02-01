@@ -503,8 +503,10 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 		$myfile = $fichiers[0];
 		if ($myfile['bt_type'] == 'image') {
 			$dossier = $GLOBALS['racine'].$GLOBALS['dossier_images'].$myfile['bt_path'];
+                        $dossier_noroot = $GLOBALS['dossier_images'].$myfile['bt_path'];
 		} else {
 			$dossier = $GLOBALS['racine'].$GLOBALS['dossier_fichiers'];
+                        $dossier_noroot = $GLOBALS['dossier_fichiers'];
 		}
 
 		$form .= '<div class="edit-fichier">'."\n";
@@ -539,12 +541,13 @@ function afficher_form_fichier($erreurs, $fichiers, $what) { // ajout d’un fic
 		// la partie des codes d’intégration (bbcode, etc.)
 		$form .= '<div id="interg-codes">'."\n";
 		$form .= '<p><strong>'.ucfirst('codes d’intégration :').'</strong></p>'."\n";
-		$form .= '<input onfocus="this.select()" class="text" type="text" value=\''.$dossier.'/'.$myfile['bt_filename'].'\' />'."\n";
+		$form .= '<input class="text" type="text" value=\''.$dossier.'/'.$myfile['bt_filename'].'\' />'."\n";
+                $form .= '<input class="text" type="text" value=\'/'.$dossier_noroot.'/'.$myfile['bt_filename'].'\' />'."\n";
 		if ($myfile['bt_type'] == 'image') { // si le fichier est une image, on ajout BBCode pour [IMG] et le code en <img/>
-			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'![description]('.$dossier.'/'.$myfile['bt_filename'].")' />\n";
+			$form .= '<input class="text" type="text" value=\'![description](/'.$dossier_noroot.'/'.$myfile['bt_filename'].")' />\n";
 		} else {
-			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'<a href="'.$dossier.'/'.$myfile['bt_filename'].'" />'.$myfile['bt_filename'].'</a>\' />'."\n";
-			$form .= '<input onfocus="this.select()" class="text" type="text" value=\'[url]'.$dossier.'/'.$myfile['bt_filename'].'[/url]\' />'."\n";
+			$form .= '<input class="text" type="text" value=\'<a href="'.$dossier.'/'.$myfile['bt_filename'].'" />'.$myfile['bt_filename'].'</a>\' />'."\n";
+			$form .= '<input class="text" type="text" value=\'[url]'.$dossier.'/'.$myfile['bt_filename'].'[/url]\' />'."\n";
 		}
 
 		$form .= '</div>'."\n";
