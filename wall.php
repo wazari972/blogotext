@@ -49,8 +49,17 @@ $ORDER = 'DESC'; // may be overwritten
 $query = "SELECT * FROM articles WHERE bt_statut=1";
 
 if (strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false) {
-    $ORDER = 'ASC';
-    $_GET['tag'] = 'polynesie';
+    if (!isset($_GET['tag'])) {
+        $_GET['tag'] = 'polynesie';
+        $ORDER = 'ASC';
+    }
+}
+
+// ordre chronologique ?
+if ($GLOBALS['old_first'] || isset($_GET['old_first']) && $_GET['old_first'] !== 'n' ) {
+      $ORDER = "ASC ";
+} else {
+      $ORDER = "DESC ";
 }
 
 // paramètre de tag "tag"
