@@ -342,24 +342,32 @@ function get_article_list($tableau) {
 	}
 	return $HTML_elmts;
 }
+
 // Affiche la liste des articles, avec le &liste dans l’url
 function afficher_liste($tableau) {
-  echo get_liste($tableau);
+        $HTML_elmts = '';
+        if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) {
+          die($GLOBALS['lang']['err_theme_introuvable']);
+        }
+
+        $HTML_article = conversions_theme($theme_page, array(), 'list');
+        if (!empty($tableau)) {
+                $HTML_elmts = get_article_list($tableau);
+                $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
+        }
+        else {
+                $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $GLOBALS['lang']['note_no_article'], $HTML_article);
+        }
+
+        echo $HTML;
 }
+
+
+
 function get_liste($tableau) {
-	$HTML_elmts = '';
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) {
           die($GLOBALS['lang']['err_theme_introuvable']);
         }
         
-	$HTML_article = conversions_theme($theme_page, array(), 'list');
-	if (!empty($tableau)) {
-                $HTML_elmts = get_article_list($tableau);
-                $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
- 	}
- 	else {
- 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $GLOBALS['lang']['note_no_article'], $HTML_article);
- 	}
-
-	return $HTML;
+	return conversions_theme($theme_page, array(), 'list');
 }
