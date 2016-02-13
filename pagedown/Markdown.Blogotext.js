@@ -9,8 +9,12 @@
         if (window.location.hostname == "capoeira.0x972.info") {
           text = do_capo_split(text)
 	}
+        // save transformed text in textarea for sending with the form
         document.getElementById("wmd-output").value = text;
-        return text;
+
+        
+        return text.replace("<iframe", "&laquo;iframe" )
+                   .replace("</iframe>", "&laquo;/iframe&raquo;" );
     });
                 
     var help = function () { alert("Do you need help?"); }
