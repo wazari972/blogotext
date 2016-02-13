@@ -320,7 +320,7 @@ function afficher_index($tableau, $type) {
 }
 
 // Affiche la liste des articles, avec le &liste dans l’url
-function get_article_list($tableau) {
+function get_article_list($tableau, $alpha=0) {
 	$HTML_elmts = '';
 
 
@@ -330,9 +330,29 @@ function get_article_list($tableau) {
     
 	if (!empty($tableau)) {
 		$HTML_elmts .= '<ul id="liste-all-articles">'."\n";
+
+        if ($alpha) {
+          function sortByOrder($a, $b) {
+            return $a['bt_title'][0] > $b['bt_title'][0];
+          }
+        
+          usort($tableau, "sortByOrder");
+        }
+        $prev = "";
 		foreach ($tableau as $e) {
+            if ($alpha) {
+              $first_letter = $e['bt_title'][0];
+              if ($first_letter != $prev) {
+                $HTML_elmts .= "\t".'<li class="list-letter">'.$first_letter.'</li>'."\n";
+                $prev = $first_letter;
+              }
+            }
 			$short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
-			$HTML_elmts .= "\t".'<li><time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time> <a href="'.$e['bt_link'].'">'.$e['bt_title'].'</a></li>'."\n";
+            $title = liste_tags($e)." | ".htmlspecialchars(trim(mb_substr(strip_tags($e['bt_content']), 0, 249)), ENT_QUOTES).'...';
+			$HTML_elmts .= "\t".'<li>'
+                        .($alpha ? '' : ('<time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time> '))
+                        .'<a href="'.$e['bt_link'].'" title="'.$title.'">'
+                        .$e['bt_title'].'</a></li>'."\n";
 		}
 		$HTML_elmts .= '</ul>'."\n";
 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
@@ -344,7 +364,7 @@ function get_article_list($tableau) {
 }
 
 // Affiche la liste des articles, avec le &liste dans l’url
-function afficher_liste($tableau) {
+function afficher_liste($tableau, $alpha=0) {
         $HTML_elmts = '';
         if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) {
           die($GLOBALS['lang']['err_theme_introuvable']);
@@ -352,7 +372,7 @@ function afficher_liste($tableau) {
 
         $HTML_article = conversions_theme($theme_page, array(), 'list');
         if (!empty($tableau)) {
-                $HTML_elmts = get_article_list($tableau);
+                $HTML_elmts = get_article_list($tableau, $alpha);
                 $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
         }
         else {
