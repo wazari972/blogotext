@@ -20,6 +20,16 @@
   src: local('Roboto Bold'), local('Roboto-Bold'), url("roboto-700.woff") format("woff");
 }
 
+a[href^="http://"]:after,
+a[href^="https://"]:after {
+  content: url(/themes/capo/Icon_External_Link.png);
+  margin: 0;
+}
+
+a[href*="//capoeira.0x972.info/"]:after {
+  content: '';
+  margin: 0;
+}
 
 /* GENERAL PAGE LAYOUT
 ------------------------------------------------------------ */
