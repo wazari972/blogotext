@@ -405,6 +405,9 @@ function lien_pagination() {
 function liste_tags($billet, $html_link) {
 	$tags = ($billet['bt_type'] == 'article') ? $billet['bt_categories'] : $billet['bt_tags'];
 	$mode = ($billet['bt_type'] == 'article') ? '' : '&amp;mode=links';
+    if (strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false) {
+      $mode .= "&alpha";
+    }
 	if (!empty($tags)) {
 		$tag_list = explode(',', $tags);
 		// remove diacritics, so that "ééé" does not passe after "zzz" and re-indexes

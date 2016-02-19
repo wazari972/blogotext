@@ -182,9 +182,25 @@ elseif ( isset($_GET['id']) and preg_match('#\d{14}#', $_GET['id']) ) {
 
 // List of all articles
 elseif (isset($_GET['liste']) or isset($_GET['alpha'])) {
-	$query = "SELECT bt_date,bt_id,bt_title,bt_type,bt_content,bt_categories,bt_abstract,bt_notes,bt_nb_comments,bt_link FROM articles WHERE bt_date <= ".date('YmdHis')." AND bt_statut=1 ORDER BY bt_date DESC";
+    $array = array();
+           
+  	// paramètre de tag "tag"
+	if (isset($_GET['tag'])) {
+      $sql_tag = "AND ( bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? ) ";
+      $array[] = $_GET['tag'];
+      $array[] = $_GET['tag'].', %';
+      $array[] = '%, '.$_GET['tag'].', %';
+      $array[] = '%, '.$_GET['tag'];
+      
+	} else {
+      
+      $sql_tag = "";
+    }
+    $what = "bt_date,bt_id,bt_title,bt_type,bt_content,bt_categories,bt_abstract,bt_notes,bt_nb_comments,bt_link";
     
-	$tableau = liste_elements($query, array(), 'articles');
+	$query = "SELECT $what FROM articles WHERE bt_date <= ".date('YmdHis')." AND bt_statut=1 $sql_tag ORDER BY bt_date DESC";
+    
+	$tableau = liste_elements($query, $array, 'articles');
 	afficher_liste($tableau, isset($_GET['alpha']));
     
 }
