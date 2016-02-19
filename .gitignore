@@ -1,9 +1,9 @@
-bt_backup/
-cache/
-config/
-databases/
-files/
-img/
+bt_backup
+cache
+config
+databases
+files
+img
 error.log
 .htaccess
 TODO
