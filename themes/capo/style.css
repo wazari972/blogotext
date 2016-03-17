@@ -258,8 +258,8 @@ q, blockquote {
 /* TOP HEADER with IMAGE
 ------------------------------------------------------------------------ */
 body > header {
-	text-align: center;
-	background: transparent url("header-bg.jpg") no-repeat scroll center center / cover;
+/*	text-align: center;*/
+	background: transparent url("header-bg2.jpg") no-repeat scroll center center / cover;
 	height: 450px;
 	font-size: 220%;
 	color: white;
@@ -271,7 +271,8 @@ body > header p {
 	flex: 1 1 100%;
 	font-style: italic;
 	vertical-align: bottom;
-	margin: 0;
+	margin-left: 800px;
+	margin-top: 100px;
 	text-shadow: 3px 3px 5px black, 3px 3px 5px black, 3px 3px 7px black;
 }
 
