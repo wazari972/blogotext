@@ -13,8 +13,8 @@
         document.getElementById("wmd-output").value = text;
 
         
-        return text.replace("<iframe", "&laquo;iframe" )
-                   .replace("</iframe>", "&laquo;/iframe&raquo;" );
+        return text.replace(new RegExp("<iframe", "g"), "&laquo;iframe" )
+                   .replace(new RegExp("</iframe>", "g"), "&laquo;/iframe&raquo;" );
     });
                 
     var help = function () { alert("Do you need help?"); }
