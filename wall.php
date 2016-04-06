@@ -79,7 +79,7 @@ if (isset($_GET['tag'])) {
 
 
 
-$query .= " ORDER BY bt_id $ORDER";
+$query .= " ORDER BY bt_date $ORDER";
 
 // paramètre de page "p"
 $sql_p = '';
