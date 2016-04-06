@@ -47,7 +47,9 @@ if (strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false
         die();
 }
 
-if (strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false
+$CAPOEIRA_WEBSITE = strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false;
+
+if ($CAPOEIRA_WEBSITE
  && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
  && strpos($_SERVER["REQUEST_URI"], "?") === false )
 {
@@ -359,7 +361,13 @@ else {
 
 	$tableau = liste_elements($query, $array, $where);
 	$GLOBALS['param_pagination'] = array('nb' => count($tableau), 'nb_par_page' => $GLOBALS['max_bill_acceuil']);
-	afficher_index($tableau, 'list');
+
+        if (isset($_GET['q'])) {
+          $want_alpha = $CAPOEIRA_WEBSITE;
+          afficher_liste($tableau, $want_alpha);
+        } else {
+          afficher_index($tableau, 'list');
+        }
 }
 
  $end = microtime(TRUE);
