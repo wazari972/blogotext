@@ -414,7 +414,10 @@ function init_post_fichier() { //no $mode : it's always admin.
 		// on new post, get info from the file itself
 		} else {
 			$file_id = date('YmdHis');
-			$dossier = htmlspecialchars($_POST['dossier']);
+			$dossier = "";
+			if (isset($_POST['is_it_edit'])) {
+				$dossier = htmlspecialchars($_POST['dossier']);
+			}
 			// ajout de fichier par upload
 			if (!empty($_FILES['fichier']) and ($_FILES['fichier']['error'] == 0)) {
 				$filename = pathinfo($_FILES['fichier']['name'], PATHINFO_FILENAME);

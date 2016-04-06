@@ -402,7 +402,7 @@ function lien_pagination() {
 }
 
 
-function liste_tags($billet, $html_link) {
+function liste_tags($billet, $html_link=0) {
 	$tags = ($billet['bt_type'] == 'article') ? $billet['bt_categories'] : $billet['bt_tags'];
 	$mode = ($billet['bt_type'] == 'article') ? '' : '&amp;mode=links';
     if (strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false) {
