@@ -408,7 +408,7 @@ body > header p {
 	padding-left: 53px; /* width gravatar + 5px margin of gravatar */
 }
 .com-footer {
-	text-align: right;	
+	text-align: right;
 }
 
 .com-footer a {
@@ -697,4 +697,28 @@ footer #lastcom ul li a {
 }
 
 
+/* PRINT media
+--------------------------------------------------------------------------*/
 
+@media print {
+body > header { display:none; }
+body > #top-nav { display:none; }
+    article > header > .date  { display:none; }
+
+    h1 { 
+        text-align: center;
+        margin: 0px;
+    }
+    
+    h1::after {
+        content: " @ capoeira.0x972.info";
+    } 
+    
+    .post-title { margin-bottom: 0px; }
+    
+    .capoeira-chant { color: black; }
+    .capoeira-traduction { color: blue }
+    .capoeira-video { display:none; }
+
+    #commentaires, #postcom, footer { display:none; }
+}
