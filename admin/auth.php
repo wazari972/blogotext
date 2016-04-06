@@ -26,7 +26,8 @@ $max_attemps = 10; // max attempts before blocking login page
 $wait_time = 30;   // time to wait before unblocking login page, in minutes
 
 // autologin for SSH authenticated ips
-$AUTOLOGIN_FILE = "/var/www/alternc/k/kevin/.ssh_autologin";
+$AUTOLOGIN_FILE = getcwd()."/.ssh_autologin";
+
 $autologin = FALSE;
 if (file_exists($AUTOLOGIN_FILE)
         //&& (time() - filemtime($AUTOLOGIN_FILE)) < 60*60*12 // file is newer than 12h
