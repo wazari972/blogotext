@@ -42,6 +42,12 @@ function require_all() {
 }
 require_all();
 
+if (strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false) {
+  $IMG_WALL = true;
+} else {
+  $IMG_WALL = false;
+}
+
 $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 $array = array();
 $ORDER = 'DESC'; // may be overwritten
@@ -98,7 +104,7 @@ function endsWith($haystack, $needle) {
     return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
 }
 
-function afficher_wall($tableau) {
+function afficher_wall($tableau, $img_wall) {
     $HTML = '';
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
 
@@ -125,7 +131,9 @@ function afficher_wall($tableau) {
             }
             
             $HTML_elmts .= '<article class="wall-post hentry">'."\n"
-                        . '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n"
+                        . '<a href="'.$element['bt_link'].'" class="entry-link">'."\n"
+                        . ($img_wall ? '  <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
+                        . '</a>'
                         . '  <header class="entry-header">'."\n"
                         . '    <div class="entry-meta">'."\n"
                         . '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').'</a></span>'."\n"
@@ -162,6 +170,6 @@ function afficher_wall($tableau) {
     echo $HTML;
 }
 
-afficher_wall($tableau);
+afficher_wall($tableau, $IMG_WALL);
 
 ?>
