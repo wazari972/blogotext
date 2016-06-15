@@ -182,7 +182,7 @@ elseif ( isset($_GET['id']) and preg_match('#\d{14}#', $_GET['id']) ) {
 }
 
 // List of all articles ordered by tags
-elseif (isset($_GET['tag'])) {
+elseif (isset($_GET['tags'])) {
   $query = "SELECT * FROM articles WHERE bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? ORDER BY bt_date DESC";
 
   $multi_tableau = array();

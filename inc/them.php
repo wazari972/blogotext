@@ -364,7 +364,7 @@ tableau_printing:
 			$short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
             $title = liste_tags($e)." | ".htmlspecialchars(trim(mb_substr(strip_tags($e['bt_content']), 0, 249)), ENT_QUOTES).'...';
 			$HTML_elmts .= "\t".'<li>';
-            if (!$alpha and !$multi_tableau) {
+            if (!$alpha and !$multi_tab) {
               $HTML_elmts .= '<time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time> ';
             }
             $HTML_elmts .= '<a href="'.$e['bt_link'].'" title="'.$title.'">'
