@@ -320,7 +320,7 @@ function afficher_index($tableau, $type) {
 }
 
 // Affiche la liste des articles, avec le &liste dans l’url
-function get_article_list($tableau, $alpha=0) {
+function get_article_list($tableau, $alpha=0, $multi_tab=0) {
 	$HTML_elmts = '';
 
 
@@ -337,23 +337,44 @@ function get_article_list($tableau, $alpha=0) {
           }
         
           usort($tableau, "sortByOrder");
+        } elseif ($multi_tab) {
+          $multi_tableau = $tableau;
         }
-        $prev = "";
+        
+tableau_printing:
+        if ($multi_tab) {
+          $tableau = reset($multi_tableau);
+          $tag = key($multi_tableau);
+          
+          unset($multi_tableau[$tag]); 
+        }
+
+        $prev_letter = "";
 		foreach ($tableau as $e) {
             if ($alpha) {
               $first_letter = $e['bt_title'][0];
-              if ($first_letter != $prev) {
+              if ($first_letter != $prev_letter) {
                 $HTML_elmts .= "\t".'<li class="list-letter">'.$first_letter.'</li>'."\n";
-                $prev = $first_letter;
+                $prev_letter = $first_letter;
               }
+            } elseif ($multi_tab and empty($prev_letter)) {
+              $HTML_elmts .= "\t".'<li class="list-letter">'.$tag.'</li>'."\n";
+              $prev_letter = "x"; // just set it
             }
 			$short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
             $title = liste_tags($e)." | ".htmlspecialchars(trim(mb_substr(strip_tags($e['bt_content']), 0, 249)), ENT_QUOTES).'...';
-			$HTML_elmts .= "\t".'<li>'
-                        .($alpha ? '' : ('<time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time> '))
-                        .'<a href="'.$e['bt_link'].'" title="'.$title.'">'
+			$HTML_elmts .= "\t".'<li>';
+            if (!$alpha and !$multi_tableau) {
+              $HTML_elmts .= '<time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time> ';
+            }
+            $HTML_elmts .= '<a href="'.$e['bt_link'].'" title="'.$title.'">'
                         .$e['bt_title'].'</a></li>'."\n";
 		}
+
+        if ($multi_tab and !empty($multi_tableau)) {
+          
+          goto tableau_printing; // loop until multi_tableau is empty
+        }
 		$HTML_elmts .= '</ul>'."\n";
 		$HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
 	}
@@ -364,7 +385,7 @@ function get_article_list($tableau, $alpha=0) {
 }
 
 // Affiche la liste des articles, avec le &liste dans l’url
-function afficher_liste($tableau, $alpha=0) {
+function afficher_liste($tableau, $alpha=0,  $multi_tab=0) {
         $HTML_elmts = '';
         if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) {
           die($GLOBALS['lang']['err_theme_introuvable']);
@@ -372,7 +393,7 @@ function afficher_liste($tableau, $alpha=0) {
 
         $HTML_article = conversions_theme($theme_page, array(), 'list');
         if (!empty($tableau)) {
-                $HTML_elmts = get_article_list($tableau, $alpha);
+                $HTML_elmts = get_article_list($tableau, $alpha, $multi_tab);
                 $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
         }
         else {

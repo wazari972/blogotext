@@ -181,7 +181,20 @@ elseif ( isset($_GET['id']) and preg_match('#\d{14}#', $_GET['id']) ) {
 	afficher_index($tableau, 'list');
 }
 
+// List of all articles ordered by tags
+elseif (isset($_GET['tag'])) {
+  $query = "SELECT * FROM articles WHERE bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? OR bt_categories LIKE ? ORDER BY bt_date DESC";
 
+  $multi_tableau = array();
+  foreach(list_all_tags("articles", "1") as $tag => $count) {
+    $search = $tag;
+
+    $tableau = liste_elements($query, array($search, $search.',%', '%, '.$search, '%, '.$search.', %'), 'articles');
+
+    $multi_tableau[$tag] = $tableau;
+  }
+  afficher_liste($multi_tableau, $alpha=0, $multi_tab=1);
+}
 // List of all articles
 elseif (isset($_GET['liste']) or isset($_GET['alpha'])) {
     $array = array();
