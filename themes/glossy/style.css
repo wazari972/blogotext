@@ -71,7 +71,6 @@ article, aside, figcaption, figure, footer, header, hgroup, nav, section {
 
     min-width: 100%;
     min-height: 100%;
-
 }
 
 .entry-title {
@@ -95,7 +94,7 @@ article, aside, figcaption, figure, footer, header, hgroup, nav, section {
 
 .entry-header {
     position: relative;
-    z-index: 1; 
+    z-index: 1;
 }
 
 .entry-header {

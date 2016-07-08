@@ -18,10 +18,10 @@
 	<div id="top-nav-links">
 		<h1><a href="{racine_du_site}" title="{blog_nom} - {blog_description}">{blog_nom}</a></h1>
 		<ul>
-			<li><a href="?liste">Tous les articles</a></li>
-			<li><a href="?random">Article au hasard</a></li>
-			<li><a href="?mode=links">Liens partagés</a></li>
-			<li><a href="?about">À propos</a></li>
+			<li><a href="/wall.php">Tous les articles</a></li>
+			<li><a href="#not_yet">Carte</a></li>
+			<li><a href="/?tags">Par tags</a></li>
+			<li><a href="/?d=2016/06/04/17/59/25-a-propos-du-blog-voyager-en-martinique">À propos</a></li>
 		</ul>
 	</div>
 	{recherche}
@@ -52,18 +52,8 @@
 </main>
 
 <footer>
-	<div id="footnav">
-		<nav id="navigate">
-			{calendrier}
-		</nav>
-		<nav id="lastcom">
-			<h3>Derniers commentaires</h3>
-			{commentaires_encart}
-		</nav>
-	</div>
-
-	<div><a href="/">{blog_auteur}</a> - <span lang="en">Theme by <a href="http://lehollandaisvolant.net/">Timo van Neerden</a></span></div>
-	<div>(<a href="https://www.flickr.com/photos/73767885@N00/13938437179/">crédit image d’entête</a>)</div>
+	<div>Website managed by <a href="/">{blog_auteur}</a><br/> Texts
+	and images under <a href="http://lien.vers.cc.net/">CC BY-NC</a><br/> <span lang="en">Theme by <a href="http://lehollandaisvolant.net/">Timo van Neerden</a></span></div>
 
 </footer>
 <script>
@@ -74,7 +64,7 @@ function insertTag(startTag, endTag, tag, tagType) {
 	field.focus();
 
 	if (window.ActiveXObject) { // C'est IE
-		var textRange = document.selection.createRange();            
+		var textRange = document.selection.createRange();
 		var currentSelection = textRange.text;
 
 		textRange.text = startTag + currentSelection + endTag;

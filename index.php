@@ -31,7 +31,10 @@ if (strpos($_SERVER["SERVER_NAME"], "phd.kevin.pouget.me") !== false
 	die(); 
 }
 
-if ((strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false || strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false)
+if ((strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false 
+     || strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false
+     || strpos($_SERVER["SERVER_NAME"], "martinique.local") !== false
+     || strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false)
  && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
  && strpos($_SERVER["REQUEST_URI"], "?") === false ) 
 {
