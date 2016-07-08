@@ -22,7 +22,11 @@
         helpButton: { handler: help },
                     strings: { quoteexample: "whatever you\'re quoting, put it right here" }
     };
-    var editor = new Markdown.Editor(converter, "", options);
-    
+
+    alert("fix this")
+    $(".form-ecrire").each(function() {
+        alert($(this).get("id"))
+        var editor = new Markdown.Editor(converter, $(this).get("id").replace("form-ecrire", ""), options);
+    })
     editor.run();
 })();

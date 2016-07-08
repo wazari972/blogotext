@@ -82,7 +82,7 @@ if ($post != '') {
 echo '<div id="page">'."\n";
 
 if (isset($_GET['md'])) {
-	afficher_form_billet_md($post, $erreurs_form);
+   	afficher_form_billet_md($post, $erreurs_form);
 	echo js_alert_before_quit(1, "wmd-input");
 } else {
 	// EDIT 
