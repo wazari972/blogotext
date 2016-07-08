@@ -61,8 +61,8 @@ function afficher_liste_articles($tableau) {
 	if (!empty($tableau)) {
 		mb_internal_encoding('UTF-8');
 
-		echo '<ul id="billets">'."\n";
                 afficher_form_billet_multi_head();
+		echo '<ul id="billets">'."\n";
 
 		foreach ($tableau as $article) {
 			// ICONE SELON STATUT

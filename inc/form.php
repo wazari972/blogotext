@@ -659,16 +659,19 @@ function afficher_form_billet_multi($article, $erreurs) {
 	echo '           </div>'."\n";
 	echo '       </div>'."\n";
         echo '
-        
                      <div class="wmd-panel">
                           <div id="wmd-button-bar'.$uid.'"></div>
                           <textarea class="wmd-input" id="wmd-input'.$uid.'" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
                           <textarea class="wmd-input" style="display:none" id="wmd-output'.$uid.'" name="html-content"></textarea>
                      </div>
-                     <div id="wmd-preview'.$uid.'" class="wmd-panel wmd-preview"></div>';
-	echo "\t".'<input class="submit blue-square" type="submit" name="enregistrer" onclick="alert(\'not yet\');return false;" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />'."\n";
-        echo '<hr/>'."\n";
-	echo '</form>'."\n";
+                     <div id="wmd-preview'.$uid.'" class="wmd-panel wmd-preview"></div>
+	             <div id="tag_bloc">'."\n";
+	echo form_categories_links('links', '');
+	echo '            <input list="htmlListTags" type="text" class="text type_tags" id="type_tags" name="tags" onkeydown="chkHit(event);" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>
+	                  <input type="hidden" id="categories" name="categories" value="" />
+	             </div>
+	             <input class="submit blue-square" type="submit" name="enregistrer" onclick="alert(\'not yet\');return false;" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />
+	       </form>'."\n";
 }
 function afficher_form_billet_multi_tail() {
         echo '      <script type="text/javascript" src="../pagedown/Markdown.Blogotext.js"></script>';
