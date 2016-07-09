@@ -31,7 +31,6 @@
 .entry-thumbnail {
     height: auto;
     width: auto;
-    position: absolute;
 
     background-repeat:no-repeat;
     background-position: center;
@@ -49,10 +48,10 @@
 
 .hentry {
     position: relative;
-    padding-bottom: 33%; /* size of the entry */
     width: 100%;
     overflow: hidden;
     margin-bottom: 20px;
+    text-align:center;
 }
 
 .entry-meta {
@@ -87,7 +86,6 @@
 .wall-main {
     margin: 0 auto;
     padding: 20px;
-    width: 75vw;
     background: rgba(0, 0, 0, 1)
 }
 

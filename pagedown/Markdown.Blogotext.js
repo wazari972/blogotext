@@ -24,9 +24,12 @@
     };
 
     //alert("fix this")
+    /*
     $(".form-ecrire").each(function() {
         alert($(this).get("id"))
         var editor = new Markdown.Editor(converter, $(this).get("id").replace("form-ecrire", ""), options);
     })
+    
     editor.run();
+    */
 })();

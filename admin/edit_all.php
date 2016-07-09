@@ -80,6 +80,7 @@ function afficher_liste_articles($tableau) {
 
 
 afficher_html_head($GLOBALS['lang']['mesarticles']);
+echo "\n".'<script src="style/jquery-3.0.0.min.js" type="text/javascript"></script>'."\n";
 echo '<div id="top">'."\n";
 afficher_msg();
 echo moteur_recherche($GLOBALS['lang']['search_in_articles']);

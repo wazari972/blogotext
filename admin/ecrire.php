@@ -56,6 +56,7 @@ if ( !empty($post) ) {
 
 // DEBUT PAGE
 afficher_html_head($titre_ecrire);
+echo "\n".'<script src="style/jquery-3.0.0.min.js" type="text/javascript"></script>'."\n";
 echo '<div id="top">'."\n";
 afficher_msg();
 afficher_topnav(basename($_SERVER['PHP_SELF']), $titre_ecrire_court);
