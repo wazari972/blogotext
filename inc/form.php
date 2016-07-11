@@ -671,6 +671,7 @@ function afficher_form_billet_multi($article, $erreurs) {
 	                  <input type="hidden" class="categories" id="categories'.$uid.'" name="categories" value="" />
 	             </div>
 	             <input class="submit blue-square" type="submit" name="enregistrer" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />
+                 <span><b>Status: </b><span class="art_status">untouched</span>.</span>
 	       </form>'."\n";
 }
 function afficher_form_billet_multi_tail() {

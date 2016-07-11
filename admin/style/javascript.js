@@ -168,6 +168,14 @@ $(function() {
             moveTag(this, 1);
         }
     })
+
+    var input_changed = function(){
+        var status = $(this).parent().parent().find(".art_status")
+        status.text("modified");
+        status.css('color', 'red').css("font-weight","Bold");
+        $(this).unbind("keydown", input_changed)
+    }
+    $(".wmd-input").keydown(input_changed)
 });
 
 /* validates the tag and move it to the list */
