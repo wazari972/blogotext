@@ -631,7 +631,7 @@ function afficher_form_billet_multi_head() {
 }
 
 function afficher_form_billet_multi($article, $erreurs) {
-        $defaut_jour = $article['jour'];
+    $defaut_jour = $article['jour'];
 	$defaut_mois = $article['mois'];
 	$defaut_annee = $article['annee'];
 	$defaut_heure = $article['heure'];
@@ -649,6 +649,16 @@ function afficher_form_billet_multi($article, $erreurs) {
 
     $uid = "-".$article['bt_id'];
     echo '<form class="form-ecrire" id="form-ecrire'.$uid.'" method="post" onsubmit="return moveTag(this);" action="'.$_SERVER['PHP_SELF'].'?md&post_id='.$article['bt_id'].'" >'."\n";
+
+    echo hidden_input('_verif_envoi', '1');
+    echo hidden_input('_multi_edit', '1');
+    echo hidden_input('enregistrer', '1');
+    echo hidden_input('article_id', $article['bt_id']);
+    echo hidden_input('article_date', $article['bt_date']);
+    echo hidden_input('ID', $article['ID']);
+    echo hidden_input('statut', $article['bt_statut']);
+    echo hidden_input('allowcomment', $article['bt_allow_comments']);
+    
     echo '      <input id="titre'.$uid.'" class="titre" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
 	echo '      <div class="chapo_note" id="chapo_note'.$uid.'">'."\n";
 	echo '           <div class="blocchapo" id="blocchapo'.$uid.'">'."\n";
@@ -662,9 +672,9 @@ function afficher_form_billet_multi($article, $erreurs) {
                      <div class="wmd-panel">
                           <div id="wmd-button-bar'.$uid.'"></div>
                           <textarea class="wmd-input" id="wmd-input'.$uid.'" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
-                          <textarea class="wmd-input" style="display:none" id="wmd-output'.$uid.'" name="html-content"></textarea>
+                          <textarea class="wmd-input" id="wmd-output'.$uid.'" style="display: none" name="html-content"></textarea>
                      </div>
-                     <div id="wmd-preview'.$uid.'" class="wmd-panel wmd-preview"></div>
+                     <div id="wmd-preview'.$uid.'" style="display: none" class="wmd-panel wmd-preview"></div>
 	             <div class="tag_bloc">'."\n";
 	echo form_categories_links('articles', $categoriesdefaut);
 	echo '            <input list="htmlListTags" type="text" class="text type_tags" id="type_tags'.$uid.'" name="tags" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>
@@ -738,7 +748,7 @@ function afficher_form_billet_md($article, $erreurs) {
         <div class="wmd-panel">
             <div id="wmd-button-bar"></div>
             <textarea class="wmd-input" id="wmd-input" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
-            <textarea class="wmd-input" style="display:none" id="wmd-output" name="html-content"></textarea>
+            <textarea class="wmd-input" style="display:none" id="wmd-output'.$uid.'" name="html-content"></textarea>
         </div>
         <div id="wmd-preview'.$uid.'" class="wmd-panel wmd-preview" style="display:hidden"></div>
 	    <div class="tag_bloc">'."\n";

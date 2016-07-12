@@ -170,10 +170,16 @@ $(function() {
     })
 
     var input_changed = function(){
-        var status = $(this).parent().parent().find(".art_status")
+        var status = $(this).data("status")
+        if (!status) {
+            status = $(this).parent().parent().find(".art_status")
+            $(this).data("status", status)
+        }
+        if (status.text() === "modified") {
+            return;
+        }
         status.text("modified");
         status.css('color', 'red').css("font-weight","Bold");
-        $(this).unbind("keydown", input_changed)
     }
     $(".wmd-input").keydown(input_changed)
 });
@@ -211,7 +217,20 @@ function do_submit(oField) {
     rst = rst.substr(0, rst.length-2);
     $(fField).val(rst)
 
-    alert("stopped")
+    var form = $(fField).parents("form")
+    var status = form.find(".art_status")
+    status.text("Saving ...");
+    $.ajax({
+        url: form.attr('action'),
+        type: form.attr('method'),
+        data: form.serialize(), 
+        success: function(html) {
+            status.text(html);
+            status.css('color', 'green');
+        }
+    });
+
+
     return false;
 }
 
