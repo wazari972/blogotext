@@ -259,7 +259,7 @@ q, blockquote {
 ------------------------------------------------------------------------ */
 body > header {
 /*	text-align: center;*/
-	background: transparent url("header-bg2.jpg") no-repeat scroll center center / cover;
+	background: transparent url("header-bg3.jpg") no-repeat scroll center center / cover;
 	height: 450px;
 	font-size: 220%;
 	color: white;
@@ -268,11 +268,10 @@ body > header {
 }
 
 body > header p {
-	flex: 1 1 100%;
 	font-style: italic;
 	vertical-align: bottom;
-	margin-left: 800px;
-	margin-top: 100px;
+	margin-left: 400px;
+	margin-top: 370px;
 	text-shadow: 3px 3px 5px black, 3px 3px 5px black, 3px 3px 7px black;
 }
 
@@ -282,7 +281,7 @@ body > header p {
 /* Article + comment + form + next/prev liens -wrapper */
 #main {
 	padding: 20px;
-	max-width: 700px;
+	max-width: 750px;
 	margin: 0 auto;
 }
 
