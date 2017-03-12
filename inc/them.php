@@ -29,8 +29,11 @@ $GLOBALS['balises'] = array(
 	'racine_du_site' => '{racine_du_site}',
 	'rss' => '{rss}',
 	'rss_comments' => '{rss_comments}',
-    //perso
-    'list_polynesie' => '{list_polynesie}',
+
+	//perso
+	'list_polynesie' => '{list_polynesie}',
+	'sohann_age' => '{sohann_age}',
+
 	// Navigation
 	'pagination' => '{pagination}',
 	// Blog
@@ -124,11 +127,11 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 
 	$texte = str_replace($GLOBALS['balises']['pagination'], lien_pagination(), $texte);
 
-    if (strpos($_SERVER["SERVER_NAME"], "polynesie") !== false) {
-        $texte = str_replace($GLOBALS['balises']['list_polynesie'], ""/*list_tagged_articles("polynesie", true)*/, $texte);
-    } else {
-        $texte = str_replace($GLOBALS['balises']['list_polynesie'], "", $texte);
-    }
+	if (strpos($_SERVER["SERVER_NAME"], "polynesie") !== false) {
+		$texte = str_replace($GLOBALS['balises']['list_polynesie'], ""/*list_tagged_articles("polynesie", true)*/, $texte);
+	} else {
+		$texte = str_replace($GLOBALS['balises']['list_polynesie'], "", $texte);
+	}
 
 	if (strpos($texte, $GLOBALS['balises']['form_recherche']) !== FALSE) {
 		$texte = str_replace($GLOBALS['balises']['form_recherche'], moteur_recherche(''), $texte) ;
@@ -191,6 +194,7 @@ function conversions_theme_article($texte, $billet) {
 	$texte = str_replace($GLOBALS['balises']['article_lien'], $billet['bt_link'], $texte);
 	$texte = str_replace($GLOBALS['balises']['article_tags'], liste_tags($billet, '1'), $texte);
 	$texte = str_replace($GLOBALS['balises']['article_tags_plain'], liste_tags($billet, '0'), $texte);
+	$texte = str_replace($GLOBALS['balises']['sohann_age'], sohann_age($billet), $texte);
 	return $texte;
 }
 

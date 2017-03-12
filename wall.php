@@ -105,6 +105,11 @@ function endsWith($haystack, $needle) {
 }
 
 function afficher_wall($tableau, $img_wall) {
+    $blog_sohann = false;
+    if (strpos($_SERVER["SERVER_NAME"], "sohann.pouget.me") !== false) {
+        $blog_sohann = true;
+    }
+
     $HTML = '';
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
 
@@ -132,11 +137,11 @@ function afficher_wall($tableau, $img_wall) {
             
             $HTML_elmts .= '<article class="wall-post hentry">'."\n"
                         . '<a href="'.$element['bt_link'].'" class="entry-link">'."\n"
-                        . ($img_wall ? '  <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
+                        . ($img_wall ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
                         . '</a>'
                         . '  <header class="entry-header">'."\n"
                         . '    <div class="entry-meta">'."\n"
-                        . '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').'</a></span>'."\n"
+                        . '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n"
                         . '    </div>'."\n"
                         
                         . '    <!-- .entry-meta -->'."\n"

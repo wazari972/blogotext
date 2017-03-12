@@ -500,3 +500,36 @@ function feed_list_html() {
 	return $html;
 }
 
+function sohann_age($billet) {
+	/* http://php.net/manual/en/function.date-diff.php */
+
+        $DEBUT_GROSSESSE = '2016-05-03'; // pour avoir 1er / 2eme /... mois de grossesse
+        $NAISSANCE = '2017-02-28';
+
+	$TS_NAISSANCE = strtotime($NAISSANCE);
+
+	$dateBillet = decode_id($billet['bt_date']);
+	$dtBillet = new DateTime();
+	$tsBillet = mktime($dateBillet['heure'], $dateBillet['minutes'], $dateBillet['secondes'],
+	                   $dateBillet['mois'], $dateBillet['jour'], $dateBillet['annee']);
+        $dtBillet->setTimestamp($tsBillet);
+	
+	$dtBase = new DateTime();
+	if ($tsBillet < $TS_NAISSANCE) {
+		$FMT_GROSSESSE = "%m<sup>ieme</sup> mois, %d jours";
+
+		$dtBase->setTimestamp(strtotime($DEBUT_GROSSESSE));
+
+		$interval = date_diff($dtBillet, $dtBase);
+
+		return $interval->format($FMT_GROSSESSE);
+	} else {
+		$FMT_NAISSANCE = "%mmois, %d jours";
+
+		$dtBase->setTimestamp(strtotime($TS_NAISSANCE));
+
+		$interval = date_diff($dtBillet, $dtBase);
+		
+		return $interval->format($FMT_NAISSANCE);
+	}
+}
