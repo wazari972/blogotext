@@ -16,8 +16,7 @@ function redirection($url) {
 	exit;
 }
 
-    function http_parse_headers( $header )
-    {
+function http_parse_headers( $header ) {
         $retVal = array();
         $fields = $header; //$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
         foreach( $fields as $field ) {
@@ -121,6 +120,7 @@ function check_session() {
 // This will look if session expired and kill it, otherwise restore it
 function operate_session() {
 	if (check_session() === FALSE) { // session is not good
+      
 		fermer_session(); // destroy it
 	} else {
 		// Restore data lost if possible

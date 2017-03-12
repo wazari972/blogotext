@@ -21,6 +21,101 @@
 }
 
 
+/* Wall*/
+
+#posts::before {
+    content: "Hello";
+    display: table;
+}
+
+.entry-thumbnail {
+    height: auto;
+    width: auto;
+
+    background-repeat:no-repeat;
+    background-position: center;
+    overflow:hidden;
+
+    max-width: 100%;
+    min-height: 100%;
+}
+
+.entry-title {
+    margin: 0px auto;
+    font-size: 1.375em;
+    line-height: 1.36364;
+}
+
+.hentry {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    text-align:center;
+}
+
+.entry-meta {
+    font-size: 0.875em;
+    line-height: 1.71429;
+}
+
+.entry-header {
+    position: relative;
+    z-index: 1;
+}
+
+.entry-header {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+
+    max-height: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+.entry-header {
+    background: rgba(0, 0, 0, 0.25) none repeat scroll 0% 0%;
+}
+
+.entry-header:hover  {
+    background: rgba(0, 0, 0, 0.8) none repeat scroll 0% 0%;
+    transition: background ease-in-out 800ms;
+}
+
+.wall-main {
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 1)
+}
+
+.wall-post a {
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: none;
+
+    font-family: "Trebuchet MS",helvetica,arial,sans-serif;
+    word-wrap: break-word;
+}
+
+.wall-post h1 {
+    font-family: Montserrat,sans-serif;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.0625em;
+}
+
+.screen-reader-text {
+    position: absolute;
+    left: -1000em;
+
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+
 /* GENERAL PAGE LAYOUT
 ------------------------------------------------------------ */
 html {
@@ -297,10 +392,12 @@ body > header p {
 }
 .post-title > h1 {
 	font-size: 1.4em;
+
 }
 .post-title > h1 > a {
 	color: inherit;
 }
+.post-title > h1,
 .post-title .date,
 .post-title .author {
 	text-align: center;

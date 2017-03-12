@@ -160,36 +160,78 @@ function insertCatTag(inputId, tag) {
 
 /* Adds a tag to the list when we hit "enter" */
 /* detects keyhit */
-function chkHit(e) {
-	var unicode = (e.keyCode) ? e.keyCode : e.charCode;
-	if (unicode == 13) {
-		moveTag;
-		return false;
-	}
-	return true;
-}
+
+$(function() {
+    $(".type_tags").keydown(function(event) {
+        if (event.which == 13 ) {
+            event.preventDefault();
+            moveTag(this, 1);
+        }
+    })
+
+    var input_changed = function(){
+        var status = $(this).data("status")
+        if (!status) {
+            status = $(this).parent().parent().find(".art_status")
+            $(this).data("status", status)
+        }
+        if (status.text() === "modified") {
+            return;
+        }
+        status.text("modified");
+        status.css('color', 'red').css("font-weight","Bold");
+    }
+    $(".wmd-input").keydown(input_changed)
+});
 
 /* validates the tag and move it to the list */
-function moveTag() {
-	var iField = document.getElementById('type_tags');
-	var oField = document.getElementById('selected');
-	var fField = document.getElementById('categories');
+function moveTag(thiss, from_enter=0) {
+    var iField = $(thiss);
+    if (!from_enter) { // from submit
+        iField = $(thiss).find(".type_tags");
+    }
 
-	// if something in the input field : enter == add word to list of tags.
-	if (iField.value.length != 0) {
-		oField.innerHTML += '<li class="tag"><span>'+iField.value+'</span><a href="javascript:void(0)" onclick="removeTag(this.parentNode)">×</a></li>';
-		iField.value = '';
-		return false;
-	}
-	// else : real submit : seek in the list of tags, extract the tags and submit these.
-	else {
-		var liste = oField.getElementsByTagName('li');
-		var len = liste.length;
-		var iTag = '';
-		for (var i = 0 ; i<len ; i++) { iTag += liste[i].getElementsByTagName('span')[0].innerHTML+", "; }
-		fField.value = iTag.substr(0, iTag.length-2);
-		return true;
-	}
+    var oField = iField.parent().find(".selected_tags")[0]
+
+    // if something in the input field : enter == add word to list of tags.
+    if (iField.val()) {
+	oField.innerHTML += '<li class="tag"><span class="toto">'+iField.val()+'</span><a href="javascript:void(0)" onclick="removeTag(this.parentNode)">×</a></li>';
+	iField.val('');
+	return false;
+    }
+    // else : real submit : seek in the list of tags, extract the tags and submit these.
+    else {
+        return do_submit(oField);
+    }
+}
+
+function do_submit(oField) {
+    var fField = $(oField).parent().find(".categories")[0]
+
+    var rst = ""
+    $(oField).children("li").each(function() {
+        rst += $(this).children("span").text() + ", ";
+        
+    });
+
+    rst = rst.substr(0, rst.length-2);
+    $(fField).val(rst)
+
+    var form = $(fField).parents("form")
+    var status = form.find(".art_status")
+    status.text("Saving ...");
+    $.ajax({
+        url: form.attr('action'),
+        type: form.attr('method'),
+        data: form.serialize(), 
+        success: function(html) {
+            status.text(html);
+            status.css('color', 'green');
+        }
+    });
+
+
+    return false;
 }
 
 /* remove a tag from the list */
