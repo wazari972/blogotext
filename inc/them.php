@@ -89,6 +89,8 @@ $GLOBALS['balises'] = array(
 	'lien_tags' => '{lien_tags}',
 );
 
+
+
 function conversions_theme($texte, $solo_art, $cnt_mode) {
 	$texte = str_replace($GLOBALS['balises']['version'], $GLOBALS['version'], $texte);
 	$texte = str_replace($GLOBALS['balises']['app_name'], $GLOBALS['nom_application'], $texte);

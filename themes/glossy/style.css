@@ -67,6 +67,8 @@ article, aside, figcaption, figure, footer, header, hgroup, nav, section {
 
     background-repeat:no-repeat;
     background-position: center;
+    background-size: cover;
+
     overflow:hidden;
 
     min-width: 100%;

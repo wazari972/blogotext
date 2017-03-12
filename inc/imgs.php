@@ -620,11 +620,11 @@ function afficher_liste_fichiers($tableau) {
 		foreach ($tableau as $file) {
 			$out .= '<div class="file_bloc"  id="bloc_'.$file['bt_id'].'" data-type="'.$file['bt_type'].'">'."\n";
 				$description = (empty($file['bt_content'])) ? '' : ' ('.$file['bt_content'].')';
-				$out .= "\t".'<span class="spantop black">';
-					$out .= '<a class="lien lien-edit" href="fichiers.php?file_id='.$file['bt_id'].'&amp;edit"></a>';
-					$out .= '<a class="lien lien-supr" href="#" onclick="request_delete_form(\''.$file['bt_id'].'\'); return false;" ></a>';
+				$out .= "\t".'heelo<span class="spantop black">';
+				$out .= '<a class="lien lien-edit" href="fichiers.php?file_id='.$file['bt_id'].'&amp;edit"></a>';
+				$out .= '<a class="lien lien-supr" href="#" onclick="request_delete_form(\''.$file['bt_id'].'\'); return false;" ></a>';
 				$out .= '</span>'."\n";
-					$out .= "\t".'<a class="lien" href="'.$dossier.'/'.$file['bt_filename'].'" download><img src="style/filetypes/'.$file['bt_type'].'.png" id="'.$file['bt_id'].'" alt="'.$file['bt_filename'].'" /></a><br/><span class="description">'.$file['bt_filename']."</span>\n";
+				$out .= "\t".'<a class="lien" href="'.$dossier.'/'.$file['bt_filename'].'" download><img src="style/filetypes/'.$file['bt_type'].'.png" id="'.$file['bt_id'].'" alt="'.$file['bt_filename'].'" /></a><br/><span class="description">'.$file['bt_filename']."</span>\n";
 			$out .= '</div>'."\n\n";
 		}
 			$out .= '</div>'."\n";

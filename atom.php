@@ -18,11 +18,14 @@ $GLOBALS['BT_ROOT_PATH'] = '';
 error_reporting(-1);
 $begin = microtime(TRUE);
 
-$GLOBALS['dossier_cache'] = 'cache';
+require_once 'inc/conf.php';
 
-require_once 'config/user.php';
-require_once 'config/prefs.php';
+//$GLOBALS['dossier_cache'] = 'cache';
+
+require_once $GLOBALS['dossier_config'].'/user.php';
+require_once $GLOBALS['dossier_config'].'/prefs.php';
 date_default_timezone_set($GLOBALS['fuseau_horaire']);
+$GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 
 function require_all() {
 	require_once 'inc/lang.php';

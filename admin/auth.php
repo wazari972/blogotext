@@ -25,8 +25,8 @@ error_reporting($GLOBALS['show_errors']);
 $max_attemps = 10; // max attempts before blocking login page
 $wait_time = 30;   // time to wait before unblocking login page, in minutes
 
-// autologin for SSH authenticated ips
-$AUTOLOGIN_FILE = getcwd()."/.ssh_autologin";
+// autologin for SSH authenticated ips 
+$AUTOLOGIN_FILE = getcwd(). "/.ssh_autologin";
 
 $autologin = FALSE;
 if (file_exists($AUTOLOGIN_FILE)
@@ -40,7 +40,6 @@ if (file_exists($AUTOLOGIN_FILE)
         $_POST['_verif_envoi'] = 1;
 	$_POST['stay_logged'] = 1;
 }
-
 
 function valider_form() {;
         $mot_de_passe_ok = $GLOBALS['mdp'].$GLOBALS['identifiant'];
