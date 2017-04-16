@@ -2,38 +2,38 @@
 ---------------------------------------------------------------------------------- */
 
 /* apercu */
-#apercu,
-#form-ecrire {
+.apercu,
+.form-ecrire {
 	padding: 0 0 1px;
 }
 
-#apercu {
+.apercu {
 	margin-bottom: 15px;
 }
 
-#apercu > h2 {
+.apercu > h2 {
 	background: #f0f0f0;
 	border-radius: 3px 3px 0 0;
 	padding: 10px 20px;
 	border-bottom: 1px solid #ddd
 }
 
-#apercu > div {
+.apercu > div {
 	margin: 20px;
 }
-#apercu p {
+.apercu p {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
-#apercu iframe {
+.apercu iframe {
         margin-left: auto;
         margin-right: auto;
         display:block;
 }
 
 
-#apercu img {
+.apercu img {
 	padding: 2px;
 	border: 1px solid #ddd;
 	max-width: 100%;
@@ -42,20 +42,20 @@
 	margin-right: auto;
 }
 
-#form-ecrire {
+.form-ecrire {
 	padding: 5px 5px 15px;
 }
 
-#form-ecrire textarea {
+.form-ecrire textarea {
 	resize: vertical;
 }
 
-#titre,
-#chapo,
-#notes,
-#contenu,
-#type_tags,
-#mots_cles {
+.titre,
+.chapo,
+.notes,
+.contenu,
+.type_tags,
+.mots_cles {
 	width: 100%;
 	clear: both;
 	margin: 0;
@@ -64,42 +64,42 @@
 	padding: 10px 5px;
 }
 
-#titre:focus,
-#chapo:focus,
-#notes:focus,
-#contenu:focus,
-#type_tags:focus,
-#mots_cles:focus {
+.titre:focus,
+.chapo:focus,
+.notes:focus,
+.contenu:focus,
+.type_tags:focus,
+.mots_cles:focus {
 	border-bottom-color: #2196F3;
 	box-shadow: 0px -1px 0px #2196F3 inset;
 }
 
-#titre {
+.titre {
 	font-weight: bold;
 	font-size: 1.15em;
 	padding: 10px 5px;
 }
 
-#chapo_note {
+.chapo_note {
 	display: flex;
 	overflow: hidden;
 }
 
-#chapo {
+.chapo {
 	flex: 2 2 auto;
 	width: auto;
 }
-#notes {
+.notes {
 	flex: 1 1 auto;
 	width: auto;
 }
 
-#chapo {
+.chapo {
 	border-right: 1px solid silver;
 }
 
-#type_tags,
-#mots_cles {
+.type_tags,
+.mots_cles {
 	padding: 0 10px;
 }
 
@@ -287,7 +287,7 @@ p.formatbut {
 	display: flex;
 }
 
-#selected { /* <ul> */
+.selected_tags { /* <ul> */
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
@@ -295,7 +295,7 @@ p.formatbut {
 }
 
 
-#selected > li {
+.selected_tags > li {
 	display:inline-block;
 	padding: 0 10px 0 7px;
 	color: #333;
@@ -309,7 +309,7 @@ p.formatbut {
 	
 }
 
-#selected > li > a {
+.selected_tags > li > a {
 	display: inline-block;
 	color: inherit;
 	margin: 0px 5px 0px 8px;
@@ -317,7 +317,7 @@ p.formatbut {
 	font-weight: bold;
 }
 
-#type_tags {
+.type_tags {
 	flex: 1 1 100px;
 	justify-content: flex-start;
 	height: 36px;

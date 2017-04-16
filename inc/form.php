@@ -316,7 +316,7 @@ function afficher_form_link($step, $erreurs, $editlink='') {
 		$form .= '</form>'."\n\n";
 
 	} elseif ($step == 2) { // Form de l'URL, avec titre, description, en POST cette fois, et qu'il faut vérifier avant de stoquer dans la BDD.
-		$form .= '<form method="post" onsubmit="return moveTag();" class="bordered-formbloc" id="post-lien" action="'.basename($_SERVER['PHP_SELF']).'">'."\n";
+		$form .= '<form method="post" onsubmit="return moveTag(this);" class="bordered-formbloc" id="post-lien" action="'.basename($_SERVER['PHP_SELF']).'">'."\n";
 		//$form .= '<fieldset>'."\n";
 
 		$url = $_GET['url'];
@@ -406,7 +406,7 @@ function afficher_form_link($step, $erreurs, $editlink='') {
 
 		$form .= "\t".'<div id="tag_bloc">'."\n";
 		$form .= form_categories_links('links', '');
-		$form .= "\t".'<input list="htmlListTags" type="text" class="text" id="type_tags" name="tags" onkeydown="chkHit(event);" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>'."\n";
+		$form .= "\t".'<input list="htmlListTags" type="text" class="text type_tags" id="type_tags" name="tags" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>'."\n";
 		$form .= "\t".'<input type="hidden" id="categories" name="categories" value="" />'."\n";
 		$form .= "\t".'</div>'."\n";
 
@@ -433,7 +433,7 @@ function afficher_form_link($step, $erreurs, $editlink='') {
 		$form .= '</form>'."\n\n";
 
 	} elseif ($step == 'edit') { // Form pour l'édition d'un lien : les champs sont remplis avec le "wiki_content" et il y a les boutons suppr/activer en plus.
-		$form = '<form method="post" onsubmit="return moveTag();" class="bordered-formbloc" id="post-lien" action="'.basename($_SERVER['PHP_SELF']).'?id='.$editlink['bt_id'].'">'."\n";
+		$form = '<form method="post" onsubmit="return moveTag(this);" class="bordered-formbloc" id="post-lien" action="'.basename($_SERVER['PHP_SELF']).'?id='.$editlink['bt_id'].'">'."\n";
 		//$form .= "\t".'<fieldset class="pref">'."\n";
 		$form .= "\t".'<input type="text" name="url" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_url']).'" required="" value="'.$editlink['bt_link'].'" size="70" class="text readonly-like" /></label>'."\n";
 		$form .= "\t".'<input type="text" name="title" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" required="" value="'.$editlink['bt_title'].'" size="70" class="text" autofocus /></label>'."\n";
@@ -442,8 +442,8 @@ function afficher_form_link($step, $erreurs, $editlink='') {
 		$form .= "\t".'</div>'."\n";
 		$form .= "\t".'<div id="tag_bloc">'."\n";
 		$form .= form_categories_links('links', $editlink['bt_tags']);
-		$form .= "\t\t".'<input list="htmlListTags" type="text" class="text" id="type_tags" name="tags" onkeydown="chkHit(event);" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>'."\n";
-		$form .= "\t\t".'<input type="hidden" id="categories" name="categories" value="" />'."\n";
+		$form .= "\t\t".'<input list="htmlListTags" type="text" class="text type_tags" id="type_tags" name="tags" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>'."\n";
+		$form .= "\t\t".'<input type="hidden"  name="categories"id="categories" name="categories" value="" />'."\n";
 		$form .= "\t".'</div>'."\n";
 		$form .= "\t".'<label class="forcheckbox">'.$GLOBALS['lang']['label_lien_priv'].'<input type="checkbox" name="statut" '.(($editlink['bt_statut'] == 0) ? 'checked ' : '').'/>'.'</label>'."\n";
 		$form .= "\t".'<p class="submit-bttns">'."\n";
@@ -514,9 +514,9 @@ function afficher_form_billet($article, $erreurs) {
 		echo erreurs($erreurs);
 	}
 	if (isset($article['bt_id'])) {
-		echo '<form id="form-ecrire" method="post" onsubmit="return moveTag();" action="'.basename($_SERVER['PHP_SELF']).'?post_id='.$article['bt_id'].'" >'."\n";
+		echo '<form id="form-ecrire" method="post" onsubmit="return moveTag(this);" action="'.basename($_SERVER['PHP_SELF']).'?post_id='.$article['bt_id'].'" >'."\n";
 	} else {
-		echo '<form id="form-ecrire" method="post" onsubmit="return moveTag();" action="'.basename($_SERVER['PHP_SELF']).'" >'."\n";
+		echo '<form id="form-ecrire" method="post" onsubmit="return moveTag(this);" action="'.basename($_SERVER['PHP_SELF']).'" >'."\n";
 	}
 		echo '<input id="titre" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" class="text" spellcheck="true" />'."\n" ;
 	echo '<div id="chapo_note">'."\n";
@@ -571,18 +571,18 @@ function afficher_form_billet($article, $erreurs) {
 
 	echo '</p>';
 
-	echo '<textarea id="contenu" name="contenu" rows="20" cols="60" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'" tabindex="55" class="text">'.$contenudefaut.'</textarea>'."\n" ;
+	echo '<textarea id="contenu" name="contenu" rows="20" cols="60" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'" tabindex="55">'.$contenudefaut.'</textarea>'."\n" ;
 
 	if ($GLOBALS['activer_categories'] == '1') {
 		echo "\t".'<div id="tag_bloc">'."\n";
 		echo form_categories_links('articles', $categoriesdefaut);
-		echo "\t\t".'<input list="htmlListTags" type="text" class="text" id="type_tags" name="tags" onkeydown="chkHit(event);" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'" tabindex="65"/>'."\n";
+		echo "\t\t".'<input list="htmlListTags" type="text" class="text type_tags" id="type_tags" name="tags" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'" tabindex="65"/>'."\n";
 		echo "\t\t".'<input type="hidden" id="categories" name="categories" value="" />'."\n";
 		echo "\t".'</div>'."\n";
 	}
 
 	if ($GLOBALS['automatic_keywords'] == '0') {
-		echo '<input id="mots_cles" name="mots_cles" type="text" size="50" value="'.$motsclesdefaut.'" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_motscle']).'" tabindex="67" class="text" />'."\n";
+		echo '<input id="mots_cles" class="mots_cles text" name="mots_cles" type="text" size="50" value="'.$motsclesdefaut.'" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_motscle']).'" tabindex="67" />'."\n";
 	}
 
 	echo '<div id="date-and-opts">'."\n";
@@ -623,7 +623,70 @@ function afficher_form_billet($article, $erreurs) {
 	echo '</form>'."\n";
 }
 
+function afficher_form_billet_multi_head() {
+         echo '      <link rel="stylesheet" type="text/css" href="../pagedown/article.css" />
+                     <script type="text/javascript" src="../pagedown/Markdown.Converter.js"></script>
+                     <script type="text/javascript" src="../pagedown/Markdown.Sanitizer.js"></script>
+                     <script type="text/javascript" src="../pagedown/Markdown.Editor.js"></script>';
+}
 
+function afficher_form_billet_multi($article, $erreurs) {
+    $defaut_jour = $article['jour'];
+	$defaut_mois = $article['mois'];
+	$defaut_annee = $article['annee'];
+	$defaut_heure = $article['heure'];
+	$defaut_minutes = $article['minutes'];
+	$defaut_secondes = $article['secondes'];
+	$titredefaut = $article['bt_title'];
+	// abstract : s’il est vide, il est regénéré à l’affichage, mais reste vide dans la BDD)
+	$chapodefaut = get_entry($GLOBALS['db_handle'], 'articles', 'bt_abstract', $article['bt_id'], 'return');
+	$notesdefaut = $article['bt_notes'];
+	$categoriesdefaut = $article['bt_categories'];
+	$contenudefaut = htmlspecialchars($article['bt_wiki_content']);
+	$motsclesdefaut = $article['bt_keywords'];
+	$statutdefaut = $article['bt_statut'];
+	$allowcommentdefaut = $article['bt_allow_comments'];
+
+    $uid = "-".$article['bt_id'];
+    echo '<form class="form-ecrire" id="form-ecrire'.$uid.'" method="post" onsubmit="return moveTag(this);" action="'.$_SERVER['PHP_SELF'].'?md&post_id='.$article['bt_id'].'" >'."\n";
+
+    echo hidden_input('_verif_envoi', '1');
+    echo hidden_input('_multi_edit', '1');
+    echo hidden_input('enregistrer', '1');
+    echo hidden_input('article_id', $article['bt_id']);
+    echo hidden_input('article_date', $article['bt_date']);
+    echo hidden_input('ID', $article['ID']);
+    echo hidden_input('statut', $article['bt_statut']);
+    echo hidden_input('allowcomment', $article['bt_allow_comments']);
+    
+    echo '      <input id="titre'.$uid.'" class="titre" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
+	echo '      <div class="chapo_note" id="chapo_note'.$uid.'">'."\n";
+	echo '           <div class="blocchapo" id="blocchapo'.$uid.'">'."\n";
+    echo '                <textarea class="chapo text" id="chapo'.$uid.'" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" >'.$chapodefaut.'</textarea>'."\n" ;
+	echo '           </div>'."\n";
+	echo '           <div class="blocnote" id="blocnote'.$uid.'">'."\n";
+    echo '                <textarea class="notes text" id="notes'.$uid.'" name="notes" rows="5" cols="30" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_notes']).'" tabindex="40"  >'.$notesdefaut.'</textarea>'."\n" ;
+	echo '           </div>'."\n";
+	echo '       </div>'."\n";
+    echo '
+                     <div class="wmd-panel">
+                          <div id="wmd-button-bar'.$uid.'"></div>
+                          <textarea class="wmd-input" id="wmd-input'.$uid.'" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
+                          <textarea class="wmd-input" id="wmd-output'.$uid.'" style="display: none" name="html-content"></textarea>
+                     </div>
+                     <div id="wmd-preview'.$uid.'" style="display: none" class="wmd-panel wmd-preview"></div>
+	             <div class="tag_bloc">'."\n";
+	echo form_categories_links('articles', $categoriesdefaut);
+	echo '            <input list="htmlListTags" type="text" class="text type_tags" id="type_tags'.$uid.'" name="tags" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'"/>
+	                  <input type="hidden" class="categories" id="categories'.$uid.'" name="categories" value="" />
+	             </div>
+	             <input class="submit blue-square" type="submit" name="enregistrer" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />
+                 <span><b>Status: </b><span class="art_status">untouched</span>.</span>
+	       </form>'."\n";
+}
+function afficher_form_billet_multi_tail() {
+        echo '      <script type="text/javascript" src="../pagedown/Markdown.Blogotext.js"></script>';
+}
 function afficher_form_billet_md($article, $erreurs) {
 	if ($article != '') {
 		$defaut_jour = $article['jour'];
@@ -662,18 +725,18 @@ function afficher_form_billet_md($article, $erreurs) {
 	}
         
 	if (isset($article['bt_id'])) {
-          echo '<form id="form-ecrire" method="post" onsubmit="return moveTag();" action="'.$_SERVER['PHP_SELF'].'?md&post_id='.$article['bt_id'].'" >'."\n";
+          echo '<form class="form-ecrire" id="form-ecrire" method="post" onsubmit="return moveTag(this);" action="'.$_SERVER['PHP_SELF'].'?md&post_id='.$article['bt_id'].'" >'."\n";
 	} else {
-          echo '<form id="form-ecrire" method="post" onsubmit="return moveTag();" action="'.$_SERVER['PHP_SELF'].'?md" >'."\n";
+          echo '<form class="form-ecrire" id="form-ecrire" method="post" onsubmit="return moveTag(this);" action="'.$_SERVER['PHP_SELF'].'?md" >'."\n";
 	}
         
-        echo '<input id="titre" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" class="text" spellcheck="true" />'."\n" ;
-	echo '<div id="chapo_note">'."\n";
-	echo '<div id="blocchapo">'."\n";
-        echo '<textarea id="chapo" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" class="text" >'.$chapodefaut.'</textarea>'."\n" ;
+        echo '<input class="titre" id="titre" class="titre text" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
+	echo '<div class="chapo_note" id="chapo_note">'."\n";
+	echo '<div class="blocchapo" id="blocchapo">'."\n";
+        echo '<textarea id="chapo" class="chapo text" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" >'.$chapodefaut.'</textarea>'."\n" ;
 	echo '</div>'."\n";
-	echo '<div id="blocnote">'."\n";
-        echo '<textarea id="notes" name="notes" rows="5" cols="30" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_notes']).'" tabindex="40" class="text" >'.$notesdefaut.'</textarea>'."\n" ;
+	echo '<div class="blocnote" id="blocnote">'."\n";
+        echo '<textarea class="notes" id="notes text" name="notes" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_notes']).'" tabindex="40" >'.$notesdefaut.'</textarea>'."\n" ;
 	echo '</div>'."\n";
 	echo '</div>'."\n";
         echo '
@@ -685,15 +748,16 @@ function afficher_form_billet_md($article, $erreurs) {
         <div class="wmd-panel">
             <div id="wmd-button-bar"></div>
             <textarea class="wmd-input" id="wmd-input" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
-            <textarea class="wmd-input" style="display:none" id="wmd-output" name="html-content"></textarea>
-';
-
+            <textarea class="wmd-input" style="display:none" id="wmd-output'.$uid.'" name="html-content"></textarea>
+        </div>
+        <div id="wmd-preview'.$uid.'" class="wmd-panel wmd-preview" style="display:hidden"></div>
+	    <div class="tag_bloc">'."\n";
 	echo form_categories_links('articles', $categoriesdefaut);
-	echo "\t".'<input list="htmlListTags" type="text" class="text" id="type_tags" name="tags" onkeydown="chkHit(event);" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'" tabindex="65"/>'."\n";
-	echo "\t".'<input type="hidden" id="categories" name="categories" value="" />'."\n";
+	echo "\t".'<input list="htmlListTags" type="text" class="text type_tags" id="type_tags" name="tags"  placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'" tabindex="65"/>'."\n";
+	echo "\t".'<input type="hidden" class="categories" id="categories" name="categories" value="" />'."\n";
 
 	if ($GLOBALS['automatic_keywords'] == '0') {
-          echo '<div><input id="mots_cles" name="mots_cles" type="text" size="50" value="'.$motsclesdefaut.'" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_motscle']).'" tabindex="67" class="text" /></div>'."\n";
+          echo '<div><input id="mots_cles" class="mots_cles text" name="mots_cles" type="text" size="50" value="'.$motsclesdefaut.'" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_motscle']).'" tabindex="67" /></div>'."\n";
 	}
 
 	echo '<div id="date-and-opts">'."\n";
@@ -818,7 +882,7 @@ function form_categories_links($where, $tags_post) {
 		foreach ($tags as $tag => $i) $html .= "\t".'<option value="'.addslashes($tag).'">'."\n";
 		$html .= '</datalist>'."\n";
 	}
-	$html .= '<ul id="selected">'."\n";
+	$html .= '<ul class="selected_tags">'."\n";
 	$list_tags = explode(',', $tags_post);
 
 

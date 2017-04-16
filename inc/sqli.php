@@ -244,14 +244,18 @@ function traiter_form_billet($billet) {
 		}
 
 		$redir = 'articles.php?msg=confirm_article_suppr';
-	}
+	} else {
+      $result = "No action set ... (expected enregistrer or supprimer)";
+    }
+    
 	if ($result === TRUE) {
 		rafraichir_cache();
-                if (isset($_GET['md'])) {
-                  $redir .= "&md";
-                }
-                
-		redirection($redir);
+        if (isset($_GET['md'])) {
+          $redir .= "&md";
+        }
+        if (!isset($_POST['_multi_edit'])) {
+          redirection($redir);
+        }
 	}
 	else { die($result); }
 }

@@ -18,6 +18,9 @@ if (!empty($GLOBALS['fuseau_horaire'])) {
 	date_default_timezone_set('UTC');
 }
 
+if ($_SERVER['SERVER_NAME'] === "martinique.local") {
+	$_SERVER['SERVER_NAME'] = "martinique.0x972.info";
+}
 // FOLDERS (change this only if you know what you are doing...)
 $GLOBALS['dossier_admin'] = 'admin';
 $GLOBALS['dossier_backup'] = 'bt_backup/'. $_SERVER['SERVER_NAME'];
@@ -145,9 +148,6 @@ function init_list_comments($comment) {
  */
 
 function init_post_article() { //no $mode : it's always admin.
-        
-	$formated_contenu = formatage_wiki(protect_markup(clean_txt($_POST['contenu'])));
-
 	if (isset($_POST['html-content'])) {
 		$formated_contenu = $_POST['html-content'];
 	} else {
@@ -160,9 +160,13 @@ function init_post_article() { //no $mode : it's always admin.
 		$keywords = extraire_mots($_POST['titre'].' '.$formated_contenu);
 	}
 
-	$date = str4($_POST['annee']).str2($_POST['mois']).str2($_POST['jour']).str2($_POST['heure']).str2($_POST['minutes']).str2($_POST['secondes']);
-	$id = (isset($_POST['article_id']) and preg_match('#\d{14}#', $_POST['article_id'])) ? $_POST['article_id'] : $date;
-
+    if (isset($_POST['_multi_edit'])) {
+      $id = $_POST['article_id'];
+      $date = $_POST['article_date'];
+    } else {
+      $date = str4($_POST['annee']).str2($_POST['mois']).str2($_POST['jour']).str2($_POST['heure']).str2($_POST['minutes']).str2($_POST['secondes']);
+      $id = (isset($_POST['article_id']) and preg_match('#\d{14}#', $_POST['article_id'])) ? $_POST['article_id'] : $date;
+    }
 	$article = array (
 		'bt_id'				=> $id,
 		'bt_date'			=> $date,
