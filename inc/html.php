@@ -503,8 +503,8 @@ function feed_list_html() {
 function sohann_age($billet) {
 	/* http://php.net/manual/en/function.date-diff.php */
 
-        $DEBUT_GROSSESSE = '2016-05-03'; // pour avoir 1er / 2eme /... mois de grossesse
-        $NAISSANCE = '2017-02-28';
+	$DEBUT_GROSSESSE = '2016-05-03'; // pour avoir 1er / 2eme /... mois de grossesse
+	$NAISSANCE = '2017-02-28';
 
 	$TS_NAISSANCE = strtotime($NAISSANCE);
 
@@ -512,7 +512,7 @@ function sohann_age($billet) {
 	$dtBillet = new DateTime();
 	$tsBillet = mktime($dateBillet['heure'], $dateBillet['minutes'], $dateBillet['secondes'],
 	                   $dateBillet['mois'], $dateBillet['jour'], $dateBillet['annee']);
-        $dtBillet->setTimestamp($tsBillet);
+	$dtBillet->setTimestamp($tsBillet);
 	
 	$dtBase = new DateTime();
 	if ($tsBillet < $TS_NAISSANCE) {
@@ -520,16 +520,14 @@ function sohann_age($billet) {
 
 		$dtBase->setTimestamp(strtotime($DEBUT_GROSSESSE));
 
-		$interval = date_diff($dtBillet, $dtBase);
-
-		return $interval->format($FMT_GROSSESSE);
+		return date_diff($dtBillet, $dtBase)->format($FMT_GROSSESSE);
 	} else {
-		$FMT_NAISSANCE = "%mmois, %d jours";
-
-		$dtBase->setTimestamp(strtotime($TS_NAISSANCE));
+		$FMT_NAISSANCE = "%m mois et %d jours";
+        
+		$dtBase->setTimestamp($TS_NAISSANCE);
 
 		$interval = date_diff($dtBillet, $dtBase);
 		
-		return $interval->format($FMT_NAISSANCE);
+		return date_diff($dtBillet, $dtBase)->format($FMT_NAISSANCE);
 	}
 }
