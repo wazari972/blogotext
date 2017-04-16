@@ -270,8 +270,8 @@ body > header {
 body > header p {
 	font-style: italic;
 	vertical-align: bottom;
-	margin-left: 400px;
-	margin-top: 370px;
+	margin-left: 25%;
+	margin-top: 85%;
 	text-shadow: 3px 3px 5px black, 3px 3px 5px black, 3px 3px 7px black;
 }
 

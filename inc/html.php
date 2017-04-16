@@ -377,6 +377,11 @@ function lien_pagination() {
 		$nb = $GLOBALS['param_pagination']['nb'];
 		$nb_par_page = $GLOBALS['param_pagination']['nb_par_page'];
 	}
+	$CAPOEIRA_WEBSITE = strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false;
+	if (isset($_GET['q']) and $CAPOEIRA_WEBSITE) {
+		return '';
+	}
+
 	$page_courante = (isset($_GET['p']) and is_numeric($_GET['p'])) ? $_GET['p'] : 0;
 	$qstring = remove_url_param('p');
 
