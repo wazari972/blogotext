@@ -355,6 +355,10 @@ body > header p {
    text-align: center;
 }
 
+.capoeira-video > iframe {
+   max-width: 100%;
+}
+
 .capoeira-after { /* deprecated*/
    text-align: center;
 }
@@ -692,6 +696,10 @@ footer #lastcom ul li a {
 	}
 	#footnav {
 		display: block;
+	}
+
+	body > header p {
+		margin-left: 0;
 	}
 }
 
