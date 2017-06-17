@@ -116,6 +116,31 @@
     overflow: hidden;
 }
 
+/* Map 
+----------------------------------------------------------- */
+
+.type_selected {
+    box-shadow:0px 12px 22px 1px #ffa700;
+}
+
+#page_map {
+    height: 450px;
+}
+
+#page_map {
+    display: table;
+    margin: 0 auto;
+    width: 57%;
+    /*height: 50%;*/
+    height: 450px;
+}
+
+.map_content {
+    min-width: 200px;
+    text-align: center;
+}
+
+
 /* GENERAL PAGE LAYOUT
 ------------------------------------------------------------ */
 html {

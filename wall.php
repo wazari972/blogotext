@@ -42,12 +42,6 @@ function require_all() {
 }
 require_all();
 
-if (strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false) {
-  $IMG_WALL = true;
-} else {
-  $IMG_WALL = false;
-}
-
 $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 $array = array();
 $ORDER = 'DESC'; // may be overwritten
@@ -104,21 +98,141 @@ function endsWith($haystack, $needle) {
     return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
 }
 
-function afficher_wall($tableau, $img_wall) {
+function addQuotes($str){
+    return "'$str'";
+}
+
+function afficher_map_data($tableau) {
+  $PICTO_PREFIX = "/themes/martinique/picto/";
+  $MAP_TYPES = array (
+    "plage", 
+    "nature",
+    "rando",
+    "fleurs",
+    "point de vue",
+    "culture", 
+    "plongee"
+  );
+
+
+  $data = array();
+
+  $HTML_article = conversions_theme($theme_page, $data, 'post');
+
+  $JSON_struc = "var page_locations = [\n";
+        
+  foreach ($tableau as $element) {
+    if (empty($element['bt_notes'])) {
+      //continue;
+    } else if ($element['bt_notes'] == "skip") {
+      continue;
+    }
+
+    $notes = explode('#@', $element['bt_notes']);
+    if (!isset($notes[1])) continue;
+    $head_img = $notes[0];
+    $location = explode(",",$notes[1]);
+            
+    $categories = $element['bt_categories'];
+                        
+    $last_type = -1;
+    $main_type = "default";
+    $all_types = array();
+                       
+    foreach ($MAP_TYPES as $type_name) {
+      $found = strrpos($categories, "#".$type_name);
+
+      if ($found === false) continue;
+      $type_name = str_replace(" ", "_", $type_name);
+      
+      if ($found > $last_type) {
+        $last_type = $found;
+        $main_type = $type_name;
+      }
+              
+      array_push($all_types, $type_name);
+    }
+
+    $JSON_struc .= "      {"
+                ."uid: '".$element['bt_id']."', "
+                ."name: \"".$element['bt_title']."\", "
+                ."lon: ".$location[0].", "
+                ."lat: ".$location[1].", "
+                ."main_type: '$main_type', "
+                ."header: '$head_img', "
+                ."types: [".implode(', ', array_map("addQuotes", $all_types))."]"
+                ."},\n";
+                        
+        
+            
+  }
+  $JSON_struc .= "];\n";
+  
+    
+  return "<script> $JSON_struc </script> <div id='page_map'></div><div id='popup'></div>\n";
+}
+
+function afficher_map_imports() {
+  $HTML_elmts = "<script src='//plongee.0x972.info/divebook.html_files/jquery.min.js'></script>"
+              .'<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.17.1/ol.js" type="text/javascript"></script>'
+              .'<link rel="stylesheet" href="//plongee.0x972.info/divebook.html_files/bootstrap.min.css" type="text/css">'
+              .'<link rel="stylesheet" href="//plongee.0x972.info/divebook.html_files/bootstrap-theme.min.css" type="text/css">'
+              .'<script src="//plongee.0x972.info/divebook.html_files/bootstrap.min.js"></script>'
+              .'<link rel="stylesheet" href="//plongee.0x972.info/divebook.html_files/ol.css" type="text/css">'
+              .'<link rel="stylesheet" href="//plongee.0x972.info//divebook.html_files/ol3-layerswitcher.css" />'."\n"
+              .'<script src="//plongee.0x972.info/divebook.html_files/ol3-layerswitcher.js"></script>'
+              ."<script src='themes/martinique/map.js'></script>\n";
+        
+  $HTML_elmts .='<!--Icons made by <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> and <a href="http://www.freepik.com" title="Freepik">Freepik</a> and <a href="http://www.flaticon.com/authors/oleksandr-yershov" title="Oleksandr Yershov">Oleksandr Yershov</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>-->';
+
+  return $HTML_elmts;
+}
+
+function afficher_tags() {
+  $tag_type_div = "";
+  $tag_where_div = "";
+  foreach (list_all_tags('articles', FALSE) as $tag => $nb) {
+    if ($tag[0] != "#" && $tag[0] != "@") continue;
+    $tagname = substr($tag, 1);
+    $tagname_ = str_replace(" ", "_", $tagname);
+    
+    $htag = "<img width='25px' class='cat tag_selector cat_$tagname_' id='sel_$tagname_' alt='$tagname_' title='$tagname ($nb articles)' src='/themes/martinique/picto/$tagname_.png'/>";
+    
+    if ($tag[0] == "#")  $tag_type_div .= $htag;
+    else $tag_where_div .= $htag;
+  }
+  
+  return "<p>$tag_type_div</p>"; # ."<p>$tag_where_div</p>";
+}
+
+function afficher_wall($tableau) {
     $blog_sohann = false;
     if (strpos($_SERVER["SERVER_NAME"], "sohann.pouget.me") !== false) {
         $blog_sohann = true;
     }
-
+    $blog_martinique = false;
+    if (strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false) {
+      $blog_martinique = true;
+    }
+    
     $HTML = '';
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
 
     $HTML_elmts = '';
     $HTML_elmts .= "<style type='text/css'>"."\n"
-                .".midle {"."\n"
-                ."margin-left: 0px;"."\n"
-                ."}"."\n"
+                .".midle {margin-left: 0px;}\n"
+                ."#main, #contenu {padding: 0px;max-width: 100%;}\n"
                 ."</style>"."\n";
+    if ($blog_martinique) {
+      $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
+                 . afficher_tags()
+                 . '</article>'."\n";
+      
+      $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
+                 . afficher_map_data($tableau)
+                 . '</article>'."\n";
+    }
+    
     $data = array();
     if (!empty($tableau)) {
         $HTML_article = conversions_theme($theme_page, $data, 'post');
@@ -130,19 +244,32 @@ function afficher_wall($tableau, $img_wall) {
                 continue;
             }
 
-            $notes = $element['bt_notes'];
+            $notes = explode('#', $element['bt_notes'])[0];
+            
             if (endsWith($notes, ".jpg") && ! endsWith($notes, "-med.jpg")) {
                 $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
             }
             
-            $HTML_elmts .= '<article class="wall-post hentry">'."\n"
+            $HTML_elmts .= '<article class="wall-post hentry " id="'.$element['bt_id'].'">'."\n"
                         . '<a href="'.$element['bt_link'].'" class="entry-link">'."\n"
-                        . ($img_wall ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
+                        . ($blog_martinique ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
                         . '</a>'
                         . '  <header class="entry-header">'."\n"
-                        . '    <div class="entry-meta">'."\n"
-                        . '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n"
-                        . '    </div>'."\n"
+                        . '    <div class="entry-meta">'."\n";
+            if ($blog_martinique) {
+              $HTML_elmts .= '    <span class="posted-on">';
+              foreach (explode(", ", $element['bt_categories']) as $id => $tag) {
+                if ($tag[0] !== '#') continue;
+                $tag = substr($tag, 1);
+                $tagname = str_replace(" ", "_", $tag);
+                $HTML_elmts .=  "<img class='cat cat_$tagname' width='25px' title='$tag' src='/themes/martinique/picto/$tagname.png' alt='$tag'/>";
+              }
+              
+              $HTML_elmts .= '</span>'."\n";
+            } else {
+              $HTML_elmts .= '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
+            }
+            $HTML_elmts .= '    </div>'."\n"
                         
                         . '    <!-- .entry-meta -->'."\n"
                         . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a></h1>'."\n"
@@ -152,7 +279,6 @@ function afficher_wall($tableau, $img_wall) {
                         . '  <a href="'.$element['bt_link'].'" class="entry-link"><span class="screen-reader-text">Lire la suite <span class="meta-nav">→</span></span></a>'."\n"
                         . '</article>'."\n";
             
-            //$HTML_elmts .=  "$notes <br/>";
         }
 
         $HTML_elmts .= "<script>"."\n"
@@ -161,7 +287,9 @@ function afficher_wall($tableau, $img_wall) {
                     . "sheet.insertRule('#main { max-width: 100%; }', sheet.cssRules.length);"."\n"
                     . "sheet.insertRule('#midle { margin-left: 0px; }', sheet.cssRules.length);"."\n"
                     . "sheet.insertRule('body { overflow-x: hidden; }', sheet.cssRules.length);"."\n"
-        ."</script>"."\n";
+                    ."</script>"."\n";
+        
+        $HTML_elmts .= afficher_map_imports();
         
         $HTML_elmts = "<div class='wall-main'> $HTML_elmts </div>";
         
@@ -175,6 +303,6 @@ function afficher_wall($tableau, $img_wall) {
     echo $HTML;
 }
 
-afficher_wall($tableau, $IMG_WALL);
+afficher_wall($tableau);
 
 ?>
