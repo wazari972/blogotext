@@ -11,6 +11,8 @@
 #
 # *** LICENSE ***
 
+session_start();
+
 header('Content-Type:  text/html; charset=UTF-8');
 
 $GLOBALS['BT_ROOT_PATH'] = '';
@@ -52,7 +54,12 @@ $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 $array = array();
 $ORDER = 'DESC'; // may be overwritten
 
-$query = "SELECT * FROM articles WHERE bt_statut=1";
+$query = "SELECT * FROM articles WHERE TRUE";
+
+if (empty($_SESSION['user_id'])) {
+	$query .= " AND bt_statut=1";
+}
+
 
 if (strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false) {
     if (!isset($_GET['tag'])) {
@@ -134,7 +141,7 @@ function afficher_wall($tableau, $img_wall) {
             if (endsWith($notes, ".jpg") && ! endsWith($notes, "-med.jpg")) {
                 $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
             }
-            
+            $hidden = $element['bt_statut'] == 0 ? " (privé) " : "";
             $HTML_elmts .= '<article class="wall-post hentry">'."\n"
                         . '<a href="'.$element['bt_link'].'" class="entry-link">'."\n"
                         . ($img_wall ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
@@ -145,7 +152,7 @@ function afficher_wall($tableau, $img_wall) {
                         . '    </div>'."\n"
                         
                         . '    <!-- .entry-meta -->'."\n"
-                        . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a></h1>'."\n"
+                        . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a>'.$hidden.'</h1>'."\n"
                         . '  </header>'."\n"
                         
                         . '  <!-- .entry-header -->'."\n"

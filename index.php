@@ -140,10 +140,9 @@ if ( isset($_GET['d']) and preg_match('#^\d{4}/\d{2}/\d{2}/\d{2}/\d{2}/\d{2}#', 
 	$tab = explode('/', $_GET['d']);
 	$id = substr($tab['0'].$tab['1'].$tab['2'].$tab['3'].$tab['4'].$tab['5'], '0', '14');
 	// 'admin' connected is allowed to see draft articles, but not 'public'. Same for article posted with a date in the future.
-	if (empty($_SESSION['user_id'])) {
-		$query = "SELECT * FROM articles WHERE bt_id=? AND bt_date <=? AND bt_statut=1 LIMIT 1";
-		$billets = liste_elements($query, array($id, date('YmdHis')), 'articles');
-	} else {
+
+	// let 'public' see the hidden article if they point right to it
+	{
 		$query = "SELECT * FROM articles WHERE bt_id=? LIMIT 1";
 		$billets = liste_elements($query, array($id), 'articles');
 	}
@@ -205,12 +204,16 @@ elseif (isset($_GET['liste']) or isset($_GET['alpha'])) {
       
       $sql_tag = "";
     }
-    $what = "bt_date,bt_id,bt_title,bt_type,bt_content,bt_categories,bt_abstract,bt_notes,bt_nb_comments,bt_link";
+    $what = "bt_date,bt_id,bt_title,bt_type,bt_content,bt_categories,bt_abstract,bt_notes,bt_nb_comments,bt_link,bt_statut";
     
-	$query = "SELECT $what FROM articles WHERE bt_date <= ".date('YmdHis')." AND bt_statut=1 $sql_tag ORDER BY bt_date DESC";
-    
-	$tableau = liste_elements($query, $array, 'articles');
-	afficher_liste($tableau, isset($_GET['alpha']));
+    $query = "SELECT $what FROM articles WHERE bt_date <= ".date('YmdHis')." ";
+    if (empty($_SESSION['user_id'])) {
+        $query .= " AND bt_statut=1";
+    }
+    $query .= $sql_tag;
+    $query .= " ORDER BY bt_date DESC";
+    $tableau = liste_elements($query, $array, 'articles');
+    afficher_liste($tableau, isset($_GET['alpha']));
     
 }
 
