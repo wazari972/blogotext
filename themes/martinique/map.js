@@ -100,8 +100,7 @@ function init_osm_box(divName) {
     });
     map.addOverlay(popup);
     
-    var feature_visible = false;
-    
+    var visible_feature = null;
     // display popup on click
     map.on('click', function(evt) {
         var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
@@ -113,8 +112,8 @@ function init_osm_box(divName) {
 
         
         $(element).popover('destroy');
-        $(".wall-post:not(.head_map)").hide();
-        if (feature) {
+
+        if (feature && visible_feature != feature) {
             var geometry = feature.getGeometry();
             var coord = geometry.getCoordinates();
             
@@ -128,12 +127,14 @@ function init_osm_box(divName) {
             });
             
             $(element).popover('show');
-            $("#"+feature.get('uid')).show();
-            feature_visible = true;
+            $(".wall-post:not(.head_map)").addClass("map-hidden"); 
+            $("#"+feature.get('uid')).removeClass("map-hidden");
+            visible_feature = feature;
         } else {
-            $(".wall-post").show();
-            feature_visible = false;
+            visible_feature = null;
+            $(".wall-post:not(.head_map)").removeClass("map-hidden"); 
         }
+        update_visible_posts_features(pageFeatures);
     });
 
     // change mouse cursor when over marker
@@ -146,22 +147,23 @@ function init_osm_box(divName) {
     });
 
     map.on("moveend", function(e) {
-        if (feature_visible) return;
+        if (visible_feature) return;
         var extent = map.getView().calculateExtent(map.getSize());
-        $(".wall-post:not(.head_map)").hide();
+        $(".wall-post:not(.head_map)").removeClass("map-visible");
         var show_all = true;
         for (var i = 0; i < page_locations.length; i++) {
             var point = page_locations[i];
             
             if (ol.extent.containsCoordinate(extent, pointToLonlat(point).getCoordinates())) {
-                $("#"+point.uid).show();
+                $("#"+point.uid).addClass("map-visible");
             } else {
                 show_all = false;
             }
         }
         if (show_all) {
-            $(".wall-post").show();
+            $(".wall-post").addClass("map-visible");
         }
+        update_visible_posts_features(pageFeatures);
     })
 
     return pageFeatures;
@@ -179,7 +181,8 @@ function pointToContent(point) {
     ret += "<p>";
     for (tp in point.types) {
         var name = point.types[tp]
-        ret += "  <img width='25px' title='"+name+"' src='/themes/martinique/picto/"+name+".png' alt='"+name+"'/>" ;
+        ret += "  <img width='25px' title='"+name+
+            "' src='/themes/martinique/picto/"+name+".png' alt='"+name+"'/>" ;
     }
     ret += "</p>";
     ret += "</div>";
@@ -189,8 +192,9 @@ function pointToContent(point) {
 
 var tagSelected = null;
 function init_tag_selectors(pageFeatures) {
+    $(".wall-post").addClass("type-visible")
+
     $(".tag_selector").click(function() {
-        var visible = [];
         var tagname = $(this).attr('alt');
 
         var showAll = tagname == tagSelected;
@@ -201,30 +205,28 @@ function init_tag_selectors(pageFeatures) {
             $("img.cat_"+tagname).addClass("type_selected")
         }
         $(".wall-post:not(.head_map)").each(function() {
-            if (showAll || $(this).find("img.cat_"+tagname).length != 0) {
-                $(this).show()
-                visible.push($(this).attr("id"));
-            } else {
-                $(this).hide()
-            }
+            $(this).toggleClass("type-visible",
+                                showAll || $(this).find("img.cat_"+tagname).length != 0);
         })
-        $(pageFeatures).each(function(pos, feature) {
-            if (visible.includes(feature.get("uid"))) {
-                feature.setStyle(feature.get("attributes")["style"]);
-            } else {
-                feature.setStyle(invisibleFeatureStyle);
-            }
-        });
+        
+        update_visible_posts_features(pageFeatures);
+        
         tagSelected = showAll ? null : tagname;
-        vectorLayer.changed()
     });
-
-    $(".loc_selector").click(function() {
-        var visible = [];
-        var tagname = $(this).html();
-
-
+}
+function update_visible_posts_features(pageFeatures) {
+    $(pageFeatures).each(function(pos, feature) {
+        if ($("#"+feature.get("uid")).is(".type-visible.map-visible")) {
+            feature.setStyle(feature.get("attributes")["style"]);
+        } else {
+            feature.setStyle(invisibleFeatureStyle);
+        }
     });
+    vectorLayer.changed()
+
+    $(".wall-post").hide();
+    $(".wall-post.type-visible.map-visible:not(.map-hidden)").show();
+    
 }
 
 $(document).ready(function() {
