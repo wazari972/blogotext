@@ -111,7 +111,8 @@ function afficher_map_data($tableau) {
     "fleurs",
     "point de vue",
     "culture", 
-    "plongee"
+    "plongee",
+    "village"
   );
 
 
@@ -196,13 +197,15 @@ function afficher_tags() {
     $tagname = substr($tag, 1);
     $tagname_ = str_replace(" ", "_", $tagname);
     
-    $htag = "<img width='25px' class='cat tag_selector cat_$tagname_' id='sel_$tagname_' alt='$tagname_' title='$tagname ($nb articles)' src='/themes/martinique/picto/$tagname_.png'/>";
-    
-    if ($tag[0] == "#")  $tag_type_div .= $htag;
-    else $tag_where_div .= $htag;
+    if ($tag[0] == "#") {
+      $tag_type_div .= "<img width='25px' class='cat tag_selector cat_$tagname_' id='sel_$tagname_' alt='$tagname_' title='$tagname ($nb articles)' src='/themes/martinique/picto/$tagname_.png'/>";
+    } else {
+      $tag_where_div .= "<span class='loc loc_selector loc_$tagname_' id='sel_$tagname_'>$tagname</span> ";
+    }
   }
-  
-  return "<p>$tag_type_div</p>"; # ."<p>$tag_where_div</p>";
+  // WHERE tags (starting with a '#') are not yet handled in the JS fronted...
+  // "<p>$tag_where_div</p>";
+  return "<p>$tag_type_div</p>" ; 
 }
 
 function afficher_wall($tableau) {

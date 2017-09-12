@@ -189,7 +189,6 @@ function pointToContent(point) {
 
 var tagSelected = null;
 function init_tag_selectors(pageFeatures) {
-    $(".tag_selector").data("visible", true);
     $(".tag_selector").click(function() {
         var visible = [];
         var tagname = $(this).attr('alt');
@@ -218,7 +217,14 @@ function init_tag_selectors(pageFeatures) {
         });
         tagSelected = showAll ? null : tagname;
         vectorLayer.changed()
-    });    
+    });
+
+    $(".loc_selector").click(function() {
+        var visible = [];
+        var tagname = $(this).html();
+
+
+    });
 }
 
 $(document).ready(function() {
