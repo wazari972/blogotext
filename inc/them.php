@@ -333,6 +333,11 @@ function get_article_list($tableau, $alpha=0, $multi_tab=0) {
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
            
 	$HTML_article = conversions_theme($theme_page, array(), 'list');
+
+    $blog_martinique = false;
+    if (strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false) {
+      $blog_martinique = true;
+    }
     
 	if (!empty($tableau)) {
 		$HTML_elmts .= '<ul id="liste-all-articles">'."\n";
@@ -355,6 +360,7 @@ tableau_printing:
           unset($multi_tableau[$tag]); 
         }
 
+        $img = "";
         $prev_letter = "";
 		foreach ($tableau as $e) {
             if ($alpha) {
@@ -364,7 +370,20 @@ tableau_printing:
                 $prev_letter = $first_letter;
               }
             } elseif ($multi_tab and empty($prev_letter)) {
-              $HTML_elmts .= "\t".'<li class="list-letter">'.$tag.'</li>'."\n";
+              if ($blog_martinique) {
+                if ($tag[0] == "#") {
+                  $tag = substr($tag, 1);
+                  $tagname = str_replace(" ", "_", $tag);
+                  $img = "<img class='cat cat_$tagname' width='25px' title='$tag' src='/themes/martinique/picto/$tagname.png' alt='$tag'/>&nbsp;";
+                  $tag = ucfirst($tag);
+                } elseif ($tag[0] == "@") {
+                  $tag = substr($tag, 1);
+                  $tag = "@".str_replace(" ", "-", ucwords(str_replace("-", " ", $tag)));
+                } else {
+                  $img = "";
+                }
+              }
+              $HTML_elmts .= "\t".'<li class="list-letter">'.$img.$tag.'</li>'."\n";
               $prev_letter = "x"; // just set it
             }
 			$short_date = substr($e['bt_date'], 0, 4).'/'.substr($e['bt_date'], 4, 2).'/'.substr($e['bt_date'], 6, 2);
