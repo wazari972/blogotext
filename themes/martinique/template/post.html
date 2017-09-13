@@ -2,12 +2,29 @@
 	<header class="art-title post-title">
 		<h1><a href="{article_lien}">{article_titre}</a></h1>
 	</header>
+        <blockquote>{article_chapo}</blockquote>
+        <script> 
+          var page_locations = null;
+          var article_notes = "{article_notes}";
+        </script> <div id='page_map'></div><div id='popup'></div>
 	<div class="art-content post-content">
 		{article_contenu}
 	</div>
 	<footer class="art-footer post-footer">
 		<div class="art-tags post-tags">{article_tags}</div>
-	</footer> 
+	</footer>
+        <script src="//plongee.0x972.info/divebook.html_files/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.17.1/ol.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="//plongee.0x972.info/divebook.html_files/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="//plongee.0x972.info/divebook.html_files/bootstrap-theme.min.css" type="text/css">
+        <script src="//plongee.0x972.info/divebook.html_files/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="//plongee.0x972.info/divebook.html_files/ol.css" type="text/css">
+        <link rel="stylesheet" href="//plongee.0x972.info//divebook.html_files/ol3-layerswitcher.css" />
+        <script src="//plongee.0x972.info/divebook.html_files/ol3-layerswitcher.js"></script>
+        <script src="/themes/martinique/map.js"></script>
+        
+        <!--Icons made by <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> and <a href="http://www.freepik.com" title="Freepik">Freepik</a> and <a href="http://www.flaticon.com/authors/oleksandr-yershov" title="Oleksandr Yershov">Oleksandr Yershov</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>-->
+
 </article>
 
 <div id="commentaires">

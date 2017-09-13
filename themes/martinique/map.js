@@ -8,16 +8,33 @@ var invisibleFeatureStyle = new ol.style.Style({
 })
 function init_osm_box(divName) {      
     var pageFeatures = [];
-
-    for (var i = 0; i < page_locations.length ; i++) {
-        var point = page_locations[i];
+    var center;
+    if (page_locations != null) {
+        for (var i = 0; i < page_locations.length ; i++) {
+            var point = page_locations[i];
+            var page = new ol.Feature({
+                geometry: pointToLonlat(point),
+                name: point.name,
+                uid: point.uid,
+                attributes: {"icon": point.main_type, "content":pointToContent(point)}
+            })
+           
+            pageFeatures.push(page)
+        }
+    } else {
+        // article_notes = "/img/martinique.0x972.info/33/DSC02815-DSC02817.jpg#@14.4007958,-60.8587551,17"
+        var loc = article_notes.split('#@')[1].split(",");
+        var point = {
+            "lon": parseFloat(loc[0]),
+            "lat": parseFloat(loc[1])
+        }
         var page = new ol.Feature({
             geometry: pointToLonlat(point),
             name: point.name,
             uid: point.uid,
-            attributes: {"icon": point.main_type, "content":pointToContent(point)}
+            point: point,
+            attributes: {"icon": "plage", "content":"rien"}
         })
-
         pageFeatures.push(page)
     }
 
@@ -55,7 +72,7 @@ function init_osm_box(divName) {
         target: document.getElementById(divName),
         view: new ol.View({
             center: [0, 0],
-            zoom: 3
+            zoom: 10
         }),
         layers: [
             new ol.layer.Group({
@@ -81,14 +98,21 @@ function init_osm_box(divName) {
             vectorLayer
         ]
       });
-    /* zoom to all dives */
-    var extent = vectorLayer.getSource().getExtent();
-    map.getView().fit(extent, map.getSize());
+ 
 
     /* add layer switch control */
     map.addControl(new ol.control.LayerSwitcher({
         tipLabel: 'Layer' // Optional label for button
     }));
+
+   /* zoom to see all */
+    var extent = vectorLayer.getSource().getExtent();
+    map.getView().fit(extent, map.getSize());
+
+    if (page_locations == null) {
+        map.getView().setZoom(10);
+        return pageFeatures;
+    }
 
     /* prepare popups*/
     var element = document.getElementById('popup');
