@@ -176,8 +176,7 @@ function pointToLonlat(point) {
 
 function pointToContent(point) {
     var ret = "<div class='map_content'>\n"
-        +"  <h3>"+point.name+"</h3>\n"
-    
+        +"  <h3>"+point.name+"</h3>\n";
     ret += "<p>";
     for (tp in point.types) {
         var name = point.types[tp]
@@ -185,6 +184,7 @@ function pointToContent(point) {
             "' src='/themes/martinique/picto/"+name+".png' alt='"+name+"'/>" ;
     }
     ret += "</p>";
+    ret += "<p>"+point.abstract+"</p>\n";
     ret += "</div>";
     return ret;
 

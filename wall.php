@@ -153,7 +153,8 @@ function afficher_map_data($tableau) {
               
       array_push($all_types, $type_name);
     }
-
+    $abstract = str_replace("'", "&apos;", $element['bt_abstract']);
+    
     $JSON_struc .= "      {"
                 ."uid: '".$element['bt_id']."', "
                 ."name: \"".$element['bt_title']."\", "
@@ -161,6 +162,7 @@ function afficher_map_data($tableau) {
                 ."lat: ".$location[1].", "
                 ."main_type: '$main_type', "
                 ."header: '$head_img', "
+                ."abstract :'$abstract', "
                 ."types: [".implode(', ', array_map("addQuotes", $all_types))."]"
                 ."},\n";
                         
@@ -252,9 +254,9 @@ function afficher_wall($tableau) {
             if (endsWith($notes, ".jpg") && ! endsWith($notes, "-med.jpg")) {
                 $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
             }
-            
-            $HTML_elmts .= '<article class="wall-post hentry " id="'.$element['bt_id'].'">'."\n"
-                        . '<a href="'.$element['bt_link'].'" class="entry-link">'."\n"
+            $tooltip = str_replace('"', "&quot;", $element['bt_abstract']);
+            $HTML_elmts .= '<article class="wall-post hentry " id="'.$element['bt_id'].'" title="'.$tooltip.'" >'."\n"
+                        . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
                         . ($blog_martinique ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
                         . '</a>'
                         . '  <header class="entry-header">'."\n"
