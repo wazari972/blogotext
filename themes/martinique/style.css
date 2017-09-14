@@ -118,6 +118,20 @@
 
 .tag_selector {
     cursor:pointer;
+    user-select: none;
+}
+
+.tag_selectors {
+    user-select: none;
+}
+
+.tag_selectors {
+    user-select: none;
+}
+
+.where_cat {
+    color: white;
+    font-weight: bold;
 }
 
 /* Map 

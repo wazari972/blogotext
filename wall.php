@@ -201,16 +201,16 @@ function afficher_tags() {
     
     if ($tag[0] == "#") {
       $tag_name = ucfirst(substr($tag, 1));
-      $tag_type_div .= "<img width='25px' class='cat tag_selector cat_$tag_name' id='sel_$tag_id' alt='$tag_id' title='$tag_name ($nb articles)' src='/themes/martinique/picto/$tag_id.png'/>";
+      $tag_type_div .= "<img width='25px' class='cat type_cat tag_selector cat_$tag_name' id='sel_$tag_id' alt='$tag_id' title='$tag_name ($nb articles)' src='/themes/martinique/picto/$tag_id.png'/>";
     } else {
       $tag_name = str_replace("-", " ", substr($tag, 1));
       $tag_name = ucwords($tag_name);
       $tag_name = str_replace(" ", "-", $tag_name);
-      $tag_where_div .= "&times; <span alt='$tag_id'  class='cat tag_selector cat_$tag_id' id='sel_$tag_id'>$tag_name</span> ";
+      $tag_where_div .= "&times; <span alt='$tag_id'  class='cat where_cat tag_selector cat_$tag_id' id='sel_$tag_id'>$tag_name</span> ";
     }
   }
 
-  return "<p>$tag_where_div&times;</p> <p>$tag_type_div</p>" ; 
+  return "<p class='tag_selectors'>$tag_where_div&times;</p> <p class='tag_selectors'>$tag_type_div</p>" ; 
 }
 
 function afficher_wall($tableau) {
