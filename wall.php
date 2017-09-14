@@ -117,7 +117,7 @@ function afficher_map_data($tableau) {
 
 
   $data = array();
-
+  $theme_page = file_get_contents($GLOBALS['theme_liste']);
   $HTML_article = conversions_theme($theme_page, $data, 'post');
 
   $JSON_struc = "var page_locations = [\n";
