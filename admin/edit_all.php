@@ -24,17 +24,7 @@ operate_session();
 $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 
 if (isset($_POST['_verif_envoi'])) {
-	$billet = init_post_article();
-	$erreurs_form = valider_form_billet($billet);
-	if (empty($erreurs_form)) {
-		traiter_form_billet($billet);
-	}
-
-    if (isset($_POST['_multi_edit'])) {
-      date_default_timezone_set('Europe/Paris');
-      echo "Saved at ". date('h:i:s', time());
-      return;
-    }
+	echo "Sent to the wrong page ..."; 
     
 }
 

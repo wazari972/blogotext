@@ -648,10 +648,11 @@ function afficher_form_billet_multi($article, $erreurs) {
 	$allowcommentdefaut = $article['bt_allow_comments'];
 
     $uid = "-".$article['bt_id'];
-    echo '<form class="form-ecrire" id="form-ecrire'.$uid.'" method="post" onsubmit="return moveTag(this);" action="'.$_SERVER['PHP_SELF'].'?md&post_id='.$article['bt_id'].'" >'."\n";
+    echo '<form class="form-ecrire" id="form-ecrire'.$uid.'" method="post" onsubmit="return moveTag(this);" action="ecrire.php?md&post_id='.$article['bt_id'].'" >'."\n";
 
     echo hidden_input('_verif_envoi', '1');
     echo hidden_input('_multi_edit', '1');
+    echo hidden_input('_ajax_reply', '1');
     echo hidden_input('enregistrer', '1');
     echo hidden_input('article_id', $article['bt_id']);
     echo hidden_input('article_date', $article['bt_date']);
@@ -720,6 +721,7 @@ function afficher_form_billet_md($article, $erreurs) {
 		$statutdefaut = '1';
 		$allowcommentdefaut = '1';
 	}
+    $uid = '';
 	if ($erreurs) {
           echo erreurs($erreurs);
 	}
@@ -729,17 +731,18 @@ function afficher_form_billet_md($article, $erreurs) {
 	} else {
           echo '<form class="form-ecrire" id="form-ecrire" method="post" onsubmit="return moveTag(this);" action="'.$_SERVER['PHP_SELF'].'?md" >'."\n";
 	}
-        
-        echo '<input class="titre" id="titre" class="titre text" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
+    echo hidden_input('_ajax_reply', '1');
+    echo hidden_input('_verif_envoi', '1');
+    echo '<input class="titre" id="titre" class="titre text" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
 	echo '<div class="chapo_note" id="chapo_note">'."\n";
 	echo '<div class="blocchapo" id="blocchapo">'."\n";
-        echo '<textarea id="chapo" class="chapo text" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" >'.$chapodefaut.'</textarea>'."\n" ;
+    echo '<textarea id="chapo" class="chapo text" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" >'.$chapodefaut.'</textarea>'."\n" ;
 	echo '</div>'."\n";
 	echo '<div class="blocnote" id="blocnote">'."\n";
-        echo '<textarea class="notes" id="notes text" name="notes" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_notes']).'" tabindex="40" >'.$notesdefaut.'</textarea>'."\n" ;
-	echo '</div>'."\n";
-	echo '</div>'."\n";
-        echo '
+    echo '<textarea class="notes" id="notes text" name="notes" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_notes']).'" tabindex="40" >'.$notesdefaut.'</textarea>'."\n" ;
+    echo '</div>'."\n";
+    echo '</div>'."\n";
+    echo '
         <link rel="stylesheet" type="text/css" href="../pagedown/article.css" />
         <script type="text/javascript" src="../pagedown/Markdown.Converter.js"></script>
         <script type="text/javascript" src="../pagedown/Markdown.Sanitizer.js"></script>
@@ -762,29 +765,30 @@ function afficher_form_billet_md($article, $erreurs) {
 
 	echo '<div id="date-and-opts">'."\n";
 	echo '<div id="date">'."\n";
-        echo '<span id="formdate">'."\n";
-        form_annee($defaut_annee);
-        form_mois($defaut_mois);
-        form_jour($defaut_jour);
-        echo '</span>'."\n\n";
-        echo '<span id="formheure">';
-        form_heure($defaut_heure, $defaut_minutes, $defaut_secondes);
-        echo '</span>'."\n";
-        echo '</div>'."\n";
-        echo '<div id="opts">'."\n";
-        echo '<span id="formstatut">'."\n";
-        form_statut($statutdefaut);
-        echo '</span>'."\n";
-        echo '<span id="formallowcomment">'."\n";
-        form_allow_comment($allowcommentdefaut);
-        echo '</span>'."\n";
-        echo '</div>'."\n";
-        
-        echo '</div>'."\n";
+    echo '<span id="formdate">'."\n";
+    form_annee($defaut_annee);
+    form_mois($defaut_mois);
+    form_jour($defaut_jour);
+    echo '</span>'."\n\n";
+    echo '<span id="formheure">';
+    form_heure($defaut_heure, $defaut_minutes, $defaut_secondes);
+    echo '</span>'."\n";
+    echo '</div>'."\n";
+    echo '<div id="opts">'."\n";
+    echo '<span id="formstatut">'."\n";
+    form_statut($statutdefaut);
+    echo '</span>'."\n";
+    echo '<span id="formallowcomment">'."\n";
+    form_allow_comment($allowcommentdefaut);
+    echo '</span>'."\n";
+    echo '</div>'."\n";
+    
+    echo '</div>'."\n";
 	echo '<p class="centrer">'."\n";
-	echo '<input class="submit blue-square" type="submit" name="enregistrer" onclick="contenuLoad=document.getElementById(\'wmd-input\').value" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />'."\n";
-	if ($article) {
-          echo '<input class="submit red-square" type="submit" name="supprimer" value="'.$GLOBALS['lang']['supprimer'].'" onclick="contenuLoad = document.getElementById(\'wmd-input\').value; return window.confirm(\''.$GLOBALS['lang']['question_suppr_article'].'\')" />'."\n";
+	echo '<input class="submit blue-square" type="submit" name="enregistrer" onclick="'."\$('#form-ecrire').append('<input type=\'hidden\' name=\'enregistrer\' value=\'1\' />')".';contenuLoad=document.getElementById(\'wmd-input\').value" value="'.$GLOBALS['lang']['envoyer'].'" tabindex="70" />'."\n";
+    echo ' <span><b>Status: </b><span class="art_status">untouched</span>.</span>';
+    if ($article) {
+          echo '<input class="submit red-square" type="submit" id="delete_bt" name="supprimer" value="'.$GLOBALS['lang']['supprimer'].'" onclick="'."\$('#form-ecrire').append('<input type=\'hidden\' name=\'supprimer\' value=\'1\' />')".';contenuLoad = document.getElementById(\'wmd-input\').value; return window.confirm(\''.$GLOBALS['lang']['question_suppr_article'].'\')" />'."\n";
           echo hidden_input('article_id', $article['bt_id']);
           echo hidden_input('article_date', $article['bt_date']);
           echo hidden_input('ID', $article['ID']);

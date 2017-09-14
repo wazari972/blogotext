@@ -253,7 +253,7 @@ function traiter_form_billet($billet) {
         if (isset($_GET['md'])) {
           $redir .= "&md";
         }
-        if (!isset($_POST['_multi_edit'])) {
+        if (!isset($_POST['_ajax_reply'])) {
           redirection($redir);
         }
 	}

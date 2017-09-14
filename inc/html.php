@@ -81,13 +81,10 @@ function afficher_topnav($active, $titre) {
 	echo "\t".'<ul>'."\n";
 	echo "\t\t".'<li><a href="index.php" id="lien-index"', ($active == 'index.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['label_resume'].'</a></li>'."\n";
 	echo "\t\t".'<li><a href="articles.php" id="lien-liste"', ($active == 'articles.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['mesarticles'].'</a></li>'."\n";
+    echo "\t\t".'<li><a href="edit_all.php" id="edit-all"', ($active == 'edit_all.php') ? ' class="current"' : '', '>Edit all the articles</a></li>'."\n";
 	echo "\t\t".'<li><a href="ecrire.php?&md" id="lien-nouveau"', ($active == 'ecrire.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['nouveau'].'</a></li>'."\n";
 	echo "\t\t".'<li><a href="commentaires.php" id="lien-lscom"', ($active == 'commentaires.php') ? ' class="current"' : '', '>'.$GLOBALS['lang']['titre_commentaires'].'</a></li>'."\n";
 	echo "\t\t".'<li><a href="fichiers.php" id="lien-fichiers"', ($active == 'fichiers.php') ? ' class="current"' : '', '>'.ucfirst($GLOBALS['lang']['label_fichiers']).'</a></li>'."\n";
-	if ($GLOBALS['onglet_liens'])
-	echo "\t\t".'<li><a href="links.php" id="lien-links"', ($active == 'links.php') ? ' class="current"' : '', '>'.ucfirst($GLOBALS['lang']['label_links']).'</a></li>'."\n";
-	if ($GLOBALS['onglet_rss'])
-	echo "\t\t".'<li><a href="feed.php" id="lien-rss"', ($active == 'feed.php') ? ' class="current"' : '', '>'.ucfirst($GLOBALS['lang']['label_feeds']).'</a></li>'."\n";
 	echo "\t".'</ul>'."\n";
 	echo '</div>'."\n";
 	echo '<h1>'.$titre.'</h1>'."\n";

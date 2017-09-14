@@ -27,11 +27,26 @@ $erreurs_form = array();
 //
 
 if (isset($_POST['_verif_envoi'])) {
-	$billet = init_post_article();
-	$erreurs_form = valider_form_billet($billet);
-	if (empty($erreurs_form)) {
-		traiter_form_billet($billet);
-	}
+
+  $billet = init_post_article();
+  $erreurs_form = valider_form_billet($billet);
+  if (empty($erreurs_form)) {
+    traiter_form_billet($billet);
+  }
+
+  if (isset($_POST['_ajax_reply'])) {
+    date_default_timezone_set('Europe/Paris');
+    if (empty($erreurs_form)) {
+      if (isset($_POST['enregistrer'])) {
+        echo "Saved at ". date('h:i:s', time());
+      } else {
+        echo "Deleted at ". date('h:i:s', time());
+      }
+    } else {
+      echo "Errors: ".$erreurs_form;
+    }
+    return;
+  }
 }
 
 // RECUP INFOS ARTICLE SI DONNÉE
