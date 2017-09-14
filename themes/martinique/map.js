@@ -24,7 +24,7 @@ function init_osm_box(divName) {
     } else {
         // article_notes = "/img/martinique.0x972.info/33/DSC02815-DSC02817.jpg#@14.4007958,-60.8587551,17"
         if (article_notes.indexOf('#@') === -1) {
-            alert("Could not parse the article GPS location ... ("+article_notes+")");
+            $("#page_map").remove()
             return;
         }
         var loc = article_notes.split('#@')[1].split(",");
