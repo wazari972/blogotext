@@ -23,6 +23,10 @@ function init_osm_box(divName) {
         }
     } else {
         // article_notes = "/img/martinique.0x972.info/33/DSC02815-DSC02817.jpg#@14.4007958,-60.8587551,17"
+        if (article_notes.indexOf('#@') === -1) {
+            alert("Could not parse the article GPS location ... ("+article_notes+")");
+            return;
+        }
         var loc = article_notes.split('#@')[1].split(",");
         var point = {
             "lon": parseFloat(loc[0]),
@@ -232,9 +236,12 @@ function init_tag_selectors(pageFeatures) {
             $(this).toggleClass("type-visible",
                                 showAll || $(this).is(".cat_"+tagname));
         })
-        
         update_visible_posts_features(pageFeatures);
     });
+    var hash = decodeURIComponent(window.location.hash.substr(1));
+    if (hash.startsWith("#") || hash.startsWith("@")) {
+        $("#sel_"+hash.substr(1)).click();
+    }
 }
 function update_visible_posts_features(pageFeatures) {
     $(pageFeatures).each(function(pos, feature) {

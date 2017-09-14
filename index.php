@@ -34,13 +34,20 @@ if (strpos($_SERVER["SERVER_NAME"], "phd.kevin.pouget.me") !== false
 if ((strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false 
   || strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false
   || strpos($_SERVER["SERVER_NAME"], "sohann.pouget.me")  !== false
-  || strpos($_SERVER["SERVER_NAME"], "martinique.local") !== false
   || strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false)
  && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
  && strpos($_SERVER["REQUEST_URI"], "?") === false ) 
 {
 	header("Location: wall.php");
 	die(); 
+}
+
+if ((strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false)
+    && strpos($_SERVER["REQUEST_URI"], "/index.php?tag=") !== false)
+{
+  $tagname = explode("tag=", $_SERVER["REQUEST_URI"])[1];
+  header("Location: wall.php#$tagname");
+  die(); 
 }
 
 $CAPOEIRA_WEBSITE = strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false;

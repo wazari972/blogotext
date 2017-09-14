@@ -196,13 +196,17 @@ function afficher_tags() {
   $tag_where_div = "";
   foreach (list_all_tags('articles', FALSE) as $tag => $nb) {
     if ($tag[0] != "#" && $tag[0] != "@") continue;
-    $tagname = substr($tag, 1);
-    $tagname_ = str_replace(" ", "_", $tagname);
+    $tag_id = str_replace(" ", "_", substr($tag, 1));
+    
     
     if ($tag[0] == "#") {
-      $tag_type_div .= "<img width='25px' class='cat tag_selector cat_$tagname_' id='sel_$tagname_' alt='$tagname_' title='$tagname ($nb articles)' src='/themes/martinique/picto/$tagname_.png'/>";
+      $tag_name = ucfirst(substr($tag, 1));
+      $tag_type_div .= "<img width='25px' class='cat tag_selector cat_$tag_name' id='sel_$tag_id' alt='$tag_id' title='$tag_name ($nb articles)' src='/themes/martinique/picto/$tag_id.png'/>";
     } else {
-      $tag_where_div .= "&times; <span alt='$tagname_'  class='cat tag_selector cat_$tagname_' id='sel_$tagname_'>$tagname</span> ";
+      $tag_name = str_replace("-", " ", substr($tag, 1));
+      $tag_name = ucwords($tag_name);
+      $tag_name = str_replace(" ", "-", $tag_name);
+      $tag_where_div .= "&times; <span alt='$tag_id'  class='cat tag_selector cat_$tag_id' id='sel_$tag_id'>$tag_name</span> ";
     }
   }
 
