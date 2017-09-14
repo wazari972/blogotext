@@ -222,20 +222,18 @@ function init_tag_selectors(pageFeatures) {
         var tagname = $(this).attr('alt');
 
         var showAll = tagname == tagSelected;
-        
-        $("img.cat").removeClass("type_selected")
+        tagSelected = showAll ? null : tagname;
 
+        $(".cat").removeClass("type_selected")
         if (!showAll) {
-            $("img.cat_"+tagname).addClass("type_selected")
+            $(this).addClass("type_selected")
         }
         $(".wall-post:not(.head_map)").each(function() {
             $(this).toggleClass("type-visible",
-                                showAll || $(this).find("img.cat_"+tagname).length != 0);
+                                showAll || $(this).is(".cat_"+tagname));
         })
         
         update_visible_posts_features(pageFeatures);
-        
-        tagSelected = showAll ? null : tagname;
     });
 }
 function update_visible_posts_features(pageFeatures) {

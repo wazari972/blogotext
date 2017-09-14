@@ -202,12 +202,11 @@ function afficher_tags() {
     if ($tag[0] == "#") {
       $tag_type_div .= "<img width='25px' class='cat tag_selector cat_$tagname_' id='sel_$tagname_' alt='$tagname_' title='$tagname ($nb articles)' src='/themes/martinique/picto/$tagname_.png'/>";
     } else {
-      $tag_where_div .= "<span class='loc loc_selector loc_$tagname_' id='sel_$tagname_'>$tagname</span> ";
+      $tag_where_div .= "&times; <span alt='$tagname_'  class='cat tag_selector cat_$tagname_' id='sel_$tagname_'>$tagname</span> ";
     }
   }
-  // WHERE tags (starting with a '#') are not yet handled in the JS fronted...
-  // "<p>$tag_where_div</p>";
-  return "<p>$tag_type_div</p>" ; 
+
+  return "<p>$tag_where_div&times;</p> <p>$tag_type_div</p>" ; 
 }
 
 function afficher_wall($tableau) {
@@ -255,26 +254,36 @@ function afficher_wall($tableau) {
                 $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
             }
             $tooltip = str_replace('"', "&quot;", $element['bt_abstract']);
-            $HTML_elmts .= '<article class="wall-post hentry " id="'.$element['bt_id'].'" title="'.$tooltip.'" >'."\n"
+            $post_class = "wall-post hentry";
+
+            if ($blog_martinique) {
+              $posted_on = '    <span class="posted-on">';
+              foreach (explode(", ", $element['bt_categories']) as $id => $tag) {
+                if ($tag === '' || ($tag[0] !== '#' && $tag[0] !== '@')) {
+                  continue;
+                }
+                $tag_name = substr($tag, 1);
+                $tag_id = str_replace(" ", "_", $tag_name);
+                $post_class .= " cat_$tag_id";
+                            
+                if ($tag[0] !== '#') continue;
+
+                $posted_on .=  "<img class='label_$tag_id' width='25px' title='$tag_name' src='/themes/martinique/picto/$tag_id.png' alt='$tag_name'/>";
+              }
+              
+              $posted_on .= '</span>'."\n";
+            } else {
+              $posted_on = '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
+            }
+            
+            $HTML_elmts .= '<article class="'.$post_class.' " id="'.$element['bt_id'].'" title="'.$tooltip.'" >'."\n"
                         . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
                         . ($blog_martinique ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
                         . '</a>'
                         . '  <header class="entry-header">'."\n"
-                        . '    <div class="entry-meta">'."\n";
-            if ($blog_martinique) {
-              $HTML_elmts .= '    <span class="posted-on">';
-              foreach (explode(", ", $element['bt_categories']) as $id => $tag) {
-                if ($tag[0] !== '#') continue;
-                $tag = substr($tag, 1);
-                $tagname = str_replace(" ", "_", $tag);
-                $HTML_elmts .=  "<img class='cat cat_$tagname' width='25px' title='$tag' src='/themes/martinique/picto/$tagname.png' alt='$tag'/>";
-              }
-              
-              $HTML_elmts .= '</span>'."\n";
-            } else {
-              $HTML_elmts .= '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
-            }
-            $HTML_elmts .= '    </div>'."\n"
+                        . '    <div class="entry-meta">'."\n"
+                        . $posted_on
+                        . '    </div>'."\n"
                         
                         . '    <!-- .entry-meta -->'."\n"
                         . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a></h1>'."\n"
