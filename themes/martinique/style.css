@@ -295,11 +295,35 @@ q, blockquote {
 	box-shadow: 0px -3px 0px #a5d6a7 inset;
 }
 
+#top-nav-top { /* normal */
+    order: 2;
+    margin-top: 5px;
+    margin-right: 5px;
+    right: 50px;
+    position:fixed;
+    transform: rotate(90deg);
+	border: 0px solid transparent;
+	border-radius: 5px;
+	box-sizing: border-box;
+	height: 40px;
+	width: 40px;
+	background: rgba(87, 95, 186, 0.5) url(sprites.png) no-repeat -555px -85px / 640px 400px;
+}
+
+#top-nav-top:hover { /* hover */
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+	cursor: pointer;
+	background-color: #36325f;
+}
+
+#top-nav-top:focus { /* disable the dotted outline of a target */
+    outline: 0;
+}
 
 /* TOP > Search button + searchbar
 ------------------------------------------------------*/
 #search {
-	order: 2;
+	order: 1;
 	flex: 0 0 50px;
 	padding: 0;
 }
