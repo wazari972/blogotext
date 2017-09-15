@@ -137,10 +137,19 @@
 
 /* Map 
 ----------------------------------------------------------- */
+.tag_selectors img:not(.type_selected) {
+    margin: 12px;
+}
+img.type_selected {
+    box-shadow:0px 0px 22px 1px #ffa700;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
 
-.type_selected {
-    box-shadow:0px 12px 22px 1px #ffa700;
-    background-color: #ffa700;
+span.type_selected {
+   text-shadow: 0px 0px 10px rgb(255, 167, 0);
+   color: rgb(255, 167, 0);
 }
 
 .wall-main #page_map {
