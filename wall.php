@@ -272,7 +272,7 @@ function afficher_wall($tableau) {
                             
                 if ($tag[0] !== '#') continue;
 
-                $posted_on .=  "<img class='label_$tag_id' width='25px' title='$tag_name' src='/themes/martinique/picto/$tag_id.png' alt='$tag_name'/>";
+                $posted_on .=  "<img class='label_$tag_id' width='25px' height='25px' title='$tag_name' src='/themes/martinique/picto/$tag_id.png' alt='$tag_name'/>";
               }
               
               $posted_on .= '</span>'."\n";

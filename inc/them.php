@@ -374,7 +374,7 @@ tableau_printing:
                 if ($tag[0] == "#") {
                   $tag = substr($tag, 1);
                   $tagname = str_replace(" ", "_", $tag);
-                  $img = "<img class='cat cat_$tagname' width='25px' title='$tag' src='/themes/martinique/picto/$tagname.png' alt='$tag'/>&nbsp;";
+                  $img = "<img class='cat cat_$tagname' width='25px' height='25px' title='$tag' src='/themes/martinique/picto/$tagname.png' alt='$tag'/>&nbsp;";
                   $tag = ucfirst($tag);
                 } elseif ($tag[0] == "@") {
                   $tag = substr($tag, 1);
