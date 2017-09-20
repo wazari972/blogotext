@@ -420,8 +420,10 @@ q, blockquote {
 ------------------------------------------------------------------------ */
 body > header {
 	text-align: center;
-	background: transparent url("header-bg.jpg") no-repeat scroll center center / cover;
-	height: 200px;
+	background: transparent url("header-bg.jpg") no-repeat fixed center center / cover;
+	background-position: center -240px;
+	background-size: contain;
+	height: 350px;
 	font-size: 220%;
 	color: white;
 	display: flex;
