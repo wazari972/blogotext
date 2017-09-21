@@ -38,7 +38,15 @@ if (isset($_POST['_verif_envoi'])) {
     date_default_timezone_set('Europe/Paris');
     if (empty($erreurs_form)) {
       if (isset($_POST['enregistrer'])) {
-        echo "Saved at ". date('h:i:s', time());
+
+        if (!isset($_POST['ID'])) {
+          $query = "SELECT ID FROM articles WHERE bt_id=?";
+          $posts = liste_elements($query, array($billet['bt_id']), 'articles');
+          $ID = $posts[0]["ID"];
+          echo "Saved at ". date('h:i:s', time())." #".$billet['bt_id'].",".$ID;
+        } else {
+          echo "Saved at ". date('h:i:s', time());
+        }
       } else {
         echo "Deleted at ". date('h:i:s', time());
       }

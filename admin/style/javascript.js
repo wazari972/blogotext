@@ -224,7 +224,19 @@ function do_submit(oField) {
         url: form.attr('action'),
         type: form.attr('method'),
         data: form.serialize(), 
-        success: function(html) {
+        success: function (html) {
+            if (html.startsWith("Saved at")) {
+                if (form.find('[name="ID"]').length == 0) {
+                    var bt_id = html.split(" #")[1];
+                    var id = bt_id.split(",")[1];
+                    bt_id = bt_id.split(",")[0];
+                    form.append('<input type="hidden" name="ID" value="'+id+'">');
+                    form.append('<input type="hidden" name="article_id" value="'+bt_id+'">');
+                    form.append('<input type="hidden" name="article_date" value="'+bt_id+'">');
+                    alert("set to "+bt_id+"/"+id);
+                }
+                html = html.split(" #")[0];
+            }
             status.text(html);
             status.css('color', 'green');
         }
