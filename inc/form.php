@@ -733,7 +733,7 @@ function afficher_form_billet_md($article, $erreurs) {
 	}
     echo hidden_input('_ajax_reply', '1');
     echo hidden_input('_verif_envoi', '1');
-    echo '<input class="titre" id="titre" class="titre text" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
+    echo '<input id="titre" class="titre text" name="titre" type="text" size="50" value="'.$titredefaut.'" required="" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_titre']).'" tabindex="30" spellcheck="true" />'."\n" ;
 	echo '<div class="chapo_note" id="chapo_note">'."\n";
 	echo '<div class="blocchapo" id="blocchapo">'."\n";
     echo '<textarea id="chapo" class="chapo text" name="chapo" rows="5" cols="60" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_chapo']).'" tabindex="35" >'.$chapodefaut.'</textarea>'."\n" ;
