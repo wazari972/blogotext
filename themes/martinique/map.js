@@ -223,6 +223,8 @@ function init_tag_selectors(pageFeatures) {
     $(".wall-post").addClass("type-visible")
 
     $(".tag_selector").click(function() {
+        $('html,body').animate({scrollTop: $("#main").offset().top}, 0);
+
         var tagname = $(this).attr('alt');
 
         var showAll = tagname == tagSelected;
