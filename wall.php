@@ -201,7 +201,7 @@ function afficher_tags() {
     
     if ($tag[0] == "#") {
       $tag_name = ucfirst(substr($tag, 1));
-      $tag_type_div .= "<img width='25px' height='25px' class='cat type_cat tag_selector cat_$tag_name' id='sel_$tag_id' alt='$tag_id' title='$tag_name ($nb articles)' src='/themes/martinique/picto/$tag_id.png'/>";
+      $tag_type_div .= "<img width='25px' height='25px' class='cat type_cat tag_selector cat_$tag_id' id='sel_$tag_id' alt='$tag_id' title='$tag_name' src='/themes/martinique/picto/$tag_id.png'/>";
     } else {
       $tag_name = str_replace("-", " ", substr($tag, 1));
       $tag_name = ucwords($tag_name);

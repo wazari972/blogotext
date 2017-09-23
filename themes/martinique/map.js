@@ -218,27 +218,39 @@ function pointToContent(point) {
 
 }
 
-var tagSelected = null;
+var tagTypeSelected = null;
+var tagWhereSelected = null;
 function init_tag_selectors(pageFeatures) {
     $(".wall-post").addClass("type-visible")
 
     $(".tag_selector").click(function() {
-        $('html,body').animate({scrollTop: $("#main").offset().top}, 0);
+        var tag_name = $(this).attr('alt');
+        var is_where = $(this).hasClass("where_cat");
 
-        var tagname = $(this).attr('alt');
-
-        var showAll = tagname == tagSelected;
-        tagSelected = showAll ? null : tagname;
-
-        $(".cat").removeClass("type_selected")
-        if (!showAll) {
-            $(this).addClass("type_selected")
+        var tag_to_unselect = is_where ? tagWhereSelected : tagTypeSelected;
+        var was_selected = $(this).hasClass("type_selected");
+        
+        if (tag_to_unselect != null) { /* or tag_to_unselect == tag_name */
+            $(".cat_"+tag_to_unselect).removeClass("type_selected");
         }
+        if (!was_selected) {
+            $(this).addClass("type_selected");
+        }
+
+        if (is_where) {
+            tagWhereSelected = was_selected ? null : tag_name;
+        } else {
+            tagTypeSelected = was_selected ? null : tag_name;
+        }
+
         $(".wall-post:not(.head_map)").each(function() {
-            $(this).toggleClass("type-visible",
-                                showAll || $(this).is(".cat_"+tagname));
+            var is_where_visible = tagWhereSelected == null ? true : $(this).is(".cat_"+tagWhereSelected);
+            var is_type_visible = tagTypeSelected == null ? true : $(this).is(".cat_"+tagTypeSelected);
+            $(this).toggleClass("type-visible", is_where_visible && is_type_visible);
         })
         update_visible_posts_features(pageFeatures);
+
+        $('html,body').animate({scrollTop: $("#main").offset().top}, 
     });
     var hash = decodeURIComponent(window.location.hash.substr(1));
     if (hash.startsWith("#") || hash.startsWith("@")) {
@@ -262,7 +274,19 @@ function update_visible_posts_features(pageFeatures) {
     $(".wall-post.type-visible.map-visible:not(.map-hidden)").show();
     var cnt = $(".wall-post.type-visible.map-visible:not(.map-hidden)").length - NB_NOT_ARTICLE;
     var plur = cnt == 1 ? "" : "s";
-    $("#tag_info").text(cnt+" article"+plur+" visible"+plur+" sur "+NB_POST);
+    var what = ""
+    if (tagTypeSelected || tagWhereSelected) {
+        what = " (catégorie: ";
+        if (tagTypeSelected) {
+            what += $(".tag_selector.cat_"+tagTypeSelected).attr("title");
+        }
+        if (tagWhereSelected) {
+            if (tagTypeSelected) what += " "
+            what += "dans le "+$(".tag_selector.cat_"+tagWhereSelected).text();
+        }
+        what += ")";
+    }
+    $("#tag_info").text(cnt+" article"+plur+" visible"+plur+" sur "+NB_POST+what);
 }
 
 $(document).ready(function() {
