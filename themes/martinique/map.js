@@ -245,6 +245,9 @@ function init_tag_selectors(pageFeatures) {
         $("#sel_"+hash.substr(1)).click();
     }
 }
+
+var NB_NOT_ARTICLE = $(".head_map").length;
+var NB_POST = $(".wall-post").length - NB_NOT_ARTICLE; // .head_map are .wall-post
 function update_visible_posts_features(pageFeatures) {
     $(pageFeatures).each(function(pos, feature) {
         if ($("#"+feature.get("uid")).is(".type-visible.map-visible")) {
@@ -257,7 +260,9 @@ function update_visible_posts_features(pageFeatures) {
 
     $(".wall-post").hide();
     $(".wall-post.type-visible.map-visible:not(.map-hidden)").show();
-    
+    var cnt = $(".wall-post.type-visible.map-visible:not(.map-hidden)").length - NB_NOT_ARTICLE;
+    var plur = cnt == 1 ? "" : "s";
+    $("#tag_info").text(cnt+" article"+plur+" visible"+plur+" sur "+NB_POST);
 }
 
 $(document).ready(function() {

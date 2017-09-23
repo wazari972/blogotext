@@ -210,7 +210,9 @@ function afficher_tags() {
     }
   }
 
-  return "<p class='tag_selectors'>$tag_where_div&times;</p> <p class='tag_selectors'>$tag_type_div</p>" ; 
+  return "<p class='tag_selectors'>$tag_where_div&times;</p>"
+        ."<p class='tag_selectors'>$tag_type_div</p>"
+        ."<p id='tag_info'>Tous les articles sont visibles.</p>"; 
 }
 
 function afficher_wall($tableau) {
