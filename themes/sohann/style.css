@@ -74,7 +74,7 @@ sts::before {
     position: relative;
     margin: 0px;
     padding-bottom: 33%;
-    width: 33%;
+    width: 33.333%;
 }
 
 .entry-meta {
