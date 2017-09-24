@@ -233,7 +233,6 @@ function do_submit(oField) {
                     form.append('<input type="hidden" name="ID" value="'+id+'">');
                     form.append('<input type="hidden" name="article_id" value="'+bt_id+'">');
                     form.append('<input type="hidden" name="article_date" value="'+bt_id+'">');
-                    alert("set to "+bt_id+"/"+id);
                 }
                 html = html.split(" #")[0];
             }
