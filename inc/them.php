@@ -105,8 +105,9 @@ function conversions_theme($texte, $solo_art, $cnt_mode) {
 	$texte = str_replace($GLOBALS['balises']['blog_nom'], $GLOBALS['nom_du_site'], $texte);
 
 	if ($cnt_mode == 'post' and !empty($solo_art)) {
-		$texte = str_replace($GLOBALS['balises']['article_titre_page'], $solo_art['bt_title'].' - ', $texte);
-		$texte = str_replace($GLOBALS['balises']['article_titre'], $solo_art['bt_title'], $texte);
+		$hidden = $solo_art['bt_statut'] == 0 ? " (privé)" : "";
+		$texte = str_replace($GLOBALS['balises']['article_titre_page'], $solo_art['bt_title'].$hidden.' - ', $texte);
+		$texte = str_replace($GLOBALS['balises']['article_titre'], $solo_art['bt_title'].$hidden, $texte);
 		$texte = str_replace($GLOBALS['balises']['article_titre_echape'], urlencode($solo_art['bt_title']), $texte);
 		$texte = str_replace($GLOBALS['balises']['article_lien'], $solo_art['bt_link'], $texte);
 		if ($solo_art['bt_type'] == 'article') {
@@ -181,7 +182,8 @@ function conversions_theme_article($texte, $billet) {
 	$texte = str_replace($GLOBALS['balises']['blog_auteur'], $GLOBALS['auteur'], $texte);
 	$texte = str_replace($GLOBALS['balises']['style'], $GLOBALS['theme_style'], $texte);
 	$texte = str_replace($GLOBALS['balises']['rss_comments'], 'rss.php?id='.$billet['bt_id'], $texte);
-	$texte = str_replace($GLOBALS['balises']['article_titre'], $billet['bt_title'], $texte);
+	$hidden = $billet['bt_statut'] == 0 ? " (article privé)" : "";
+	$texte = str_replace($GLOBALS['balises']['article_titre'], $billet['bt_title'].$hidden, $texte);
 	$texte = str_replace($GLOBALS['balises']['article_chapo'], $billet['bt_abstract'], $texte);
 	$texte = str_replace($GLOBALS['balises']['article_contenu'], $billet['bt_content'], $texte);
 	$texte = str_replace($GLOBALS['balises']['article_date'], date_formate($billet['bt_date']), $texte);
@@ -392,8 +394,9 @@ tableau_printing:
             if (!$alpha and !$multi_tab) {
               $HTML_elmts .= '<time datetime="'.date_formate_iso($e['bt_id']).'">'.$short_date.'</time> ';
             }
+	    $hidden = $e['bt_statut'] == 0 ? "&nbsp;(article privé)" : "";
             $HTML_elmts .= '<a href="'.$e['bt_link'].'" title="'.$title.'">'
-                        .$e['bt_title'].'</a></li>'."\n";
+                        .$e['bt_title']."</a>$hidden</li>"."\n";
 		}
 
         if ($multi_tab and !empty($multi_tableau)) {

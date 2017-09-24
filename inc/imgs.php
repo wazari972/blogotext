@@ -454,7 +454,7 @@ function init_post_fichier() { //no $mode : it's always admin.
 			'bt_checksum' => $checksum,
 			'bt_statut' => $statut,
 			'bt_dossier' => (empty($dossier) ? 'default' : $dossier ), // tags
-			'bt_path' => (empty($path) ? '/'.(substr($checksum, 0, 2)) : $path ), // path on disk (rand subdir to avoid too many files in same dir)
+			'bt_path' => (empty($path) ? '/'.(date('Y-m-d')) : $path ), // path on disk (daily subdir to avoid too many files in same dir)
 		);
 		return $fichier;
 }
