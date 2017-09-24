@@ -11,6 +11,8 @@
 #
 # *** LICENSE ***
 
+session_start();
+
 header('Content-Type:  text/html; charset=UTF-8');
 
 $GLOBALS['BT_ROOT_PATH'] = '';
@@ -46,7 +48,12 @@ $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 $array = array();
 $ORDER = 'DESC'; // may be overwritten
 
-$query = "SELECT * FROM articles WHERE bt_statut=1";
+$query = "SELECT * FROM articles WHERE TRUE";
+
+if (empty($_SESSION['user_id'])) {
+	$query .= " AND bt_statut=1";
+}
+
 
 if (strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false) {
     if (!isset($_GET['tag'])) {
@@ -259,6 +266,9 @@ function afficher_wall($tableau) {
             if (endsWith($notes, ".jpg") && ! endsWith($notes, "-med.jpg")) {
                 $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
             }
+
+            $hidden = $element['bt_statut'] == 0 ? " (privé) " : "";
+
             $tooltip = str_replace('"', "&quot;", $element['bt_abstract']);
             $post_class = "wall-post hentry";
 
@@ -279,12 +289,13 @@ function afficher_wall($tableau) {
               
               $posted_on .= '</span>'."\n";
             } else {
-              $posted_on = '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'.date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
+              $posted_on = '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'
+                         .date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
             }
             
             $HTML_elmts .= '<article class="'.$post_class.' " id="'.$element['bt_id'].'" title="'.$tooltip.'" >'."\n"
                         . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
-                        . ($blog_martinique ? ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
+                        . ($blog_martinique ?        ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
                         . '</a>'
                         . '  <header class="entry-header">'."\n"
                         . '    <div class="entry-meta">'."\n"
@@ -292,7 +303,7 @@ function afficher_wall($tableau) {
                         . '    </div>'."\n"
                         
                         . '    <!-- .entry-meta -->'."\n"
-                        . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a></h1>'."\n"
+                        . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a>'.$hidden.'</h1>'."\n"
                         . '  </header>'."\n"
                         
                         . '  <!-- .entry-header -->'."\n"

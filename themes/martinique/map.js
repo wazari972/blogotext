@@ -250,7 +250,7 @@ function init_tag_selectors(pageFeatures) {
         })
         update_visible_posts_features(pageFeatures);
 
-        $('html,body').animate({scrollTop: $("#main").offset().top}, 
+        $('html,body').animate({scrollTop: $("#main").offset().top}, 0); 
     });
     var hash = decodeURIComponent(window.location.hash.substr(1));
     if (hash.startsWith("#") || hash.startsWith("@")) {
