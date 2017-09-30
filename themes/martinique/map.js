@@ -135,12 +135,16 @@ function init_osm_box(divName) {
         stopEvent: false
     });
     map.addOverlay(popup);
-    
-    var visible_feature = null;
-    // display popup on click
-    map.on('click', function(evt) {
-        var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
 
+    var visible_feature = null;
+    var feature_clicked = null;
+    // display popup on click
+    map.on('singleclick', function(evt) {
+        if (feature_clicked != null) {
+            feature_clicked = null; // cancel close on link click
+            return;
+        }
+        var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
         var feature = map.forEachFeatureAtPixel(evt.pixel,
             function(feature, layer) {
                 return feature;
@@ -161,8 +165,12 @@ function init_osm_box(divName) {
                 'offset': '50px 50px',
                 'content': feature.get('attributes')["content"]
             });
-            
             $(element).popover('show');
+
+            $(".popover-content a").click(function(e) {                
+                feature_clicked = feature; // use to cancel close on link click
+            })
+
             $(".wall-post:not(.head_map)").addClass("map-hidden"); 
             $("#"+feature.get('uid')).removeClass("map-hidden");
             visible_feature = feature;
