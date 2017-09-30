@@ -238,7 +238,9 @@ function afficher_wall($tableau) {
     $HTML_elmts = '';
     $HTML_elmts .= "<style type='text/css'>"."\n"
                 .".midle {margin-left: 0px;}\n"
-                ."#main, #contenu {padding: 0px;max-width: 100%;}\n"
+                ."#main, #contenu {"
+                .($blog_sohann ? "" : "padding: 0px;")
+                ."max-width: 100%;}\n"
                 ."</style>"."\n";
     if ($blog_martinique) {
       $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
