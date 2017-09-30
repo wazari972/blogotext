@@ -170,6 +170,10 @@ span.type_selected {
     text-align: center;
 }
 
+.popover-content a{
+    color: blue;
+    font-weight: lighter;
+}
 
 /* GENERAL PAGE LAYOUT
 ------------------------------------------------------------ */

@@ -44,7 +44,10 @@ function init_osm_box(divName) {
             point: point,
             attributes: {"icon": "plage", "content":"rien"}
         })
-        pageFeatures.push(page)
+        pageFeatures.push(page);
+        var geo_href =  pointToGeoportailURL(point);
+        $("#popup").html("<a target='_blank' href='"+geo_href+"'>Voir sur geoportail</a>");
+        $("#popup").show();
     }
 
     var vectorSource = new ol.source.Vector({features: pageFeatures})
@@ -219,9 +222,15 @@ function pointToContent(point) {
     }
     ret += "</p>";
     ret += "<p>"+point.abstract+"</p>\n";
+    var geo_href = pointToGeoportailURL(point);
+    ret += "<a target='_blank' href='"+geo_href+"'>(voir sur geoportail)</a>";
     ret += "</div>";
     return ret;
 
+}
+
+function pointToGeoportailURL(point) {
+    return "https://www.geoportail.gouv.fr/carte?c="+point.lat+","+point.lon+"&z=15&l0=GEOGRAPHICALGRIDSYSTEMS.MAPS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes";
 }
 
 var tagTypeSelected = null;
