@@ -6,6 +6,11 @@ var invisibleFeatureStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({color: 'yellow', width: 1})
     })
 })
+
+function centerMap(map, lonlat) {
+    map.getView().setCenter(ol.proj.transform(lonlat, 'EPSG:4326', 'EPSG:3857'));
+}
+
 function init_osm_box(divName) {      
     var pageFeatures = [];
     var center;
@@ -158,6 +163,7 @@ function init_osm_box(divName) {
             $(".wall-post:not(.head_map)").addClass("map-hidden"); 
             $("#"+feature.get('uid')).removeClass("map-hidden");
             visible_feature = feature;
+            centerMap(map, lonlat);
         } else {
             visible_feature = null;
             $(".wall-post:not(.head_map)").removeClass("map-hidden"); 
