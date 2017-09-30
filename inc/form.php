@@ -753,8 +753,7 @@ function afficher_form_billet_md($article, $erreurs) {
             <textarea class="wmd-input" id="wmd-input" name="contenu" placeholder="'.ucfirst($GLOBALS['lang']['placeholder_contenu']).'">'.$contenudefaut.'</textarea>
             <textarea class="wmd-input" style="display:none" id="wmd-output'.$uid.'" name="html-content"></textarea>
         </div>
-        <div id="wmd-preview'.$uid.'" class="wmd-panel wmd-preview" style="display:hidden"></div>
-	    <div class="tag_bloc">'."\n";
+	<div class="tag_bloc">'."\n";
 	echo form_categories_links('articles', $categoriesdefaut);
 	echo "\t".'<input list="htmlListTags" type="text" class="text type_tags" id="type_tags" name="tags"  placeholder="'.ucfirst($GLOBALS['lang']['placeholder_tags']).'" tabindex="65"/>'."\n";
 	echo "\t".'<input type="hidden" class="categories" id="categories" name="categories" value="" />'."\n";
