@@ -271,22 +271,24 @@ function handleDragLeave(e) {
 }
 
 function handleDragOver(e) {
-	if (document.getElementById('dragndrop-area').classList.contains('fullpagedrag')) return false;
-
-	var isFiles = false;
-	// detects if drag content is actually files (it might be text, url… but only files are relevant here)
-	if (e.dataTransfer.types.contains) {
-		var isFiles = e.dataTransfer.types.contains("application/x-moz-file");
-	}
-	else if (e.dataTransfer.types) {
-		var isFiles = (e.dataTransfer.types == 'Files') ? true : false;
-	}
-
-	if (isFiles) {
-		document.getElementById('dragndrop-area').classList.add('fullpagedrag');
-	} else {
-		document.getElementById('dragndrop-area').classList.remove('fullpagedrag');
-	}
+    if (document.getElementById('dragndrop-area').classList.contains('fullpagedrag')) {
+        return false;
+    }
+    var isFiles = false;
+    // detects if drag content is actually files (it might be text, url… but only files are relevant here)
+    if (e.dataTransfer.types.contains) {
+	isFiles = e.dataTransfer.types.contains("application/x-moz-file");
+        
+    }
+    else if (e.dataTransfer.types) {
+        isFiles = e.dataTransfer.types.indexOf("Files") !== -1;
+    }
+    
+    if (isFiles) {
+	document.getElementById('dragndrop-area').classList.add('fullpagedrag');
+    } else {
+	document.getElementById('dragndrop-area').classList.remove('fullpagedrag');
+    }
 }
 
 
@@ -642,11 +644,12 @@ function handleDrop(event) {
 	document.getElementById('dragndrop-area').classList.remove('fullpagedrag');
 	if (nbDraged === false) { nbDone = 0; }
 	// detects if drag contains files.
+        var isFiles = false;
 	if (event.dataTransfer.types.contains) {
-		var isFiles = event.dataTransfer.types.contains("application/x-moz-file");
+		isFiles = event.dataTransfer.types.contains("application/x-moz-file");
 	}
 	else if (event.dataTransfer.types) {
-		var isFiles = (event.dataTransfer.types == 'Files') ? true : false;
+		isFiles = event.dataTransfer.types.indexOf('Files') !== -1;;
 	}
 
 	if (!isFiles) { event.preventDefault(); return false; }

@@ -139,7 +139,7 @@ else {
 	afficher_liste_images($images);
 	afficher_liste_fichiers($fichiers);
 }
-
+echo "\n".'<script src="style/jquery-3.0.0.min.js" type="text/javascript"></script>';
 echo "\n".'<script src="style/javascript.js" type="text/javascript"></script>'."\n";
 echo "\n".'<script type="text/javascript">'."\n";
 echo 'var curr_img = (typeof imgs != \'undefined\') ? imgs.list.slice(0, 25) : \'\';'."\n";
