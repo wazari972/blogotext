@@ -221,7 +221,7 @@ function afficher_form_commentaire($article_id, $mode, $erreurs='', $comm_id='')
 
 			$form .= "\t\t".'<input class="check" type="checkbox" id="allowcookie" name="allowcookie"'.$cookie_checked.' />'.label('allowcookie', $GLOBALS['lang']['comment_cookie']).'<br/>'."\n";
 
-			$form .= "\t\t".'<input class="check" type="checkbox" id="subscribe" name="subscribe"'.$subscribe_checked.' />'.label('subscribe', $GLOBALS['lang']['comment_subscribe'])."\n";
+//			$form .= "\t\t".'<input class="check" type="checkbox" id="subscribe" name="subscribe"'.$subscribe_checked.' />'.label('subscribe', $GLOBALS['lang']['comment_subscribe'])."\n";
 
 			$form .= "\t".'</fieldset><!--end cookie asking-->'."\n";
 			$form .= "\t".'<fieldset class="buttons">'."\n";
