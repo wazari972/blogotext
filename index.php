@@ -34,7 +34,8 @@ if (strpos($_SERVER["SERVER_NAME"], "phd.kevin.pouget.me") !== false
 if ((strpos($_SERVER["SERVER_NAME"], "autour.de.grenoble.0x972.info") !== false 
   || strpos($_SERVER["SERVER_NAME"], "polynesie.0x972.info") !== false
   || strpos($_SERVER["SERVER_NAME"], "sohann.pouget.me")  !== false
-  || strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false)
+  || strpos($_SERVER["SERVER_NAME"], "jessica.pouget.me")  !== false
+  || strpos($_SERVER["SERVER_NAME"], "martinique") !== false)
  && strpos($_SERVER["REQUEST_URI"], $_SERVER["SCRIPT_NAME"]) === false
  && strpos($_SERVER["REQUEST_URI"], "?") === false ) 
 {

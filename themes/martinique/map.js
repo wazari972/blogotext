@@ -23,7 +23,6 @@ function init_osm_box(divName) {
                 uid: point.uid,
                 attributes: {"icon": point.main_type, "content":pointToContent(point)}
             })
-           
             pageFeatures.push(page)
         }
     } else {
@@ -47,6 +46,7 @@ function init_osm_box(divName) {
         pageFeatures.push(page);
         var geo_href =  pointToGeoportailURL(point);
         $("#popup").html("<a target='_blank' href='"+geo_href+"'>Voir sur geoportail</a>");
+	$("#popup").css("text-align", "center");
         $("#popup").show();
     }
 
@@ -65,7 +65,7 @@ function init_osm_box(divName) {
                     scale: 0.05,
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'pixels',
-                    opacity: 1,
+                    opacity: 1, label: feature.get("attributes")["icon"],
                     src: "/themes/martinique/picto/" + feature.get("attributes")["icon"] + ".png"
                 }))
             });
@@ -221,7 +221,7 @@ function pointToLonlat(point) {
 
 function pointToContent(point) {
     var ret = "<div class='map_content'>\n"
-        +"  <h3>"+point.name+"</h3>\n";
+        +"  <h3><a href='/?d="+point.uid+"' target='_blank'>"+point.name+"</a></h3>\n";
     ret += "<p>";
     for (tp in point.types) {
         var name = point.types[tp]
@@ -230,8 +230,8 @@ function pointToContent(point) {
     }
     ret += "</p>";
     ret += "<p>"+point.abstract+"</p>\n";
-    var geo_href = pointToGeoportailURL(point);
-    ret += "<a target='_blank' href='"+geo_href+"'>(voir sur geoportail)</a>";
+    //var geo_href = pointToGeoportailURL(point);
+    //ret += "<a target='_blank' href='"+geo_href+"'>(voir sur geoportail)</a>";
     ret += "</div>";
     return ret;
 

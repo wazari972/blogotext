@@ -21,6 +21,9 @@ if (!empty($GLOBALS['fuseau_horaire'])) {
 if ($_SERVER['SERVER_NAME'] === "martinique.local") {
 	$_SERVER['SERVER_NAME'] = "martinique.0x972.info";
 }
+if ($_SERVER['SERVER_NAME'] === "martinique.972.ovh") {
+        $_SERVER['SERVER_NAME'] = "martinique.0x972.info";
+}
 // FOLDERS (change this only if you know what you are doing...)
 $GLOBALS['dossier_admin'] = 'admin';
 $GLOBALS['dossier_backup'] = 'bt_backup/'. $_SERVER['SERVER_NAME'];

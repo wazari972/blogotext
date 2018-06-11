@@ -244,7 +244,14 @@ function afficher_wall($tableau) {
                 ."</style>"."\n";
     if ($blog_martinique) {
       $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
-                 . afficher_tags()
+        . "Selecteurs d'articles interactif: "
+        ."<ul><li>Choisissez un coin de l'île,</li>"
+        ."<li>des types d'activités,</li>"
+        ."<li>zoomez sur la carte,</li>"
+        ."<li>clickez sur une icone de la carte</li></ul>"
+        ."pour réduire la listes des articles listés en dessous. Dézoomez / reclickuez pour déselectionner."
+
+        . afficher_tags()
                  . '</article>'."\n";
       
       $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
@@ -295,7 +302,7 @@ function afficher_wall($tableau) {
                          .date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
             }
             
-            $HTML_elmts .= '<article class="'.$post_class.' " id="'.$element['bt_id'].'" title="'.$tooltip.'" >'."\n"
+            $HTML_elmts .= '<article class="'.$post_class.' " id="'.$element['bt_id'].'" >'."\n"
                         . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
                         . ($blog_martinique ?        ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
                         . '</a>'

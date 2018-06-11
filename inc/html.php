@@ -23,9 +23,8 @@ function afficher_html_head($titre) {
 	$txt .= '<head>'."\n";
 	$txt .= "\t".'<meta charset="UTF-8" />'."\n";
 	$txt .= "\t".'<link type="text/css" rel="stylesheet" href="style/style.css.php" />'."\n";
-	$txt .= "\t".'<meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />'."\n";
+	$txt .= "\t".'<meta name="viewport" content="initial-scale=1.0, user-scalable=yessss" />'."\n";
         $txt .= "\t".'<title>'.$titre.' | '.$GLOBALS['nom_application'].'</title>'."\n";
-
         if (strpos($_SERVER["SERVER_NAME"], "capoeira.0x972.info") !== false
             && $_SERVER["SCRIPT_NAME"] === "/admin/ecrire.php") 
         {
@@ -509,27 +508,32 @@ function sohann_age($billet) {
 	$NAISSANCE = '2017-02-28';
 
 	$TS_NAISSANCE = strtotime($NAISSANCE);
-
+    $TS_UN_AN = 60*60*24*365; // 1year in seconds
+    
 	$dateBillet = decode_id($billet['bt_date']);
 	$dtBillet = new DateTime();
 	$tsBillet = mktime($dateBillet['heure'], $dateBillet['minutes'], $dateBillet['secondes'],
 	                   $dateBillet['mois'], $dateBillet['jour'], $dateBillet['annee']);
 	$dtBillet->setTimestamp($tsBillet);
 	
-	$dtBase = new DateTime();
-	if ($tsBillet < $TS_NAISSANCE) {
-		$FMT_GROSSESSE = "%m<sup>ieme</sup> mois, %d jours";
+	$dtBase = new DateTime();	
+    if ($tsBillet < $TS_NAISSANCE) {
+      $FMT_GROSSESSE = "%m<sup>ieme</sup> mois, %d jours";
 
-		$dtBase->setTimestamp(strtotime($DEBUT_GROSSESSE));
-
-		return date_diff($dtBillet, $dtBase)->format($FMT_GROSSESSE);
+      $dtBase->setTimestamp(strtotime($DEBUT_GROSSESSE));
+      
+      return date_diff($dtBillet, $dtBase)->format($FMT_GROSSESSE);
 	} else {
-		$FMT_NAISSANCE = "%m mois et %d jours";
+      if (($tsBillet - $TS_NAISSANCE) < $TS_UN_AN) {
+		$fmt = "%m mois et %d jours";
+      } else if (($tsBillet - $TS_NAISSANCE) < 2*$TS_UN_AN) {
+        $fmt = "%y an et %m mois";
+      } else {
+        $fmt = "%y ans et %m mois";;
+      }
         
-		$dtBase->setTimestamp($TS_NAISSANCE);
-
-		$interval = date_diff($dtBillet, $dtBase);
+      $dtBase->setTimestamp($TS_NAISSANCE);
 		
-		return date_diff($dtBillet, $dtBase)->format($FMT_NAISSANCE);
+      return date_diff($dtBillet, $dtBase)->format($fmt);
 	}
 }

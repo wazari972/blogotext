@@ -69,12 +69,24 @@ sts::before {
     line-height: 1.36364;
 }
 
+.old-hentry .entry-title {
+      display: none;
+}
+
 .hentry {
     float: left;
     position: relative;
     margin: 0px;
-    padding-bottom: 33%;
-    width: 33.333%;
+    padding-bottom: 25%;
+    width: 25%;
+}
+
+.old-hentry {
+    float: left;
+    position: relative;
+    margin: 0px;
+    padding-bottom: 12.5%;
+    width: 12.5%;
 }
 
 .entry-meta {
