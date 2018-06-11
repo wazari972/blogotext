@@ -44,6 +44,16 @@ function require_all() {
 }
 require_all();
 
+$blog_sohann = false;
+if (strpos($_SERVER["SERVER_NAME"], "sohann.pouget.me") !== false) {
+  $blog_sohann = true;
+}
+
+$blog_martinique = false;
+if (strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false) {
+  $blog_martinique = true;
+}
+
 $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
 $array = array();
 $ORDER = 'DESC'; // may be overwritten
@@ -223,14 +233,7 @@ function afficher_tags() {
 }
 
 function afficher_wall($tableau) {
-    $blog_sohann = false;
-    if (strpos($_SERVER["SERVER_NAME"], "sohann.pouget.me") !== false) {
-        $blog_sohann = true;
-    }
-    $blog_martinique = false;
-    if (strpos($_SERVER["SERVER_NAME"], "martinique.0x972.info") !== false) {
-      $blog_martinique = true;
-    }
+    global $blog_sohann, $blog_martinique;
     
     $HTML = '';
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
@@ -242,6 +245,7 @@ function afficher_wall($tableau) {
                 .($blog_sohann ? "" : "padding: 0px;")
                 ."max-width: 100%;}\n"
                 ."</style>"."\n";
+    
     if ($blog_martinique) {
       $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
         . "Selecteurs d'articles interactif: "
@@ -250,9 +254,8 @@ function afficher_wall($tableau) {
         ."<li>zoomez sur la carte,</li>"
         ."<li>clickez sur une icone de la carte</li></ul>"
         ."pour réduire la listes des articles listés en dessous. Dézoomez / reclickuez pour déselectionner."
-
         . afficher_tags()
-                 . '</article>'."\n";
+        . '</article>'."\n";
       
       $HTML_elmts.= '<article class="wall-post hentry head_map">'."\n"
                  . afficher_map_data($tableau)
@@ -260,88 +263,142 @@ function afficher_wall($tableau) {
     }
     
     $data = array();
-    if (!empty($tableau)) {
-        $HTML_article = conversions_theme($theme_page, $data, 'post');
-        
-        foreach ($tableau as $element) {
-            if (empty($element['bt_notes'])) {
-                //continue;
-            } else if ($element['bt_notes'] == "skip") {
-                continue;
-            }
+    if (empty($tableau)) {
+        goto no_article;
+    }
+    
+    $HTML_article = conversions_theme($theme_page, $data, 'post');
 
-            $notes = explode('#', $element['bt_notes'])[0];
-            
-            if (endsWith($notes, ".jpg") && ! endsWith($notes, "-med.jpg")) {
-                $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
-            }
+    if ($blog_sohann) {
+      $this_year = date("Y");
+      $ts_now = time();
 
-            $hidden = $element['bt_statut'] == 0 ? " (privé) " : "";
+      $old_elements = array();
+      foreach ($tableau as $element) {        
+        $dateBillet = decode_id($element['bt_date']);
+        $dtBillet = new DateTime();
 
-            $tooltip = str_replace('"', "&quot;", $element['bt_abstract']);
-            $post_class = "wall-post hentry";
-
-            if ($blog_martinique) {
-              $posted_on = '    <span class="posted-on">';
-              foreach (explode(", ", $element['bt_categories']) as $id => $tag) {
-                if ($tag === '' || ($tag[0] !== '#' && $tag[0] !== '@')) {
-                  continue;
-                }
-                $tag_name = substr($tag, 1);
-                $tag_id = str_replace(" ", "_", $tag_name);
-                $post_class .= " cat_$tag_id";
-                            
-                if ($tag[0] !== '#') continue;
-
-                $posted_on .=  "<img class='label_$tag_id' width='25px' height='25px' title='$tag_name' src='/themes/martinique/picto/$tag_id.png' alt='$tag_name'/>";
-              }
-              
-              $posted_on .= '</span>'."\n";
-            } else {
-              $posted_on = '      <span class="posted-on"><a href="'.$element['bt_link'].'" rel="bookmark">'
-                         .date_formate($element['bt_date'], '2').($blog_sohann ? " (".sohann_age($element).")" : "").'</a></span>'."\n";
-            }
-            
-            $HTML_elmts .= '<article class="'.$post_class.' " id="'.$element['bt_id'].'" >'."\n"
-                        . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
-                        . ($blog_martinique ?        ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
-                        . '</a>'
-                        . '  <header class="entry-header">'."\n"
-                        . '    <div class="entry-meta">'."\n"
-                        . $posted_on
-                        . '    </div>'."\n"
-                        
-                        . '    <!-- .entry-meta -->'."\n"
-                        . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a>'.$hidden.'</h1>'."\n"
-                        . '  </header>'."\n"
-                        
-                        . '  <!-- .entry-header -->'."\n"
-                        . '  <a href="'.$element['bt_link'].'" class="entry-link"><span class="screen-reader-text">Lire la suite <span class="meta-nav">→</span></span></a>'."\n"
-                        . '</article>'."\n";
-            
+        if ($dateBillet['annee'] == $this_year) {
+          continue;
         }
-
-        $HTML_elmts .= "<script>"."\n"
-                    . " var sheet = window.document.styleSheets[0];"."\n"
-                    . "sheet.insertRule('#sidebar { display: none; }', sheet.cssRules.length);"."\n"
-                    . "sheet.insertRule('#main { max-width: 100%; }', sheet.cssRules.length);"."\n"
-                    . "sheet.insertRule('#midle { margin-left: 0px; }', sheet.cssRules.length);"."\n"
-                    . "sheet.insertRule('body { overflow-x: hidden; }', sheet.cssRules.length);"."\n"
-                    ."</script>"."\n";
         
-        $HTML_elmts .= afficher_map_imports();
+        $tsBillet = mktime($dateBillet['heure'], $dateBillet['minutes'], $dateBillet['secondes'],
+                           $dateBillet['mois'], $dateBillet['jour'], $this_year);
         
-        $HTML_elmts = "<div class='wall-main'> $HTML_elmts </div>";
+        if ($tsBillet > $ts_now) {
+          continue;
+        }
         
-        $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
+        $old_elements[$tsBillet] = $element;
+      }
+      ksort($old_elements);
+      $old_elements = array_reverse($old_elements);
+      foreach (array_reverse(array_slice($old_elements, 0, 8)) as $element) {
+        //print($element['bt_date']." ".$element["bt_title"]." "."\n");
+        $HTML_elmts .= afficher_wall_entry($element, "old-hentry");
+      }
     }
 
-    else {
-        $HTML_article = conversions_theme($theme_page, $data, 'list');
-        $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $GLOBALS['lang']['note_no_article'], $HTML_article);
+    if (isset($_GET['rand'])) {
+      shuffle($tableau);
     }
+    
+    foreach ($tableau as $element) {
+      $HTML_elmts .= afficher_wall_entry($element);
+    }
+    
+    $HTML_elmts .= "<script>"."\n"
+                . " var sheet = window.document.styleSheets[0];"."\n"
+                . "sheet.insertRule('#sidebar { display: none; }', sheet.cssRules.length);"."\n"
+                . "sheet.insertRule('#main { max-width: 100%; }', sheet.cssRules.length);"."\n"
+                . "sheet.insertRule('#midle { margin-left: 0px; }', sheet.cssRules.length);"."\n"
+                . "sheet.insertRule('body { overflow-x: hidden; }', sheet.cssRules.length);"."\n"
+                ."</script>"."\n";
+    
+    if ($blog_martinique) {
+      $HTML_elmts .= afficher_map_imports();
+    }
+
+    $HTML_elmts = "<div class='wall-main'> $HTML_elmts </div>";
+    
+    $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
+
+    echo $HTML;
+    return;
+    
+no_article:
+    $HTML_article = conversions_theme($theme_page, $data, 'list');
+    $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $GLOBALS['lang']['note_no_article'], $HTML_article);
+    
     echo $HTML;
 }
+
+function martinique_get_posted_on($element) {
+  $posted_on = '    <span class="posted-on">';
+  foreach (explode(", ", $element['bt_categories']) as $id => $tag) {
+    if ($tag === '' || ($tag[0] !== '#' && $tag[0] !== '@')) {
+      continue;
+    }
+    $tag_name = substr($tag, 1);
+    $tag_id = str_replace(" ", "_", $tag_name);
+    $post_class .= " cat_$tag_id";
+    
+    if ($tag[0] !== '#') continue;
+    
+    $posted_on .=  "<img class='label_$tag_id' width='25px' height='25px' title='$tag_name' src='/themes/martinique/picto/$tag_id.png' alt='$tag_name'/>";
+    }
+  
+  $posted_on .= '</span>'."\n";
+
+  return $posted_on;
+}
+
+function afficher_wall_entry($element, $post_extra_class="") {
+  global $blog_sohann, $blog_martinique;
+  
+  if (empty($element['bt_notes'])) {
+    //return "";
+  } else if ($element['bt_notes'] == "skip") {
+    return "";
+  }
+      
+  $notes = explode('#', $element['bt_notes'])[0];
+      
+  if (endsWith($notes, ".jpg") && ! endsWith($notes, "-med.jpg")) {
+    $notes = substr($notes, 0, strlen($notes) - 4)."-med.jpg";
+  }
+      
+  $hidden = $element['bt_statut'] == 0 ? " (privé) " : "";
+      
+  $tooltip = str_replace('"', "&quot;", $element['bt_abstract']);
+  $post_class = "wall-post hentry ".$post_extra_class;
+  
+  if ($blog_martinique) {
+    $posted_on = martinique_get_posted_on($element);
+  } else {
+    $posted_on = '      <span class="posted-on">'
+               . '<a href="'.$element['bt_link'].'" rel="bookmark">'
+               .     date_formate($element['bt_date'], '2')
+               .     ($blog_sohann ? " (".sohann_age($element).")" : "")
+               . '</a></span>'."\n";
+  }
+  
+  return '<article class="'.$post_class.' " id="'.$element['bt_id'].'" >'."\n"
+               . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
+               . ($blog_martinique ?        ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
+               . '</a>'
+               . '  <header class="entry-header">'."\n"
+               . '    <div class="entry-meta">'."\n"
+               . $posted_on
+               . '    </div>'."\n"
+               . '    <!-- .entry-meta -->'."\n"
+               . '    <h1 class="entry-title"><a href="'.$element['bt_link'].'" rel="bookmark">'.$element['bt_title'].'</a>'.$hidden.'</h1>'."\n"
+               . '  </header>'."\n"            
+               . '  <!-- .entry-header -->'."\n"
+               . '  <a href="'.$element['bt_link'].'" class="entry-link"><span class="screen-reader-text">Lire la suite <span class="meta-nav">→</span></span></a>'."\n"
+               . '</article>'."\n";
+}
+
 
 afficher_wall($tableau);
 
