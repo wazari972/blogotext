@@ -1,0 +1,764 @@
+@charset "utf-8";
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: local('Roboto Light'), local('Roboto-Light'), url("roboto-300.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url("roboto-400.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url("roboto-700.woff") format("woff");
+}
+
+
+/* GENERAL PAGE LAYOUT
+------------------------------------------------------------ */
+html {
+	font-size: 16px;
+}
+
+body {
+	font-size: .875em; /* 14px */
+}
+
+html, body {
+	margin: 0; padding: 0;
+	background: #f9f9f9;
+	color: #333;
+	font-family: Roboto, Verdana, Helvetica, Arial, sans-serif;
+	word-wrap: break-word;
+}
+
+/* WALL STUFF
+------------------------------------------------------------ */
+#
+sts::before {
+    content: "";
+    display: table;
+}
+
+.entry-thumbnail {
+    height: auto;
+    width: auto;
+    position: absolute;
+
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    overflow:hidden;
+
+    min-width: 100%;
+    min-height: 100%;
+
+}
+
+.entry-title {
+    margin: 0px auto;
+    font-size: 1.375em;
+    line-height: 1.36364;
+}
+
+.hentry {
+    float: left;
+    position: relative;
+    margin: 0px;
+    padding-bottom: 33%;
+    width: 33.333%;
+}
+
+.entry-meta {
+    font-size: 0.875em;
+    line-height: 1.71429;
+}
+
+.entry-header {
+    position: relative;
+    z-index: 1;
+}
+
+.entry-header {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+
+    max-height: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+.entry-header {
+    background: rgba(0, 0, 0, 0.25) none repeat scroll 0% 0%;
+}
+
+.entry-header:hover  {
+    background: rgba(0, 0, 0, 0.8) none repeat scroll 0% 0%;
+    transition: background ease-in-out 800ms;
+}
+
+.wall-main {
+    position: absolute;
+    width: 100vw;
+    background: rgba(0, 0, 0, 1);
+/*    margin-top: -20px;*/
+/*    margin-left: -40px;*/
+}
+
+.wall-post a {
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: none;
+
+    font-family: "Trebuchet MS",helvetica,arial,sans-serif;
+    word-wrap: break-word;
+}
+
+.wall-post h1 {
+    font-family: Montserrat,sans-serif;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.0625em;
+}
+
+.screen-reader-text {
+    position: absolute;
+    left: -1000em;
+
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+
+/* GENERAL STUFF 
+------------------------------------------------------------------- */
+
+a {
+	color: #4caf50;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #2e7d32;
+	text-decoration: underline;
+}
+
+#footer a {
+	color: inherit;
+}
+
+.centrer {
+	text-align: center;
+}
+
+img {
+	border: none;
+}
+
+pre { white-space: pre-wrap; }
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Trebuchet MS', Roboto, Arial, sans-serif;
+	clear: both;
+}
+
+textarea {
+	resize: both;
+	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+textarea, input {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: 300;
+}
+
+label, input, textarea, select {
+	vertical-align: middle;
+}
+
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+button {
+	cursor:pointer;
+}
+
+q, blockquote {
+	font-style: italic;
+}
+
+
+
+/* TOP 
+------------------------------------------------------------------------ */
+#top-nav {
+	display: flex;
+	min-height: 50px;
+	box-sizing: border-box;
+	background: #222;
+	color: #7B7B7B;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+	z-index: 1;
+	position: relative;
+}
+
+#top-nav-links,
+#top-nav-links > h1,
+#search {
+	box-sizing: border-box;
+	min-height: 50px;
+	line-height: 50px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+
+/* TOP > links
+------------------------------------------------------*/
+#top-nav-links {
+	display: flex;
+	justify-content: center;
+	order: 1;
+	flex: 1;
+	text-align: center;
+}
+
+#top-nav-links > h1 {
+	font-size: inherit;
+	margin: 0 50px;
+	box-shadow: 0px -3px 0px #4caf50 inset;
+}
+#top-nav-links > h1 > a {
+	color: inherit;
+}
+
+#top-nav-links > ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	min-height: 50px;
+}
+
+#top-nav-links li {
+	display: inline-block;
+	margin: 0 10px;
+}
+
+#top-nav-links a {
+	display: inline-block;
+	color: inherit;
+	transition: box-shadow 0.1s ease-in 0s;
+}
+
+#top-nav-links a:hover {
+	box-shadow: 0px -3px 0px #4caf50 inset;
+}
+
+#top-nav-links a:active {
+	box-shadow: 0px -3px 0px #a5d6a7 inset;
+}
+
+
+/* TOP > Search button + searchbar
+------------------------------------------------------*/
+#search {
+	order: 2;
+	flex: 0 0 50px;
+	padding: 0;
+}
+
+#search input[type='submit'] {
+	display: none;
+}
+
+#search input[type='search'] { /* normal */
+	padding: 5px 20px;
+	border: 0px solid transparent;
+	border-radius: 5px;
+	box-sizing: border-box;
+	height: 40px;
+	width: 40px;
+	right: 0; left: 0;
+	background: rgba(255, 255, 255, .5) url(sprites.png) no-repeat 7px -40px / 640px 400px;
+}
+
+#search input:hover { /* hover */
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .3);
+	cursor: pointer;
+	background-color: white;
+}
+
+#search input[value=""]:focus,
+#search input:not([value=""]) { /* focus OR not empty (a search is done) */
+	margin: 0 auto;
+	position: absolute;
+	z-index: 10;
+	border-radius: 3px;
+	max-width: 550px;
+	padding: 0 10px 0 40px;
+	box-shadow: 0 12px 24px rgba(0, 0, 0, .3);
+	background: white url(sprites.png) no-repeat 10px -40px / 640px 400px;
+	cursor: text;
+	animation: popup-search .4s;
+	animation-fill-mode: forwards;
+}
+
+#search input:not([value=""]) {  /* not empty ; this avoids animation on page load */
+	width: 95%;
+	box-shadow: 1px 12px 24px rgba(0, 0, 0, .3);
+	animation: none;
+	top: 35px; left: 0; right: 0;
+}
+
+#search input:not([value=""]):focus { /* not empty : focus */
+	box-shadow: 1px 12px 24px rgba(0, 0, 0, .3);
+}
+
+@keyframes popup-search{  
+	0% {
+		width: 50px;
+		top: 25px;
+	}
+	100% {
+		width: 95%;
+		top: 35px;
+	}
+}
+
+/* TOP HEADER with IMAGE
+------------------------------------------------------------------------ */
+body > header {
+	text-align: center;
+	background: transparent url("header-bg.jpg") no-repeat scroll center center / cover;
+	height: 200px;
+	font-size: 220%;
+	color: white;
+	display: flex;
+	align-items: center;
+}
+
+body > header p {
+	flex: 1 1 100%;
+	font-style: italic;
+	vertical-align: middle;
+	margin: 0;
+	text-shadow: 3px 3px 5px black, 3px 3px 5px black, 3px 3px 7px black;
+}
+
+/* MAIN SECTION With Article + comments + comm form
+------------------------------------------------------------------------- */
+
+/* Article + comment + form + next/prev liens -wrapper */
+#main {
+	padding: 20px;
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+/* art+comm+form */
+#contenu {
+	padding: 0px 1% 20px;
+}
+
+/* 1 art */
+.article,
+.lien {
+	padding: 15px;
+	background: white;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .25);
+	border-radius: 3px;
+	margin-bottom: 30px;
+}
+
+.article img {
+	border: none;
+	max-width: 100%;
+}
+
+.post-title {
+	margin-bottom: 40px;
+}
+.post-title > h1 {
+	font-size: 1.4em;
+}
+.post-title > h1 > a {
+	color: inherit;
+}
+.post-title .date,
+.post-title .author {
+	text-align: center;
+}
+
+.post-footer {
+	display: flex;
+	margin: 20px -15px -15px;
+	padding: 15px;
+	border-radius: 0 0 3px 3px;
+	background: #fafafa;
+}
+.post-footer > .post-tags {
+	flex: 1;
+}
+
+.post-footer > .post-tags > a {
+	padding: 3px 10px;
+	margin-right: 4px;
+	color: inherit;
+	background-color: white;
+	border: #ccc 1px solid;
+	border-radius: 3px;
+	display: inline-block;
+}
+
+/* list of comments */
+#commentaires {
+	background: white;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .25);
+	border-radius: 3px;
+	margin: 30px 10px;
+	padding: 0.1px 5px 15px; /* Fx bug with padding=0 and child margin */
+}
+
+#commentaires .nbcom {
+	margin: 15px;
+	text-align: center;
+	font-size: 1.3em;
+}
+
+/* 1 comment */
+.comment {
+	padding: 40px 15px 10px;
+	border-top: 1px solid #eee;
+}
+
+.comment:target {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, .25);
+}
+
+.com-head {
+	display: flex;
+	align-items: flex-start;
+}
+.com-head .com-gravatar {
+	margin-right: 5px;
+}
+.com-head .com-author {
+	font-weight: bold;
+	flex: 1;
+	font-size: 1.2em;
+}
+.com-head > .com-author > a {
+	color: inherit;
+}
+.com-head > .com-date-time {
+	font-size: .9em;
+	font-style: italic;
+}
+.com-content {
+	padding-left: 53px; /* width gravatar + 5px margin of gravatar */
+}
+.com-footer {
+	text-align: right;	
+}
+
+.com-footer a {
+	color: #aaa;
+	font-style: italic;
+}
+
+/* spécifique pour liste des liens */
+.lien-permalien {
+	color: #aaa;
+	font-size: .8em;
+	padding: 5px 0;
+	font-style: italic;
+}
+
+
+/* Formulaire commentaires 
+------------------------------------------ */
+#postcom {
+	padding: 15px;
+	background: white;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .25);
+	border-radius: 3px;
+	margin: 30px 10px;
+}
+.form-commentaire fieldset {
+	border: 0;
+}
+
+/* Boutons de formatage  */
+p.formatbut {
+	height: 30px;
+	width: 100%;
+	line-height: 28px;
+	margin: 0; padding: 0;
+	background: #f5f5f5;
+}
+.formatbut button {
+	padding: 0;
+	vertical-align: middle;
+	background: rgba(0, 0, 0, 0);
+	height: 24px; width: 24px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+.formatbut button:hover {
+	border-color: silver;
+}
+.formatbut button:active {
+	border-color: gray;
+	background: #cde6ff;
+	background: linear-gradient(to top, white, #d6d6d6);
+}
+.formatbut button span {
+	display: inline-block;
+	width: 16px;
+	height: 24px;
+}
+.formatbut .spacer {
+	width: 2px;
+	margin: 0 4px;
+	border-left: 1px solid #e5e5e5;
+	border-right: 1px solid #fafafa
+}
+#button01 span { background: no-repeat -4px   -1px url(format.png); }
+#button02 span { background: no-repeat -4px  -21px url(format.png); }
+#button03 span { background: no-repeat -4px  -42px url(format.png); }
+#button04 span { background: no-repeat -4px  -82px url(format.png); }
+#button09 span { background: no-repeat -4px  -62px url(format.png); }
+#button10 span { background: no-repeat -4px -102px url(format.png); }
+#button12 span { background: no-repeat -4px -122px url(format.png); }
+
+
+/* textarea field in comments */
+.form-commentaire > .field {
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	padding: 0;
+}
+.form-commentaire textarea {
+	font: inherit inherit 300;
+	resize: both;
+	width: 100%;
+	border: 0;
+}
+
+/* inputs */
+.form-commentaire > .infos {
+	margin: 15px auto 0;
+	max-width: 480px;
+}
+.form-commentaire > .infos label {
+	display: block;
+	text-align: right;
+	padding: 5px 0;
+}
+
+.form-commentaire > .infos input {
+	width: 250px;
+	padding: 2px 0;
+	border: 0;
+	border-bottom: 1px solid #dadada;
+	margin-left: 5px;
+}
+
+.form-commentaire input:not(.submit):focus {
+	border-bottom-color: #2196F3;
+	box-shadow: 0px -1px 0px #2196F3 inset;
+}
+
+.form-commentaire input:invalid {
+	border-bottom-color: #f44336;
+	box-shadow: 0px -1px 0px #f44336 inset;
+}
+
+.form-commentaire > .buttons {
+	max-width: 70%;
+	text-align: right;
+}
+.form-commentaire .submit {
+    background: #2196F3 none repeat scroll 0% 0%;
+    color: #FFF;
+    font-weight: bold;
+    vertical-align: middle;
+    padding: 6px 12px;
+    margin: 7px 0px 0px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    border: 1px solid transparent;
+    min-width: 100px;
+}
+.form-commentaire .submit[name="previsualiser"] {
+	background: #FFF none repeat scroll 0% 0%;
+	color: #333;
+	box-shadow: none;
+}
+
+.form-commentaire .submit[name="previsualiser"]:hover {
+	border: 1px solid #DDD;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* mode "liste tous les articles" */
+#liste-all-articles {
+	padding: 15px;
+	background: white;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .25);
+	border-radius: 3px;
+	margin: 30px 10px;
+	list-style-type: none;
+}
+
+#liste-all-articles li {
+	border-bottom: 1px solid #eee;
+	padding: 10px 0;
+	display: flex;
+}
+
+#liste-all-articles li span {
+}
+#liste-all-articles li a {
+	padding-left: 20px;
+}
+
+/* Liens de navigation */
+.pagination {
+	padding: 15px;
+	background: white;
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, .25);
+	border-radius: 3px;
+	text-align: center;
+	margin: 0 1% 30px;
+}
+
+/* PAGE FOOTER 
+------------------------------------------------------------------------ */
+body > footer {
+	padding: 15px;
+	background: white;
+	box-shadow: 0px -8px 16px rgba(0, 0, 0, .25);
+	text-align: center;
+}
+
+#footnav {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+#footnav a {
+}
+
+#footnav > nav {
+}
+
+
+/* FOOTER calendrier */
+#navigate {
+	min-width: 270px;
+}
+#calendrier {
+	margin: 0 auto;
+}
+
+#calendrier td {
+	width: 30px;
+	height: 30px;
+	border-radius: 3px;
+	border: 1px solid transparent;
+	empty-cells: hide;
+}
+
+#calendrier td a {
+	width: 30px;
+	height: 30px;
+	border-radius: 3px;
+	border: 1px solid silver;
+	display: inline-block;
+	font-weight: bold;
+	line-height: 30px;
+}
+
+
+/* FOOTER : comments
+------------------------------------- */
+footer #lastcom ul {
+	list-style-type: none;
+	padding: 20px;
+}
+
+footer #lastcom ul li {
+	padding: 5px;
+	word-wrap: break-word;
+	text-align: left;
+}
+
+footer #lastcom ul li a {
+	font-style: italic;
+}
+
+
+/* MOBILE THEME ~ MEDIA QUERIES
+--------------------------------------------------------------------------*/
+
+@media (max-width: 700px) {
+	#top-nav,
+	#top-nav-links {
+		display: block;
+	}
+
+	body > header p {
+		font-size: 4vmin;
+	}
+
+	#search {
+		padding: 5px 20px;
+		text-align: center;
+	}
+
+	#search input[type="search"] {
+		width: auto;
+		padding: 5px 20px 5px 35px;
+		animation: none;
+	}
+
+	#search input[value=""]:focus, #search input:not([value=""]) {
+		padding: 5px 20px 5px 35px;
+		position: static;
+		animation: none;
+	}
+
+	.post-footer {
+		display: block;
+	}
+
+
+	.form-commentaire > .infos label {
+		text-align: left;
+	}
+	.form-commentaire > .infos input {
+		display: block;
+	}
+	#footnav {
+		display: block;
+	}
+}
+
+
+
