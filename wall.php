@@ -270,29 +270,7 @@ function afficher_wall($tableau) {
     $HTML_article = conversions_theme($theme_page, $data, 'post');
 
     if ($blog_sohann) {
-      $this_year = date("Y");
-      $ts_now = time();
-
-      $old_elements = array();
-      foreach ($tableau as $element) {        
-        $dateBillet = decode_id($element['bt_date']);
-        $dtBillet = new DateTime();
-
-        if ($dateBillet['annee'] == $this_year) {
-          continue;
-        }
-        
-        $tsBillet = mktime($dateBillet['heure'], $dateBillet['minutes'], $dateBillet['secondes'],
-                           $dateBillet['mois'], $dateBillet['jour'], $this_year);
-        
-        if ($tsBillet > $ts_now) {
-          continue;
-        }
-        
-        $old_elements[$tsBillet] = $element;
-      }
-      ksort($old_elements);
-      $old_elements = array_reverse($old_elements);
+      $old_elements = sort_by_same_date($tableau);
       foreach (array_reverse(array_slice($old_elements, 0, 8)) as $element) {
         //print($element['bt_date']." ".$element["bt_title"]." "."\n");
         $HTML_elmts .= afficher_wall_entry($element, "old-hentry");

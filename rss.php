@@ -27,6 +27,8 @@ require_once $GLOBALS['dossier_config'].'/prefs.php';
 
 date_default_timezone_set($GLOBALS['fuseau_horaire']);
 
+require_once 'inc/util.php';
+
 function require_all() {
 	require_once 'inc/lang.php';
 	require_once 'inc/conf.php';
@@ -85,7 +87,6 @@ if (isset($_GET['id']) and preg_match('#^[0-9]{14}$#', $_GET['id'])) {
 /* sinon, fil rss sur les articles (par défaut) ou sur les liens ou les Commentaires */
 /* Ici, on utilise la petite BDD placée en cache. */
 else {
-
 	function rel2abs($article) { // convertit les URL relatives en absolues
 		$article = str_replace(' src="/', ' src="http://'.$_SERVER['HTTP_HOST'].'/' , $article);
 		$article = str_replace(' href="/', ' href="http://'.$_SERVER['HTTP_HOST'].'/' , $article);
@@ -115,6 +116,16 @@ else {
 	$modes_url = '';
 	if (!empty($_GET['mode'])) {
 		$found = 0;
+
+        if ( strpos($_GET['mode'], 'same_day') !== FALSE ) {
+          	require_all();
+            $GLOBALS['db_handle'] = open_base($GLOBALS['db_location']);
+            $query = "SELECT * FROM articles WHERE TRUE";
+			$liste_rss = liste_elements($query, array(), 'articles');
+			$found = 1;
+            $liste_rss = sort_by_same_date($liste_rss, true);
+
+		}
 		// 1 = articles
 		if ( strpos($_GET['mode'], 'blog') !== FALSE ) {
 			$liste_rss = array_merge($liste_rss, $liste['a']);
@@ -165,7 +176,12 @@ else {
 	foreach ($liste_rss as $elem) {
 		$time = (isset($elem['bt_date'])) ? $elem['bt_date'] : $elem['bt_id'];
 		if ($time > date('YmdHis')) { continue; }
-		$title = (in_array($elem['bt_type'], array('article', 'link', 'note'))) ? $elem['bt_title'] : $elem['bt_author'];
+		$title = (in_array($elem['bt_type'], array('article', 'link', 'note'))) ?$elem['bt_title'] : $elem['bt_author'];
+
+                if ( strpos($_GET['mode'], 'same_day') !== FALSE ) {
+		  $year = substr($elem['bt_id'], 0, 4);
+                  $title = "[$year] $title";
+                }
 		// normal code
 		$xml_post = '<item>'."\n";
 		$xml_post .= '<title>'.$title.'</title>'."\n";

@@ -729,6 +729,12 @@ footer #lastcom ul li a {
 /* MOBILE THEME ~ MEDIA QUERIES
 --------------------------------------------------------------------------*/
 
+@media (max-width: 900px) {
+    .hentry .entry-title, .hentry .entry-meta {
+      display: none;
+    }
+}
+
 @media (max-width: 700px) {
 	#top-nav,
 	#top-nav-links {

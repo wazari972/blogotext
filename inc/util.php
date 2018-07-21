@@ -11,6 +11,37 @@
 #
 # *** LICENSE ***
 
+function sort_by_same_date($tableau, $set_this_year=false) {
+  $this_year = date("Y");
+  $ts_now = time();
+
+  $old_elements = array();
+  foreach ($tableau as $element) {        
+    $dateBillet = decode_id($element['bt_date']);
+    $dtBillet = new DateTime();
+
+    if ($dateBillet['annee'] == $this_year) {
+      continue;
+    }
+    
+    $tsBillet = mktime($dateBillet['heure'], $dateBillet['minutes'], $dateBillet['secondes'],
+                       $dateBillet['mois'], $dateBillet['jour'], $this_year);
+
+    if ($tsBillet > $ts_now) {
+      continue;
+    }
+
+    if ($set_this_year) {
+      $dateBillet["annee"] = $this_year;
+      $element['bt_date'] = encode_id($dateBillet);
+    }
+    $old_elements[$tsBillet] = $element;
+  }
+  ksort($old_elements);
+
+  return array_reverse($old_elements);
+}
+
 function redirection($url) {
 	header('Location: '.$url);
 	exit;
@@ -50,6 +81,10 @@ function decode_id($id) {
 		'secondes' => substr($id, 12, 2)
 		);
 	return $retour;
+}
+
+function encode_id($id_array) {
+    return implode($id_array);
 }
 
 // used sometimes, like in the email that is sent.
