@@ -192,6 +192,11 @@ function afficher_map_data($tableau) {
   return "<script> $JSON_struc </script> <div id='page_map'></div><div id='popup'></div>\n";
 }
 
+function afficher_lazy_image_imports() {
+  return '<script src="jquery_lazyload/lazyload.min.js"></script>'."\n"
+       . '<script type="text/javascript">lazyload();</script>'."\n";
+}
+
 function afficher_map_imports() {
   $HTML_elmts = "<script src='//plongee.0x972.info/divebook.html_files/jquery.min.js'></script>"
               .'<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.17.1/ol.js" type="text/javascript"></script>'
@@ -296,7 +301,9 @@ function afficher_wall($tableau) {
     if ($blog_martinique) {
       $HTML_elmts .= afficher_map_imports();
     }
-
+    
+    $HTML_elmts .= afficher_lazy_image_imports();
+    
     $HTML_elmts = "<div class='wall-main'> $HTML_elmts </div>";
     
     $HTML = str_replace(extract_boucles($theme_page, $GLOBALS['boucles']['posts'], 'incl'), $HTML_elmts, $HTML_article);
@@ -360,11 +367,19 @@ function afficher_wall_entry($element, $post_extra_class="") {
                .     ($blog_sohann ? " (".sohann_age($element).")" : "")
                . '</a></span>'."\n";
   }
+
+  $notes_thb = str_replace("-med.jpg", "-thb.jpg", $notes);
+
+  if ($blog_martinique) {
+    $img_tag = ' <img class="entry-thumbnail lazyload" src="'.$notes_thb.'" data-src="'.$notes.'" >';
+  } else {
+    $img_tag =  '  <div class="entry-thumbnail lazyload" style="background-image: url('.$notes_thb.')" data-src="'.$notes.'"></div>';
+  }
   
   return '<article class="'.$post_class.' " id="'.$element['bt_id'].'" >'."\n"
                . '<a href="'.$element['bt_link'].'" class="entry-link" >'."\n"
-               . ($blog_martinique ?        ' <img class="entry-thumbnail" src="'.$notes.'">'."\n" : '  <div class="entry-thumbnail" style="background-image: url('.$notes.')"></div>'."\n")
-               . '</a>'
+               . $img_tag ."\n" 
+               . '</a>'."\n" 
                . '  <header class="entry-header">'."\n"
                . '    <div class="entry-meta">'."\n"
                . $posted_on
