@@ -124,8 +124,8 @@ else {
 			$liste_rss = liste_elements($query, array(), 'articles');
 			$found = 1;
             $liste_rss = sort_by_same_date($liste_rss, true);
-
 		}
+
 		// 1 = articles
 		if ( strpos($_GET['mode'], 'blog') !== FALSE ) {
 			$liste_rss = array_merge($liste_rss, $liste['a']);
@@ -178,10 +178,10 @@ else {
 		if ($time > date('YmdHis')) { continue; }
 		$title = (in_array($elem['bt_type'], array('article', 'link', 'note'))) ?$elem['bt_title'] : $elem['bt_author'];
 
-                if ( strpos($_GET['mode'], 'same_day') !== FALSE ) {
-		  $year = substr($elem['bt_id'], 0, 4);
-                  $title = "[$year] $title";
-                }
+        if (strpos($_GET['mode'], 'same_day') !== FALSE ) {
+            $year = substr($elem['bt_id'], 0, 4);
+            $title = "[$year] $title";
+        }
 		// normal code
 		$xml_post = '<item>'."\n";
 		$xml_post .= '<title>'.$title.'</title>'."\n";
