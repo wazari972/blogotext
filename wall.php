@@ -94,7 +94,10 @@ if (isset($_GET['tag'])) {
     } 
 }
 
-
+$sohann_age_davi = FALSE;
+if (isset($_GET['age']) && $_GET['age'] == "davi") {
+  $sohann_age_davi = TRUE;
+}
 
 $query .= " ORDER BY bt_date $ORDER";
 
@@ -238,7 +241,7 @@ function afficher_tags() {
 }
 
 function afficher_wall($tableau) {
-    global $blog_sohann, $blog_martinique;
+    global $blog_sohann, $blog_martinique, $sohann_age_davi;
     
     $HTML = '';
 	if (!($theme_page = file_get_contents($GLOBALS['theme_liste']))) die($GLOBALS['lang']['err_theme_introuvable']);
@@ -273,8 +276,27 @@ function afficher_wall($tableau) {
     }
     
     $HTML_article = conversions_theme($theme_page, $data, 'post');
-
-    if ($blog_sohann) {
+    
+    if ($sohann_age_davi) {
+      $today = array("bt_date" => date("YmdHis"));
+      $HTML_elmts .= "<b>Sohann à l'age de Davi aujoud'hui: ".davi_age($today)." </b><br/>";
+      $age_davi_diff = davi_age($today, TRUE);
+      $shown = 0;
+      foreach ($tableau as $element) {
+        $age_sohann_diff = sohann_age($element, TRUE);
+        //echo $age_sohann_diff;
+        if ($age_sohann_diff > $age_davi_diff) {
+          continue;
+        }
+        
+        $HTML_elmts .= afficher_wall_entry($element);
+        $shown++;
+        if ($shown >= 8) {
+          break;
+        }
+      }
+      goto finish;
+    } else if ($blog_sohann) {
       $old_elements = sort_by_same_date($tableau);
       foreach (array_reverse(array_slice($old_elements, 0, 8)) as $element) {
         //print($element['bt_date']." ".$element["bt_title"]." "."\n");
@@ -289,7 +311,7 @@ function afficher_wall($tableau) {
     foreach ($tableau as $element) {
       $HTML_elmts .= afficher_wall_entry($element);
     }
-    
+  finish:
     $HTML_elmts .= "<script>"."\n"
                 . " var sheet = window.document.styleSheets[0];"."\n"
                 . "sheet.insertRule('#sidebar { display: none; }', sheet.cssRules.length);"."\n"

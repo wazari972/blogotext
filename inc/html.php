@@ -501,13 +501,27 @@ function feed_list_html() {
 	return $html;
 }
 
-function sohann_age($billet) {
-	/* http://php.net/manual/en/function.date-diff.php */
+function sohann_age($billet, $in_seconds=FALSE) {
 
-	$DEBUT_GROSSESSE = '2016-05-03'; // pour avoir 1er / 2eme /... mois de grossesse
+	$DEBUT_GROSSESSE = '2016-05-03';
 	$NAISSANCE = '2017-02-28';
 
-	$TS_NAISSANCE = strtotime($NAISSANCE);
+    return age($billet, $DEBUT_GROSSESSE, $NAISSANCE, $in_seconds);
+}
+
+function davi_age($billet, $in_seconds=FALSE) {
+  
+	$DEBUT_GROSSESSE = '2018-01-08'; 
+	$NAISSANCE = '2018-10-08';
+
+    return age($billet, $DEBUT_GROSSESSE, $NAISSANCE, $in_seconds);
+}
+
+
+function age($billet, $grossesse, $naissance, $in_seconds) {
+  	/* http://php.net/manual/en/function.date-diff.php */
+
+	$TS_NAISSANCE = strtotime($naissance);
     $TS_UN_AN = 60*60*24*365; // 1year in seconds
     
 	$dateBillet = decode_id($billet['bt_date']);
@@ -520,9 +534,13 @@ function sohann_age($billet) {
     if ($tsBillet < $TS_NAISSANCE) {
       $FMT_GROSSESSE = "%m<sup>ieme</sup> mois, %d jours";
 
-      $dtBase->setTimestamp(strtotime($DEBUT_GROSSESSE));
-      
-      return date_diff($dtBillet, $dtBase)->format($FMT_GROSSESSE);
+      $dtBase->setTimestamp(strtotime($grossesse));
+
+      $diff = date_diff($dtBillet, $dtBase);
+      $fmt = $FMT_GROSSESSE;
+      if ($in_seconds) {
+        $diff = -$diff;
+      }
 	} else {
       if (($tsBillet - $TS_NAISSANCE) < $TS_UN_AN) {
 		$fmt = "%m mois et %d jours";
@@ -533,7 +551,12 @@ function sohann_age($billet) {
       }
         
       $dtBase->setTimestamp($TS_NAISSANCE);
-		
-      return date_diff($dtBillet, $dtBase)->format($fmt);
+      $diff = date_diff($dtBillet, $dtBase);
 	}
+    
+    if ($in_seconds) {
+      return $dtBillet->getTimestamp() - $dtBase->getTimestamp();
+    } else {
+      return $diff->format($fmt);
+    }
 }
